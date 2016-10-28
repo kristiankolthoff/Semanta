@@ -12,7 +12,12 @@ import de.unima.dws.semanta.generator.HAGenerator;
 import de.unima.dws.semanta.generator.NodeSumSelector;
 import de.unima.dws.semanta.generator.OAGenerator;
 import de.unima.dws.semanta.generator.PropertyHAGenerator;
-
+/**
+ * Semanta is the main logical component for generating a semantic topic-based crossword
+ * puzzle as combines strategies for selecting topic-related entities, generates HAEntities
+ * based on the selected Resources and additionally identifies and retrieves related opational
+ * answers for each HAEntitiy.
+ */
 public class Semanta {
 
 	private EntitySelector selector;

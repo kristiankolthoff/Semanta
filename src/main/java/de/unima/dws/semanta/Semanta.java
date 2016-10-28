@@ -10,12 +10,14 @@ import de.unima.dws.semanta.generator.EntitySelector;
 import de.unima.dws.semanta.generator.HAEntity;
 import de.unima.dws.semanta.generator.HAGenerator;
 import de.unima.dws.semanta.generator.NodeSumSelector;
+import de.unima.dws.semanta.generator.OAGenerator;
 import de.unima.dws.semanta.generator.PropertyHAGenerator;
 
 public class Semanta {
 
 	private EntitySelector selector;
 	private HAGenerator generator;
+	private OAGenerator optionalGenerator;
 	
 	public Semanta(EntitySelector selector, HAGenerator generator) {
 		this.selector = selector;
@@ -27,12 +29,16 @@ public class Semanta {
 		this.generator = new PropertyHAGenerator();
 	}
 	
-	public List<HAEntity> fetchEntities(String topic, int numEntities) {
-		Resource topicResource = ResourceFactory.createResource(topic);
-		List<Resource> haResources = this.selector.select(topicResource, numEntities);
+	public List<HAEntity> fetchEntities(String topic, int numEntities, boolean optionalAnswers) {
 		List<HAEntity> haEntities = new ArrayList<>();
-		for(Resource resource : haResources) {
-			haEntities.add(this.generator.generate(resource));
+		for (int i = 0; i < numEntities; i++) {
+			Resource topicResource = ResourceFactory.createResource(topic);
+			Resource haResource = this.selector.select(topicResource);
+			HAEntity entity = this.generator.generate(haResource, null, topicResource);
+			if(optionalAnswers) {
+				entity.setOAResources(this.optionalGenerator.generate(haResource, 3));
+			}
+			haEntities.add(entity);
 		}
 		return haEntities;
 	}
@@ -51,5 +57,13 @@ public class Semanta {
 
 	public void setGenerator(HAGenerator generator) {
 		this.generator = generator;
+	}
+
+	public OAGenerator getOptionalGenerator() {
+		return optionalGenerator;
+	}
+
+	public void setOptionalGenerator(OAGenerator optionalGenerator) {
+		this.optionalGenerator = optionalGenerator;
 	}
 }

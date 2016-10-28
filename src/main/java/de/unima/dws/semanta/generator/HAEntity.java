@@ -11,29 +11,29 @@ public class HAEntity {
 	private String answer;
 	private Resource resource;
 	private String entAbstract;
-	private List<String> optionalAnswers;
+	private List<Resource> oaResources;
 	
 	public HAEntity(List<String> hints, String answer, Resource resource, 
-			String entAbstract, List<String> optionalAnswers) {
+			String entAbstract, List<Resource> optionalAnswers) {
 		this.hints = hints;
 		this.answer = answer;
 		this.resource = resource;
 		this.entAbstract = entAbstract;
-		this.optionalAnswers = optionalAnswers;
+		this.oaResources = optionalAnswers;
 	}
 	
 	public HAEntity(Resource resource) {
 		this.resource = resource;
 		this.hints = new ArrayList<>();
-		this.optionalAnswers = new ArrayList<>();
+		this.oaResources = new ArrayList<>();
 	}
 	
 	public boolean addHint(String hint) {
 		return this.hints.add(hint);
 	}
 	
-	public boolean addOptionalAnswer(String optionalAnswer) {
-		return this.optionalAnswers.add(optionalAnswer);
+	public boolean addOptionalAnswer(Resource oaResource) {
+		return this.oaResources.add(oaResource);
 	}
 
 	public List<String> getHints() {
@@ -68,12 +68,12 @@ public class HAEntity {
 		this.entAbstract = entAbstract;
 	}
 
-	public List<String> getOptionalAnswers() {
-		return optionalAnswers;
+	public List<Resource> getOAResources() {
+		return oaResources;
 	}
 
-	public void setOptionalAnswers(List<String> optionalAnswers) {
-		this.optionalAnswers = optionalAnswers;
+	public void setOAResources(List<Resource> oaResources) {
+		this.oaResources = oaResources;
 	}
 	
 	@Override

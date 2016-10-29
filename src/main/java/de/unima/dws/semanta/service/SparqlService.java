@@ -25,14 +25,27 @@ public class SparqlService {
 		return qExec.execSelect();
 	}
 	
-	public static Model queryDescribe(String query) {
+	public static Model queryDescribe(String uri) {
+		final String query = "DESCRIBE <" + uri + ">";
 		qExec = QueryExecutionFactory.sparqlService(endpoint, QueryFactory.create(query));
 		return qExec.execDescribe();
 	}
 	
-	public static Resource queryResource(String query, String uri) {
+	public static Resource queryResource(String uri) {
 		Resource resource = ResourceFactory.createResource(uri);
-		ResultSet result = SparqlService.query(query);
+		ResultSet result = SparqlService.query(uri);
+		while(result.hasNext()) {
+			QuerySolution qs = result.next();
+			Resource property = qs.getResource("p");
+			Resource object = qs.getResource("o");
+			resource.addProperty((Property) property, object);
+		}
+		return resource;
+	}
+	
+	public static Resource queryResourceSanitized(String uri) {
+		Resource resource = ResourceFactory.createResource(uri);
+		ResultSet result = SparqlService.query(uri);
 		while(result.hasNext()) {
 			QuerySolution qs = result.next();
 			Resource property = qs.getResource("p");

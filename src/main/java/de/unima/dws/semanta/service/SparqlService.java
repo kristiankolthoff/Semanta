@@ -6,7 +6,9 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -31,26 +33,38 @@ public class SparqlService {
 		return qExec.execDescribe();
 	}
 	
-	public static Resource queryResource(String uri) {
-		Resource resource = ResourceFactory.createResource(uri);
-		ResultSet result = SparqlService.query(uri);
-		while(result.hasNext()) {
-			QuerySolution qs = result.next();
-			Resource property = qs.getResource("p");
-			Resource object = qs.getResource("o");
-			resource.addProperty((Property) property, object);
-		}
-		return resource;
+	public static Resource queryResource(String uri, String...propertiesToRemove) {
+		final String query = "SELECT ?p ?o " +
+				"{" +
+				"<" + uri + ">" + " ?p ?o . " +
+				"}";
+		ResultSet result = SparqlService.query(query);
+		return SparqlService.buildResource(result, uri, "p", "o", propertiesToRemove);
 	}
 	
-	public static Resource queryResourceSanitized(String uri) {
-		Resource resource = ResourceFactory.createResource(uri);
-		ResultSet result = SparqlService.query(uri);
+	private static Resource buildResource(ResultSet result, String uri, String p, 
+			String o, String... propertiesToRemove) {
+		Model model = ModelFactory.createDefaultModel();
+		Resource resource = model.createResource(uri);
 		while(result.hasNext()) {
 			QuerySolution qs = result.next();
-			Resource property = qs.getResource("p");
-			Resource object = qs.getResource("o");
-			resource.addProperty((Property) property, object);
+			Property property = ResourceFactory.createProperty(qs.getResource(p).getURI());
+			boolean skipProperty = false;
+			for (int i = 0; i < propertiesToRemove.length; i++) {
+				if(property.getURI().contains(propertiesToRemove[i])) {
+					skipProperty = true;
+					break;
+				}
+			}
+			if(!skipProperty) {
+				try {
+					Resource object = qs.getResource(o);
+					resource.addProperty(property, object);
+				} catch(ClassCastException ex) {
+					Literal literal = qs.getLiteral(o);
+					resource.addLiteral(property, literal);
+				}
+			}
 		}
 		return resource;
 	}

@@ -6,6 +6,7 @@ import org.apache.jena.graph.Triple;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
@@ -45,7 +46,25 @@ public class SparqlServiceTest {
 	
 	@Test
 	public void retrieveResourceFromStringTest() {
-		@SuppressWarnings("unused")
 		Resource resource = SparqlService.queryResource("http://dbpedia.org/resource/Germany");
+		StmtIterator it = resource.listProperties();
+		int count = 0;
+		while(it.hasNext()) {
+			it.next();
+			count++;
+		}
+		assertEquals(202, count);
+	}
+	
+	@Test
+	public void retrieveResourceFromStringRmRDFTypeTest() {
+		Resource resource = SparqlService.queryResource("http://dbpedia.org/resource/Germany", "type");
+		StmtIterator it = resource.listProperties();
+		int count = 0;
+		while(it.hasNext()) {
+			it.next();
+			count++;
+		}
+		assertEquals(168, count);
 	}
 }

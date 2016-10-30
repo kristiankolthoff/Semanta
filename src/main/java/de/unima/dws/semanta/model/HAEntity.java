@@ -1,4 +1,4 @@
-package de.unima.dws.semanta.generator;
+package de.unima.dws.semanta.model;
 
 import java.util.ArrayList;
 import java.util.List;

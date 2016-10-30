@@ -2,7 +2,7 @@ package de.unima.dws.semanta;
 
 import java.util.List;
 
-import de.unima.dws.semanta.generator.HAEntity;
+import de.unima.dws.semanta.model.HAEntity;
 
 public class Application {
 

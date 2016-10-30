@@ -6,12 +6,13 @@ import java.util.List;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 
-import de.unima.dws.semanta.generator.EntitySelector;
-import de.unima.dws.semanta.generator.HAEntity;
 import de.unima.dws.semanta.generator.HAGenerator;
-import de.unima.dws.semanta.generator.NodeSumSelector;
 import de.unima.dws.semanta.generator.OAGenerator;
 import de.unima.dws.semanta.generator.PropertyHAGenerator;
+import de.unima.dws.semanta.model.HAEntity;
+import de.unima.dws.semanta.selector.EntitySelector;
+import de.unima.dws.semanta.selector.NodeSumSelector;
+import de.unima.dws.semanta.service.SparqlService;
 /**
  * Semanta is the main logical component for generating a semantic topic-based crossword
  * puzzle as combines strategies for selecting topic-related entities, generates HAEntities
@@ -37,7 +38,7 @@ public class Semanta {
 	public List<HAEntity> fetchEntities(String topic, int numEntities, boolean optionalAnswers) {
 		List<HAEntity> haEntities = new ArrayList<>();
 		for (int i = 0; i < numEntities; i++) {
-			Resource topicResource = ResourceFactory.createResource(topic);
+			Resource topicResource = SparqlService.queryResource("http://dbpedia.org/resource/Germany");
 			Resource haResource = this.selector.select(topicResource);
 			HAEntity entity = this.generator.generate(haResource, null, topicResource);
 			if(optionalAnswers) {

@@ -9,6 +9,7 @@ import de.unima.dws.semanta.generator.EasyOAGenerator;
 import de.unima.dws.semanta.generator.HAGenerator;
 import de.unima.dws.semanta.generator.OAGenerator;
 import de.unima.dws.semanta.generator.PropertyHAGenerator;
+import de.unima.dws.semanta.generator.PropertyLinkHAGenerator;
 import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.selector.EntitySelector;
@@ -17,7 +18,7 @@ import de.unima.dws.semanta.service.SparqlService;
 /**
  * Semanta is the main logical component for generating a semantic topic-based crossword
  * puzzle as combines strategies for selecting topic-related entities, generates HAEntities
- * based on the selected Resources and additionally identifies and retrieves related opational
+ * based on the selected Resources and additionally identifies and retrieves related optional
  * answers for each HAEntitiy.
  */
 public class Semanta {
@@ -35,7 +36,7 @@ public class Semanta {
 
 	public Semanta() {
 		this.selector = new OutEntitySelector();
-		this.generator = new PropertyHAGenerator();
+		this.generator = new PropertyLinkHAGenerator();
 		this.optionalGenerator = new EasyOAGenerator();
 	}
 	

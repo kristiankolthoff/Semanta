@@ -28,52 +28,59 @@ public class HAEntity {
 		this.oaResources = new ArrayList<>();
 	}
 	
-	public boolean addHint(String hint) {
-		return this.hints.add(hint);
+	public HAEntity addHint(String hint) {
+		this.hints.add(hint);
+		return this;
 	}
 	
-	public boolean addOptionalAnswer(Resource oaResource) {
-		return this.oaResources.add(oaResource);
+	public HAEntity addOptionalAnswer(Resource oaResource) {
+		this.oaResources.add(oaResource);
+		return this;
 	}
 
 	public List<String> getHints() {
 		return hints;
 	}
 
-	public void setHints(List<String> hints) {
+	public HAEntity setHints(List<String> hints) {
 		this.hints = hints;
+		return this;
 	}
 
 	public String getAnswer() {
 		return answer;
 	}
 
-	public void setAnswer(String answer) {
+	public HAEntity setAnswer(String answer) {
 		this.answer = answer;
+		return this;
 	}
 
 	public Resource getResource() {
 		return resource;
 	}
 
-	public void setResource(Resource resource) {
+	public HAEntity setResource(Resource resource) {
 		this.resource = resource;
+		return this;
 	}
 
 	public String getEntAbstract() {
 		return entAbstract;
 	}
 
-	public void setEntAbstract(String entAbstract) {
+	public HAEntity setEntAbstract(String entAbstract) {
 		this.entAbstract = entAbstract;
+		return this;
 	}
 
 	public List<Resource> getOAResources() {
 		return oaResources;
 	}
 
-	public void setOAResources(List<Resource> oaResources) {
+	public HAEntity setOAResources(List<Resource> oaResources) {
 		this.oaResources = oaResources;
+		return this;
 	}
 	
 	@Override

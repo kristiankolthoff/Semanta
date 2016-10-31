@@ -74,6 +74,12 @@ public class SparqlService {
 		return SparqlService.buildResource(result, uri, "p", "o", "wiki");
 	}
 	
+	
+	public static Resource queryResourceWithTypeHierachy(String uri) {
+		Resource resource = SparqlService.queryResource(uri);
+		return resource;
+	}
+	
 	private static Resource buildResource(ResultSet result, String uri, String p, 
 			String o, String... propertiesToRemove) {
 		Model model = ModelFactory.createDefaultModel();

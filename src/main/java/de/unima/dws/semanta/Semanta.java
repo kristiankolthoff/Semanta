@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
 
+import de.unima.dws.semanta.generator.EasyOAGenerator;
 import de.unima.dws.semanta.generator.HAGenerator;
 import de.unima.dws.semanta.generator.OAGenerator;
 import de.unima.dws.semanta.generator.PropertyHAGenerator;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.selector.EntitySelector;
-import de.unima.dws.semanta.selector.NodeSumSelector;
+import de.unima.dws.semanta.selector.OutEntitySelector;
 import de.unima.dws.semanta.service.SparqlService;
 /**
  * Semanta is the main logical component for generating a semantic topic-based crossword
@@ -25,20 +25,23 @@ public class Semanta {
 	private HAGenerator generator;
 	private OAGenerator optionalGenerator;
 	
-	public Semanta(EntitySelector selector, HAGenerator generator) {
+	public Semanta(EntitySelector selector, HAGenerator generator,
+			OAGenerator optionalGenerator) {
 		this.selector = selector;
 		this.generator = generator;
+		this.optionalGenerator = optionalGenerator;
 	}
 
 	public Semanta() {
-		this.selector = new NodeSumSelector();
+		this.selector = new OutEntitySelector();
 		this.generator = new PropertyHAGenerator();
+		this.optionalGenerator = new EasyOAGenerator();
 	}
 	
 	public List<HAEntity> fetchEntities(String topic, int numEntities, boolean optionalAnswers) {
 		List<HAEntity> haEntities = new ArrayList<>();
+		Resource topicResource = SparqlService.queryResource("http://dbpedia.org/resource/Germany");
 		for (int i = 0; i < numEntities; i++) {
-			Resource topicResource = SparqlService.queryResource("http://dbpedia.org/resource/Germany");
 			Resource haResource = this.selector.select(topicResource);
 			HAEntity entity = this.generator.generate(haResource, null, topicResource);
 			if(optionalAnswers) {

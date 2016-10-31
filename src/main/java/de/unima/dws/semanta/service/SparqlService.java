@@ -1,5 +1,8 @@
 package de.unima.dws.semanta.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -12,6 +15,8 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+
+import de.unima.dws.semanta.model.ResourceInfo;
 
 
 public class SparqlService {
@@ -33,6 +38,24 @@ public class SparqlService {
 		return qExec.execDescribe();
 	}
 	
+	public static List<ResourceInfo> queryTopic(String topic, int limit) {
+		final String query = "PREFIX dbo: <http://dbpedia.org/ontology/> " +
+				"SELECT ?s " +
+				"{" +
+				"?s rdfs:label ?o . " +
+				"FILTER regex(str(?o, " + topic + ")) . " +
+				"}" +
+				"LIMIT " + limit;
+		List<ResourceInfo> resourceInfos = new ArrayList<>();
+		ResultSet result = SparqlService.query(query);
+		while(result.hasNext()) {
+			QuerySolution qs = result.next();
+			Resource resource = qs.getResource("s");
+			resourceInfos.add(new ResourceInfo(resource, resource.getURI(), null));
+		}
+		return resourceInfos;
+	}
+	
 	public static Resource queryResource(String uri, String...propertiesToRemove) {
 		final String query = "SELECT ?p ?o " +
 				"{" +
@@ -40,6 +63,15 @@ public class SparqlService {
 				"}";
 		ResultSet result = SparqlService.query(query);
 		return SparqlService.buildResource(result, uri, "p", "o", propertiesToRemove);
+	}
+	
+	public static Resource queryResource(String uri) {
+		final String query = "SELECT ?p ?o " +
+				"{" +
+				"<" + uri + ">" + " ?p ?o . " +
+				"}";
+		ResultSet result = SparqlService.query(query);
+		return SparqlService.buildResource(result, uri, "p", "o", "wiki");
 	}
 	
 	private static Resource buildResource(ResultSet result, String uri, String p, 

@@ -10,7 +10,8 @@ public class PropertyHAGenerator implements HAGenerator {
 
 	
 	public HAEntity generate(Resource resource, Property property, Resource topicResource) {
-		return null;
+		System.out.println("generate HA");
+		return new HAEntity(resource);
 	}
 
 }

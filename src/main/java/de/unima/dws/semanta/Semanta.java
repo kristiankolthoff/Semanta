@@ -9,6 +9,7 @@ import de.unima.dws.semanta.generator.EasyOAGenerator;
 import de.unima.dws.semanta.generator.HAGenerator;
 import de.unima.dws.semanta.generator.OAGenerator;
 import de.unima.dws.semanta.generator.PropertyHAGenerator;
+import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.selector.EntitySelector;
 import de.unima.dws.semanta.selector.OutEntitySelector;
@@ -42,10 +43,10 @@ public class Semanta {
 		List<HAEntity> haEntities = new ArrayList<>();
 		Resource topicResource = SparqlService.queryResource("http://dbpedia.org/resource/Germany");
 		for (int i = 0; i < numEntities; i++) {
-			Resource haResource = this.selector.select(topicResource);
-			HAEntity entity = this.generator.generate(haResource, null, topicResource);
+			Entity resourceEntity = this.selector.select(topicResource);
+			HAEntity entity = this.generator.generate(resourceEntity, topicResource);
 			if(optionalAnswers) {
-				entity.setOAResources(this.optionalGenerator.generate(haResource, 3));
+				entity.setOAResources(this.optionalGenerator.generate(resourceEntity, 3));
 			}
 			haEntities.add(entity);
 		}

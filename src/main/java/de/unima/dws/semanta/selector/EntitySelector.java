@@ -2,6 +2,8 @@ package de.unima.dws.semanta.selector;
 
 import org.apache.jena.rdf.model.Resource;
 
+import de.unima.dws.semanta.model.Entity;
+
 @FunctionalInterface
 public interface EntitySelector {
 
@@ -13,7 +15,7 @@ public interface EntitySelector {
 	 * returning the same entity or entities which are linked to
 	 * the topic entitiy via the same semantic link among repeated calls.
 	 * @param topicResource the topic entity represented as a resource
-	 * @return the resource of the selected entity
+	 * @return an Entity contining the selected resource
 	 */
-	public Resource select(Resource topicResource);
+	public Entity select(Resource topicResource);
 }

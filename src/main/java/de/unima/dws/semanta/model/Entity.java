@@ -7,6 +7,7 @@ import org.apache.jena.graph.Triple;
 import org.apache.jena.graph.impl.LiteralLabel;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 
@@ -55,15 +56,40 @@ public class Entity {
 	}
 	
 	public Resource getSpecialOntType() {
-		return null;
+		List<Resource> resources = this.getTypes();
+		for(Resource source : resources) {
+			boolean occuredAsSubclass = false;
+			for(Resource target : resources) {
+				StmtIterator it = target.listProperties();
+				while(it.hasNext()) {
+					Triple triple = it.next().asTriple();
+					if(triple.getPredicate().getURI().equals(Settings.RDFS_SUBCLASS_OF) && 
+							source.getURI().equals(triple.getObject().getURI())) {
+								occuredAsSubclass = true;
+								break;
+							}
+				}
+			}
+			if(!occuredAsSubclass) {
+				return source;
+			}
+		}
+		return ResourceFactory.createResource();
 	}
 	
 	public Resource getMediumOntType() {
-		return null;
+		return ResourceFactory.createResource();
 	}
 	
 	public Resource getGeneralOntType() {
-		return null;
+		List<Resource> resources = this.getTypes();
+		for(Resource resource : resources) {
+			Statement stmt = resource.getProperty(ResourceFactory.createProperty(Settings.RDFS_SUBCLASS_OF));
+			if(stmt.asTriple().getObject().getURI().equals(Settings.OWL_THING)) {
+				return resource;
+			}
+		}
+		return ResourceFactory.createResource();
 	}
 	
 	public Resource getResource() {

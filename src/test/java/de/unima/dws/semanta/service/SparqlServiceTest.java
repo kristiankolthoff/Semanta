@@ -12,13 +12,14 @@ import org.apache.jena.rdf.model.StmtIterator;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.unima.dws.semanta.utilities.Settings;
+
 public class SparqlServiceTest {
 
 	
 	@Before
 	public void init() {
-		final String DBPEDIA_ENDPOINT = "http://dbpedia.org/sparql";
-		SparqlService.setEndpoint(DBPEDIA_ENDPOINT);
+		SparqlService.setEndpoint(Settings.DEFAULT_ENDPOINT_DBPEDIA);
 	}
 	
 	@Test
@@ -65,5 +66,29 @@ public class SparqlServiceTest {
 			count++;
 		}
 		assertEquals(168, count);
+	}
+	
+	@Test
+	public void queryResourceWithTypeHierachyTest() {
+		Resource resource = SparqlService.
+				queryResourceWithTypeHierachy("http://dbpedia.org/resource/Stanislaw_Tillich");
+		StmtIterator it = resource.listProperties();
+		while(it.hasNext()) {
+			Statement stmt = it.next();
+			Triple triple = stmt.asTriple();
+			if(triple.getPredicate().getURI().equals(Settings.RDF_TYPE) && 
+					triple.getObject().getURI().contains(Settings.DBO)) {
+				Resource typeResource = stmt.getResource();
+				StmtIterator typeIt = typeResource.listProperties();
+				System.out.println("---------------------------------------");
+				System.out.println(typeResource);
+				int count = 0;
+				while(typeIt.hasNext()) {
+					System.out.println(typeIt.next().asTriple());
+					count++;
+				}
+				assertNotEquals(0, count);
+			}
+		}
 	}
 }

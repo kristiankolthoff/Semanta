@@ -3,6 +3,7 @@ package de.unima.dws.semanta.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -15,8 +16,11 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 
 import de.unima.dws.semanta.model.ResourceInfo;
+import de.unima.dws.semanta.utilities.Settings;
 
 
 public class SparqlService {
@@ -74,9 +78,25 @@ public class SparqlService {
 		return SparqlService.buildResource(result, uri, "p", "o", "wiki");
 	}
 	
-	
 	public static Resource queryResourceWithTypeHierachy(String uri) {
+		return SparqlService.queryResourceWithTypeHierachy(uri, Settings.RDF_TYPE, Settings.DBO);
+	}
+	
+	
+	public static Resource queryResourceWithTypeHierachy(String uri, 
+			String propertyType, String ontTypeRegex) {
 		Resource resource = SparqlService.queryResource(uri);
+		Model model = resource.getModel();
+		StmtIterator it = resource.listProperties();
+		while(it.hasNext()) {
+			Statement stmt = it.next();
+			Triple triple = stmt.asTriple();
+			if(triple.getPredicate().getURI().equals(propertyType) &&
+					triple.getObject().getURI().contains(ontTypeRegex)) {
+				Resource typeResource = SparqlService.queryResource(triple.getObject().getURI());
+				model.add(typeResource.getModel());
+			}
+		}
 		return resource;
 	}
 	

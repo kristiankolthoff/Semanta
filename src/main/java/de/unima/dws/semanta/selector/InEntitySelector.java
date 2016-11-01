@@ -11,4 +11,16 @@ public class InEntitySelector implements EntitySelector{
 		return null;
 	}
 
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int size() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

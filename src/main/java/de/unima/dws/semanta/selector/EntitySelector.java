@@ -4,7 +4,6 @@ import org.apache.jena.rdf.model.Resource;
 
 import de.unima.dws.semanta.model.Entity;
 
-@FunctionalInterface
 public interface EntitySelector {
 
 	/**
@@ -18,4 +17,17 @@ public interface EntitySelector {
 	 * @return an Entity contining the selected resource
 	 */
 	public Entity select(Resource topicResource);
+	
+	/**
+	 * Clear the cache of already selected and retrieved
+	 * Entities
+	 */
+	public void clear();
+	
+	/**
+	 * Get the size of the current cache of Entities
+	 * @return size of entities cached
+	 */
+	public int size();
+
 }

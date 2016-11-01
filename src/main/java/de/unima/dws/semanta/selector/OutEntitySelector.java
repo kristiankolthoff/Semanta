@@ -27,7 +27,7 @@ public class OutEntitySelector implements EntitySelector{
 			Statement stmt = it.next();
 			Triple triple = stmt.asTriple();
 			if(selectTriple(triple)) {
-				Entity entity = new Entity(SparqlService.queryResource(triple.getObject().getURI()),
+				Entity entity = new Entity(SparqlService.queryResourceWithTypeHierachy(triple.getObject().getURI()),
 						ResourceFactory.createProperty(triple.getPredicate().getURI()), true);
 				cache.add(entity);
 				return entity;
@@ -62,8 +62,14 @@ public class OutEntitySelector implements EntitySelector{
 		return cache;
 	}
 
-	public void setCache(List<Entity> cache) {
-		this.cache = cache;
+	@Override
+	public void clear() {
+		this.cache.clear();
+	}
+
+	@Override
+	public int size() {
+		return this.cache.size();
 	}
 
 }

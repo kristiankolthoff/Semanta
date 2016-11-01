@@ -8,7 +8,6 @@ import org.apache.jena.rdf.model.Resource;
 import de.unima.dws.semanta.generator.EasyOAGenerator;
 import de.unima.dws.semanta.generator.HAGenerator;
 import de.unima.dws.semanta.generator.OAGenerator;
-import de.unima.dws.semanta.generator.PropertyHAGenerator;
 import de.unima.dws.semanta.generator.PropertyLinkHAGenerator;
 import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.model.HAEntity;

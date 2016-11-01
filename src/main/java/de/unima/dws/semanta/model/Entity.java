@@ -38,22 +38,33 @@ public class Entity {
 		this.forward = forward;
 	}
 	
-	public List<Resource> getTypes() {
-		StmtIterator it = resource.listProperties();
-		List<Resource> types = new ArrayList<>();
-		while(it.hasNext()) {
-			Statement stmt = it.next();
-			Triple triple = stmt.asTriple();
-			if(triple.getPredicate().getURI().equals(Settings.RDF_TYPE) &&
-					triple.getObject().getURI().contains(Settings.DBO)) {
-				//If complete resource of type property available, return this
-				//rather than plain string
-				types.add(stmt.getResource());
-			}
-		}
-		return types;
+	public List<Resource> getTypes(String propertyType, String ontTypeRegex) {
+		return Entity.getTypes(this.resource, propertyType, ontTypeRegex);
 	}
-
+	
+	public List<Resource> getTypes() {
+		return Entity.getTypes(this.resource, Settings.RDF_TYPE, Settings.DBO);
+	}
+	
+	public String getLabel(String lang) {
+		return Entity.getLabel(this.resource, lang);
+	}
+	
+	public String getLabel() {
+		return Entity.getLabel(this.resource, Settings.LANG);
+	}
+	
+	public Resource getSpecialOntType() {
+		return null;
+	}
+	
+	public Resource getMediumOntType() {
+		return null;
+	}
+	
+	public Resource getGeneralOntType() {
+		return null;
+	}
 	
 	public Resource getResource() {
 		return resource;
@@ -78,5 +89,76 @@ public class Entity {
 	public void setForward(boolean forward) {
 		this.forward = forward;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (forward ? 1231 : 1237);
+		result = prime * result
+				+ ((property == null) ? 0 : property.hashCode());
+		result = prime * result
+				+ ((resource == null) ? 0 : resource.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Entity other = (Entity) obj;
+		if (forward != other.forward)
+			return false;
+		if (property == null) {
+			if (other.property != null)
+				return false;
+		} else if (!property.equals(other.property))
+			return false;
+		if (resource == null) {
+			if (other.resource != null)
+				return false;
+		} else if (!resource.equals(other.resource))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Entity [resource=" + resource + ", property=" + property
+				+ ", forward=" + forward + "]";
+	}
 	
+	public static String getLabel(Resource resource, String lang) {
+		StmtIterator it = resource.listProperties();
+		while(it.hasNext()) {
+			Statement st = it.next();
+			Triple triple = st.asTriple();
+			if(triple.getPredicate().getURI().equals(Settings.RDFS_LABEL)) {
+				LiteralLabel literal = triple.getObject().getLiteral();
+				if(literal.language().equals(lang)) {
+					return literal.getValue().toString();
+				}
+			}
+		}
+		return null;
+	}
+	
+	public static List<Resource> getTypes(Resource resource, String propertyType, 
+			String ontTypeRegex) {
+		StmtIterator it = resource.listProperties();
+		List<Resource> types = new ArrayList<>();
+		while(it.hasNext()) {
+			Statement stmt = it.next();
+			Triple triple = stmt.asTriple();
+			if(triple.getPredicate().getURI().equals(propertyType) &&
+					triple.getObject().getURI().contains(ontTypeRegex)) {
+				types.add(stmt.getResource());
+			}
+		}
+		return types;
+	}
 }

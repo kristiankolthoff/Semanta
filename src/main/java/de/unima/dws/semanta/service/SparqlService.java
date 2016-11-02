@@ -84,6 +84,24 @@ public class SparqlService {
 		return SparqlService.query(sb.toString());
 	}
 	
+	public static ResultSet querySimilarResources(String uri, String type, int limit) {
+		final String query = "PREFIX dbo: <http://dbpedia.org/ontology/> " +
+							 "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
+					"SELECT ?s " +
+					"WHERE { " +
+					"{ " +
+					"?s rdf:type <" + type + "> . " +
+					"?s ?p <" + uri + "> . " +
+					"} UNION " +
+					"{ " +
+					"?s rdf:type <" + type + "> . " +
+					"<" + uri + "> ?h ?s . " + 
+					"} " +
+					"} " +
+					"LIMIT " + limit;
+		return SparqlService.query(query);
+	}
+	
 	public static Resource queryResource(String uri, String...propertiesToRemove) {
 		final String query = "SELECT ?p ?o " +
 				"{" +

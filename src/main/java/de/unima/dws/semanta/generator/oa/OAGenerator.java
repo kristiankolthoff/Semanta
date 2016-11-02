@@ -1,4 +1,4 @@
-package de.unima.dws.semanta.generator;
+package de.unima.dws.semanta.generator.oa;
 
 import java.util.List;
 
@@ -17,6 +17,6 @@ public interface OAGenerator {
 	 * @param numEntities the number of resources that should be generated
 	 * @return a list of generated resources according to the numEntities number
 	 */
-	public List<Resource> generate(Entity entitiy, int numEntities);
+	public List<Resource> generate(Entity entitiy, Resource topicResource, int numEntities);
 
 }

@@ -5,15 +5,15 @@ import java.util.List;
 
 import org.apache.jena.rdf.model.Resource;
 
-import de.unima.dws.semanta.generator.EasyOAGenerator;
-import de.unima.dws.semanta.generator.HAGenerator;
-import de.unima.dws.semanta.generator.OAGenerator;
-import de.unima.dws.semanta.generator.SummaryHAGenerator;
+import de.unima.dws.semanta.generator.ha.HAGenerator;
+import de.unima.dws.semanta.generator.ha.SummaryHAGenerator;
+import de.unima.dws.semanta.generator.oa.HardOAGenerator;
+import de.unima.dws.semanta.generator.oa.OAGenerator;
 import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.selector.EntitySelector;
-import de.unima.dws.semanta.selector.NodeSumSelector;
+import de.unima.dws.semanta.selector.OutEntitySelector;
 import de.unima.dws.semanta.service.SparqlService;
 /**
  * Semanta is the main logical component for generating a semantic topic-based crossword
@@ -35,9 +35,9 @@ public class Semanta {
 	}
 
 	public Semanta() {
-		this.selector = new NodeSumSelector();
+		this.selector = new OutEntitySelector();
 		this.generator = new SummaryHAGenerator();
-		this.optionalGenerator = new EasyOAGenerator();
+		this.optionalGenerator = new HardOAGenerator();
 	}
 	
 	public List<HAEntity> fetchEntities(String topic, int numEntities, boolean optionalAnswers) {
@@ -47,7 +47,7 @@ public class Semanta {
 			Entity resourceEntity = this.selector.select(topicResource);
 			HAEntity entity = this.generator.generate(resourceEntity, topicResource);
 			if(optionalAnswers) {
-				entity.setOAResources(this.optionalGenerator.generate(resourceEntity, 3));
+				entity.setOAResources(this.optionalGenerator.generate(resourceEntity, topicResource, 3));
 			}
 			haEntities.add(entity);
 		}

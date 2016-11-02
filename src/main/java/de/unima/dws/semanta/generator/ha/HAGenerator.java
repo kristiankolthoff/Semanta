@@ -1,4 +1,4 @@
-package de.unima.dws.semanta.generator;
+package de.unima.dws.semanta.generator.ha;
 
 import org.apache.jena.rdf.model.Resource;
 

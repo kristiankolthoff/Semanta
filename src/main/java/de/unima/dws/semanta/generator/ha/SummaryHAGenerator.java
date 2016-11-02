@@ -1,4 +1,4 @@
-package de.unima.dws.semanta.generator;
+package de.unima.dws.semanta.generator.ha;
 
 import java.io.IOException;
 import java.io.InputStream;

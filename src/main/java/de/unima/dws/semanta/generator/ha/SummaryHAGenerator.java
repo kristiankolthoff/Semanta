@@ -1,15 +1,7 @@
 package de.unima.dws.semanta.generator.ha;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
-import opennlp.tools.sentdetect.SentenceDetector;
-import opennlp.tools.sentdetect.SentenceDetectorME;
-import opennlp.tools.sentdetect.SentenceModel;
 
 import org.apache.jena.graph.Triple;
 import org.apache.jena.graph.impl.LiteralLabel;
@@ -18,35 +10,18 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 
 
-
 import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.model.HAEntity;
+import de.unima.dws.semanta.service.NLPService;
 import de.unima.dws.semanta.utilities.Settings;
 
 public class SummaryHAGenerator implements HAGenerator {
 
-	private SentenceDetector sentenceDetector;
-	
-	public SummaryHAGenerator() {
-		this.init();
-	}
-	
-	private void init() {
-		InputStream in = null;
-		try {
-			in = Files.newInputStream(Paths.get("src/main/resources/nlpmodels/en-sent.bin"));
-			final SentenceModel sentenceModel = new SentenceModel(in);
-			in.close();
-			this.sentenceDetector = new SentenceDetectorME(sentenceModel);
-		} catch(IOException ex) {
-			ex.printStackTrace();
-		}
-	}
 	
 	@Override
 	public HAEntity generate(Entity entity, Resource topicResource) {
 		String summary = this.extractSummary(entity.getResource());
-		String[] sentences = this.getSentences(summary);
+		String[] sentences = NLPService.detectSentences(summary);
 		String hint = this.getHint(entity, sentences, 1);
 		return new HAEntity(entity.getResource()).
 				addHint(hint).
@@ -72,12 +47,6 @@ public class SummaryHAGenerator implements HAGenerator {
 		return sb.toString().trim();
 	}
 	
-	public String[] getSentences(String content) {
-		if(content == null || content.isEmpty()) {
-			return new String[0];	
-		}
-		return this.sentenceDetector.sentDetect(content);
-	}
 	
 	public String extractSummary(Resource resource) {
 		StmtIterator it = resource.listProperties();

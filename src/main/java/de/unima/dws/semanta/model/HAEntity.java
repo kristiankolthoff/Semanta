@@ -131,7 +131,8 @@ public class HAEntity {
 	@Override
 	public String toString() {
 		return "HAEntity [hints=" + hints + ", answer=" + answer
-				+ ", resource=" + resource + "]";
+				+ ", resource=" + resource + ", entAbstract=" + entAbstract
+				+ ", oaResources=" + oaResources + "]";
 	}
-	
+
 }

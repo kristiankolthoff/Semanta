@@ -14,13 +14,16 @@ import de.unima.dws.semanta.service.SparqlService;
 public class NodeSumSelector implements EntitySelector {
 
 	private List<Entity> cache;
+	private List<String> filterSubjects;
+	private List<String> filterPredicates;
 	
 	public NodeSumSelector() {
 		this.cache = new ArrayList<>();
+		this.filterSubjects = new ArrayList<>();
+		this.filterPredicates = new ArrayList<>();
 	}
+	
 	public Entity select(Resource topicResource) {
-		List<String> filterSubjects = new ArrayList<>();
-		List<String> filterPredicates = new ArrayList<>();
 		for(Entity entity : this.cache) {
 			filterSubjects.add(entity.getResource().getURI());
 			filterPredicates.add(entity.getProperty().getURI());

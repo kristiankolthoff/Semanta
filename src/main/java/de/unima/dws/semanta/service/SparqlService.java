@@ -60,6 +60,30 @@ public class SparqlService {
 		return resourceInfos;
 	}
 	
+	public static ResultSet queryNodeSumEntities(String uri, int threshold, 
+			List<String> filterSubjects, List<String> filterPredicates) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("PREFIX dbo: <http://dbpedia.org/ontology/> " +
+		"SELECT ?s ?p (count(?p1) as ?c) " +
+		"WHERE {" +
+		"?s ?p <" + uri + "> . " +
+		"?s ?p1 ?out . ");
+		for(String filterS : filterSubjects) {
+			sb.append("FILTER(!REGEX(STR(?s), \"" + filterS + "\")) . ");
+		}
+		//Note that this is only necessecary if hints are generated directly
+		//by the linking property to the topic entity. Otherwise, we might
+		//lose interesing entites
+		for(String filterP : filterPredicates) {
+			sb.append("FILTER(!REGEX(STR(?p), \"" + filterP + "\")) . ");
+		}
+		sb.append("} ");
+		sb.append("group by ?s ?p " +
+		"having (count(?out) > " + threshold + ") " +
+		"order by desc(?c) ");
+		return SparqlService.query(sb.toString());
+	}
+	
 	public static Resource queryResource(String uri, String...propertiesToRemove) {
 		final String query = "SELECT ?p ?o " +
 				"{" +
@@ -75,7 +99,7 @@ public class SparqlService {
 				"<" + uri + ">" + " ?p ?o . " +
 				"}";
 		ResultSet result = SparqlService.query(query);
-		return SparqlService.buildResource(result, uri, "p", "o", "wiki");
+		return SparqlService.buildResource(result, uri, "p", "o", "wiki", "thumbnail");
 	}
 	
 	public static Resource queryResourceWithTypeHierachy(String uri) {

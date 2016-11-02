@@ -81,6 +81,10 @@ public class Entity {
 		return ResourceFactory.createResource();
 	}
 	
+	public boolean isTyped() {
+		return !getTypes().isEmpty();
+	}
+	
 	public Resource getGeneralOntType() {
 		List<Resource> resources = this.getTypes();
 		for(Resource resource : resources) {

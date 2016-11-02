@@ -8,11 +8,12 @@ import org.apache.jena.rdf.model.Resource;
 import de.unima.dws.semanta.generator.EasyOAGenerator;
 import de.unima.dws.semanta.generator.HAGenerator;
 import de.unima.dws.semanta.generator.OAGenerator;
-import de.unima.dws.semanta.generator.PropertyLinkHAGenerator;
+import de.unima.dws.semanta.generator.SummaryHAGenerator;
 import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.model.HAEntity;
+import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.selector.EntitySelector;
-import de.unima.dws.semanta.selector.OutEntitySelector;
+import de.unima.dws.semanta.selector.NodeSumSelector;
 import de.unima.dws.semanta.service.SparqlService;
 /**
  * Semanta is the main logical component for generating a semantic topic-based crossword
@@ -34,8 +35,8 @@ public class Semanta {
 	}
 
 	public Semanta() {
-		this.selector = new OutEntitySelector();
-		this.generator = new PropertyLinkHAGenerator();
+		this.selector = new NodeSumSelector();
+		this.generator = new SummaryHAGenerator();
 		this.optionalGenerator = new EasyOAGenerator();
 	}
 	
@@ -51,6 +52,10 @@ public class Semanta {
 			haEntities.add(entity);
 		}
 		return haEntities;
+	}
+	
+	public List<ResourceInfo> fetchResources(String topic) {
+		return null;
 	}
 
 	public EntitySelector getSelector() {

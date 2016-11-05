@@ -3,6 +3,8 @@ package de.unima.dws.semanta;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.jena.rdf.model.Resource;
 
 import de.unima.dws.semanta.generator.ha.HAGenerator;
@@ -15,6 +17,7 @@ import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.selector.EntitySelector;
 import de.unima.dws.semanta.selector.OutEntitySelector;
 import de.unima.dws.semanta.service.SparqlService;
+import de.unima.dws.semanta.utilities.Settings;
 /**
  * Semanta is the main logical component for generating a semantic topic-based crossword
  * puzzle as combines strategies for selecting topic-related entities, generates HAEntities
@@ -35,6 +38,12 @@ public class Semanta {
 	}
 
 	public Semanta() {
+		initialize();
+	}
+	
+	@PostConstruct
+	public void initialize() {
+		SparqlService.setEndpoint(Settings.DEFAULT_ENDPOINT_DBPEDIA);
 		this.selector = new OutEntitySelector();
 		this.generator = new SummaryHAGenerator();
 		this.optionalGenerator = new HardOAGenerator();

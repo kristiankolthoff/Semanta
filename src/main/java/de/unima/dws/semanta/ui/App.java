@@ -3,6 +3,10 @@ package de.unima.dws.semanta.ui;
 
 import com.airhacks.afterburner.injection.Injector;
 
+import de.unima.dws.semanta.crossword.model.Crossword;
+import de.unima.dws.semanta.crossword.model.HAWord;
+import de.unima.dws.semanta.crossword.model.SemaCrossword;
+import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.ui.home.HomeView;
 import de.unima.dws.semanta.ui.main.MainView;
 
@@ -17,7 +21,15 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+    	Crossword crossword = new SemaCrossword();
+    	crossword.addWord(new HAWord(
+				new HAEntity(null, "test", null, null, null)), 0, 1, 3, 1);
+		crossword.addWord(new HAWord(
+				new HAEntity(null, "semanta", null, null, null)), 1, 0, 1, 6);
+		crossword.addWord(new HAWord(
+				new HAEntity(null, "aborting", null, null, null)), 1, 6, 8, 6);
         Map<Object, Object> customProperties = new HashMap<>();
+        customProperties.put("crossword", crossword);
         Injector.setConfigurationSource(customProperties::get);
 
         MainView appView = new MainView();

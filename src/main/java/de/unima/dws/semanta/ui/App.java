@@ -4,6 +4,7 @@ package de.unima.dws.semanta.ui;
 import com.airhacks.afterburner.injection.Injector;
 
 import de.unima.dws.semanta.ui.home.HomeView;
+import de.unima.dws.semanta.ui.main.MainView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,7 @@ public class App extends Application {
         Map<Object, Object> customProperties = new HashMap<>();
         Injector.setConfigurationSource(customProperties::get);
 
-        HomeView appView = new HomeView();
+        MainView appView = new MainView();
         Scene scene = new Scene(appView.getView());
         stage.setTitle("Semanta : Topic-Based Crossword Puzzle Generation");
         final String uri = getClass().getResource("app.css").toExternalForm();

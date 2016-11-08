@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 
-
 import de.unima.dws.semanta.Semanta;
 import de.unima.dws.semanta.model.HAEntity;
 import javafx.concurrent.Task;
@@ -18,6 +17,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 
 public class HomePresenter implements Initializable{
 
@@ -26,6 +27,12 @@ public class HomePresenter implements Initializable{
 	
 	@FXML
 	Label label2;
+	
+	@FXML
+	TextField text1;
+	
+	@FXML
+	TextField text2;
 	
 	@FXML
 	Button button;
@@ -38,12 +45,12 @@ public class HomePresenter implements Initializable{
 	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		indicator.setProgress(-1);
-		indicator.setVisible(false);
+		text1.setFocusTraversable(true);
 		System.out.println("HomePresenter created");
 	}
 	
 	public void findResources() {
+		text2.setFocusTraversable(true);
 		indicator.setVisible(true);
 		System.out.println("hello world from afterburner.fx");
 		Task<List<HAEntity>> longTask = new Task<List<HAEntity>>() {

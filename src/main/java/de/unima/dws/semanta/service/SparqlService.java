@@ -1,7 +1,10 @@
 package de.unima.dws.semanta.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Query;
@@ -18,6 +21,9 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.vocabulary.VCARD;
+import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
 
 import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.utilities.Settings;
@@ -41,33 +47,32 @@ public class SparqlService {
 		qExec = QueryExecutionFactory.sparqlService(endpoint, QueryFactory.create(query));
 		return qExec.execDescribe();
 	}
-	
-		// Get topics related to a search word
-	public static List<ResourceInfo> getTopics(String topic, int limit) {
-		final StringBuilder query = new StringBuilder();
-		query.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n");
-		query.append("select distinct ?s ?o where {\n");
-		query.append("?s rdfs:label ?o.\n");
-		query.append("FILTER (lang(?o) = 'en').\n");
-		query.append("?o <bif:contains> \"");
-		query.append(topic);
-		query.append("\".} LIMIT ");
-		query.append(limit);
-		
-		System.out.println(query.toString());
 
-		List<ResourceInfo> resourceInfos = new ArrayList<>();
-		ResultSet result = SparqlService.query(query.toString());
-		while(result.hasNext()) {
-			QuerySolution qs = result.next();
-			Resource resource = qs.getResource("s");
-			Literal label =  qs.getLiteral("o");
-			// resource.addProperty(VCARD.LABEL, qs.get("o"));
+	// Get topics related to a search word
+		public static List<ResourceInfo> getTopics(String topic, int limit) {
+			final StringBuilder query = new StringBuilder();
+			query.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n");
+			query.append("select distinct ?s ?o where {\n");
+			query.append("?s rdfs:label ?o.\n");
+			query.append("FILTER (lang(?o) = 'en').\n");
+			query.append("?o <bif:contains> \"");
+			query.append(topic);
+			query.append("\".} LIMIT ");
+			query.append(limit);
 			
-			resourceInfos.add(new ResourceInfo(resource, resource.getURI(),null, label.toString()));
+			System.out.println(query.toString());
+
+			List<ResourceInfo> resourceInfos = new ArrayList<>();
+			ResultSet result = SparqlService.query(query.toString());
+			while(result.hasNext()) {
+				QuerySolution qs = result.next();
+				Resource resource = qs.getResource("s");
+				Literal label =  qs.getLiteral("o");
+				
+				resourceInfos.add(new ResourceInfo(resource, resource.getURI(),null, label.toString()));
+			}
+			return resourceInfos;
 		}
-		return resourceInfos;
-	}
 	
 	public static List<ResourceInfo> queryTopic(String topic, int limit) {
 		final String query = "PREFIX dbo: <http://dbpedia.org/ontology/> " +

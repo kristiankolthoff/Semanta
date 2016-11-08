@@ -53,7 +53,7 @@ public class SparqlServiceTest {
 			it.next();
 			count++;
 		}
-		assertEquals(202, count);
+		assertEquals(193, count);
 	}
 	
 	@Test

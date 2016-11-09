@@ -42,6 +42,33 @@ public class SparqlService {
 		return qExec.execDescribe();
 	}
 	
+		// Get topics related to a search word
+	public static List<ResourceInfo> getTopics(String topic, int limit) {
+		final StringBuilder query = new StringBuilder();
+		query.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n");
+		query.append("select distinct ?s where {\n");
+		query.append("?s rdfs:label ?o.\n");
+		query.append("FILTER (lang(?o) = 'en').\n");
+		query.append("?o <bif:contains> \"");
+		query.append(topic);
+		query.append("\".} LIMIT ");
+		query.append(limit);
+		
+		System.out.println(query.toString());
+
+		List<ResourceInfo> resourceInfos = new ArrayList<>();
+		ResultSet result = SparqlService.query(query.toString());
+		while(result.hasNext()) {
+			QuerySolution qs = result.next();
+			Resource resource = qs.getResource("s");
+			
+			// resource.addProperty(VCARD.LABEL, qs.get("o"));
+			
+			resourceInfos.add(new ResourceInfo(resource, resource.getURI(), null));
+		}
+		return resourceInfos;
+	}
+	
 	public static List<ResourceInfo> queryTopic(String topic, int limit) {
 		final String query = "PREFIX dbo: <http://dbpedia.org/ontology/> " +
 				"SELECT ?s " +

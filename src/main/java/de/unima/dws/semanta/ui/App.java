@@ -32,7 +32,8 @@ public class App extends Application {
         customProperties.put("crossword", crossword);
         Injector.setConfigurationSource(customProperties::get);
 
-        MainView appView = new MainView();
+        //MainView appView = new MainView();
+        HomeView appView = new HomeView();
         Scene scene = new Scene(appView.getView());
         stage.setTitle("Semanta : Topic-Based Crossword Puzzle Generation");
         final String uri = getClass().getResource("app.css").toExternalForm();

@@ -3,11 +3,12 @@
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.unima.dws.semanta.ui.home.HomePresenter">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="551.0" prefWidth="433.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="de.unima.dws.semanta.ui.home.HomePresenter">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -48,22 +49,26 @@
         </Menu>
       </menus>
     </MenuBar>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" minWidth="283.0" prefHeight="527.0" prefWidth="344.0" snapToPixel="true" VBox.vgrow="ALWAYS">
       <children>
-        <Label fx:id="label1" alignment="CENTER" layoutX="149.0" layoutY="123.0" style="&#10;" text="Drag components from Library here…" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
+        <Label fx:id="label1" alignment="CENTER" layoutX="136.0" layoutY="473.0" prefWidth="113.0" style="&#10;" text="Drag components from Library here…" textAlignment="CENTER" wrapText="false">
           <font>
-            <Font size="18.0" />
+            <Font size="18.0" fx:id="x1" />
           </font>
+          <textFill>
+            <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
+          </textFill>
         </Label>
-            <Button fx:id="button" layoutX="272.0" layoutY="233.0" mnemonicParsing="false" onAction="#findResources" text="Button" />
-            <Label fx:id="label2" alignment="CENTER" layoutX="149.0" layoutY="171.0" style="&#10;" text="Drag components from Library here…" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <ProgressIndicator fx:id="indicator" layoutX="286.0" layoutY="293.0" visible="false" />
-            <TextField fx:id="text1" layoutX="149.0" layoutY="76.0" prefHeight="31.0" prefWidth="32.0" />
-            <TextField fx:id="text2" layoutX="181.0" layoutY="76.0" prefHeight="31.0" prefWidth="32.0" />
+        <Button fx:id="button" layoutX="27.0" layoutY="464.0" mnemonicParsing="false" onAction="#findResources" prefHeight="38.0" prefWidth="90.0" text="Button" />
+        <Label fx:id="label2" alignment="CENTER" font="$x1" layoutX="285.0" layoutY="473.0" prefWidth="113.0" style="&#10;" text="Drag components from Library here…" textAlignment="CENTER" textFill="$x2" wrapText="false" />
+        <ListView fx:id="LstViewTopics" layoutX="14.0" layoutY="95.0" onMouseClicked="#startGameAction" prefHeight="313.0" prefWidth="405.0" />
+        <TextField id="TxtField" fx:id="TxtFieldSearch" alignment="CENTER" blendMode="MULTIPLY" depthTest="INHERIT" focusTraversable="true" layoutX="43.0" layoutY="14.0" mouseTransparent="false" pickOnBounds="false" prefHeight="45.0" prefWidth="298.0" promptText="type something">
+          <effect>
+            <InnerShadow color="#3385ff" />
+          </effect>
+        </TextField>
+        <Button fx:id="BtnSearch" cancelButton="false" contentDisplay="CENTER" defaultButton="true" layoutX="345.0" layoutY="14.0" mnemonicParsing="false" onAction="#getTopicsAction" prefHeight="45.0" text="Search" textAlignment="CENTER" textOverrun="ELLIPSIS" underline="false" />
+        <ProgressIndicator fx:id="indicator" layoutX="186.0" layoutY="417.0" prefHeight="47.0" prefWidth="38.5" progress="0.0" />
       </children>
     </AnchorPane>
   </children>

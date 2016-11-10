@@ -43,7 +43,10 @@ public class SimpleCrosswordGenerator implements CrosswordGenerator{
 				//Check for letter matches with target label
 				for (int i = 0; i < label.length(); i++) {
 					if(cell.getLabel().equals(String.valueOf(label.charAt(i)))) {
-						words.add(getWord(word, cell, i, wordCurr.getOrientation()));
+						HAWord possibleWord = getWord(word, cell, i, wordCurr.getOrientation());
+						if(crossword.validateWord(possibleWord)) {
+							words.add(possibleWord);
+						}
 					}
 				}
 			}
@@ -65,7 +68,7 @@ public class SimpleCrosswordGenerator implements CrosswordGenerator{
 		} else if(orientation == Orientation.VERTICAL) {
 			int count = 0;
 			for (int i = matchCell.getX()-matchPos; i < 
-					originalWord.getWord().length()-matchPos ; i++) {
+					originalWord.getWord().length()+matchCell.getX()-matchPos ; i++) {
 				word.addCell(new Cell(i, matchCell.getY(), 
 						String.valueOf(originalWord.getWord().charAt(count)), ""));
 				count++;

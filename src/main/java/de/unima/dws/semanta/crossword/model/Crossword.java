@@ -12,6 +12,7 @@ public class Crossword implements Iterable<HAWord>, Serializable, Supplier<Doubl
 	
 	private static final long serialVersionUID = 1L;
 	private List<HAWord> words;
+	private double score;
 	
 	public Crossword() {
 		this.words = new ArrayList<>();
@@ -208,11 +209,24 @@ public class Crossword implements Iterable<HAWord>, Serializable, Supplier<Doubl
 	public void write(Path path) {
 		
 	}
-
+	
 	@Override
 	public Double get() {
-		return 0.4;
+		this.score = (double) (getWidth() * getHeight());
+		return score;
 	}
 
+	public double getScore() {
+		return score;
+	}
+
+	public void setScore(double score) {
+		this.score = score;
+	}
+
+	@Override
+	public String toString() {
+		return "Crossword [score=" + score + "]";
+	}
 
 }

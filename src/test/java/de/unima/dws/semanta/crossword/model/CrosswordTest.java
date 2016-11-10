@@ -11,11 +11,11 @@ import de.unima.dws.semanta.model.HAEntity;
 
 public class CrosswordTest {
 
-	private SemaCrossword crossword;
+	private Crossword crossword;
 	
 	@Before
 	public void init() {
-		this.crossword = new SemaCrossword();
+		this.crossword = new Crossword();
 	}
 	
 	@Test
@@ -75,8 +75,8 @@ public class CrosswordTest {
 	public void cellTest() {
 		this.crossword.addWord(new HAWord(
 				new HAEntity(null, "test", null, null, null)), 0, 0, 3, 0);
-		Iterator<Word> words = this.crossword.iterator();
-		Word word = words.next();
+		Iterator<HAWord> words = this.crossword.iterator();
+		HAWord word = words.next();
 		Iterator<Cell> it = word.iterator();
 		Cell c1 = it.next();
 		Cell c2 = it.next();

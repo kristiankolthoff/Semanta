@@ -46,7 +46,7 @@ public class SparqlService {
 	public static List<ResourceInfo> getTopics(String topic, int limit) {
 		final StringBuilder query = new StringBuilder();
 		query.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n");
-		query.append("select distinct ?s where {\n");
+		query.append("select distinct ?s ?o where {\n");
 		query.append("?s rdfs:label ?o.\n");
 		query.append("FILTER (lang(?o) = 'en').\n");
 		query.append("?o <bif:contains> \"");
@@ -61,10 +61,10 @@ public class SparqlService {
 		while(result.hasNext()) {
 			QuerySolution qs = result.next();
 			Resource resource = qs.getResource("s");
-			
+			Literal label =  qs.getLiteral("o");
 			// resource.addProperty(VCARD.LABEL, qs.get("o"));
 			
-			resourceInfos.add(new ResourceInfo(resource, resource.getURI(), null));
+			resourceInfos.add(new ResourceInfo(resource, resource.getURI(),null, label.toString()));
 		}
 		return resourceInfos;
 	}
@@ -82,7 +82,7 @@ public class SparqlService {
 		while(result.hasNext()) {
 			QuerySolution qs = result.next();
 			Resource resource = qs.getResource("s");
-			resourceInfos.add(new ResourceInfo(resource, resource.getURI(), null));
+			resourceInfos.add(new ResourceInfo(resource, resource.getURI(), null, null));
 		}
 		return resourceInfos;
 	}

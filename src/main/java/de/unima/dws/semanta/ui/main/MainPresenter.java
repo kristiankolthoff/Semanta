@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 import de.unima.dws.semanta.crossword.model.Cell;
 import de.unima.dws.semanta.crossword.model.Crossword;
-import de.unima.dws.semanta.crossword.model.Word;
+import de.unima.dws.semanta.crossword.model.HAWord;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -33,7 +33,7 @@ public class MainPresenter implements Initializable{
 	
 	private Map<Cell, TextField> cellMap;
 	private Map<TextField, Cell> textMap;
-	private Map<Cell, Word> wordMap;
+	private Map<Cell, HAWord> wordMap;
 	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -53,10 +53,11 @@ public class MainPresenter implements Initializable{
             rowConst.setPrefHeight(30);
             grid.getRowConstraints().add(rowConst);         
         }
-		grid.setGridLinesVisible(false);
-		for(Word word : crossword) {
+		grid.setGridLinesVisible(true);
+		for(HAWord word : crossword) {
 			for(Cell cell : word) {
 				TextField text = new TextField();
+				text.setText(cell.getLabel());
 				cell.getSolutionProperty().bind(text.textProperty());
 				text.textProperty().addListener((observable, oldValue, newValue) -> {
 					if(newValue.length() > 1) {
@@ -64,7 +65,7 @@ public class MainPresenter implements Initializable{
 					} else if(newValue.length() == 1){
 						Cell cellSelected = textMap.get(text);
 						System.out.println("selected: " + cellSelected);
-						Word wordCurr = wordMap.get(cellSelected);
+						HAWord wordCurr = wordMap.get(cellSelected);
 						boolean next = false;
 						for(Cell cellCurr : wordCurr) {
 							if(next) {
@@ -89,7 +90,7 @@ public class MainPresenter implements Initializable{
 	
 	public void validate() {
 		System.out.println("validate");
-		for(Word word : crossword) {
+		for(HAWord word : crossword) {
 			for(Cell cell : word) {
 				if(cell.isValid()) {
 					System.out.println("Cell valid : " +  cell);

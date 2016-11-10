@@ -6,12 +6,14 @@ public class ResourceInfo {
 	
 	private Resource resource;
 	private String uri;
+	private String label;
 	private String type;
 	
-	public ResourceInfo(Resource resource, String uri, String type) {
+	public ResourceInfo(Resource resource, String uri, String type, String label) {
 		this.resource = resource;
 		this.uri = uri;
 		this.type = type;
+		this.label = label;
 	}
 
 	public String getUri() {
@@ -36,6 +38,21 @@ public class ResourceInfo {
 
 	public void setResource(Resource resource) {
 		this.resource = resource;
+	}
+
+	
+
+	@Override
+	public String toString() {
+		return "ResourceInfo [label=" + label + "]";
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 	
 	

@@ -5,9 +5,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Supplier;
 
 
-public class Crossword implements Iterable<HAWord>, Serializable{
+public class Crossword implements Iterable<HAWord>, Serializable, Supplier<Double>{
 	
 	private static final long serialVersionUID = 1L;
 	private List<HAWord> words;
@@ -206,6 +207,11 @@ public class Crossword implements Iterable<HAWord>, Serializable{
 
 	public void write(Path path) {
 		
+	}
+
+	@Override
+	public Double get() {
+		return 0.4;
 	}
 
 

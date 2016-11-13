@@ -21,9 +21,10 @@ public class SimpleCrosswordGenerator implements CrosswordGenerator{
 	@Override
 	public Crossword generate(List<HAWord> words) {
 		Crossword crossword = new Crossword();
-		Collections.sort(words, (first, second) -> {
-			return second.getWord().length() - first.getWord().length();
-		});
+//		Collections.sort(words, (first, second) -> {
+//			return second.getWord().length() - first.getWord().length();
+//		});
+		Collections.shuffle(words);
 		for (int i = 0; i < words.size(); i++) {
 			HAWord word = words.get(i);
 			List<HAWord> possibleWords = getPositions(crossword, word);

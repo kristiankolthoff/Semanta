@@ -32,13 +32,19 @@ public class App extends Application {
 //				new HAEntity(null, "aborting", null, null, null)), 1, 6, 8, 6);
 //    	CrosswordGenerator generator = new SimpleCrosswordGenerator();
     	CrosswordGenerator generator = new InternalGreedyCrosswordGenerator(
-    			new SimpleCrosswordGenerator(), 10, null);
+    			new SimpleCrosswordGenerator(), 50, null);
 		Crossword crossword = generator.generate(
 				new HAWord(new HAEntity(null, "tested", null, null, null)),
 				new HAWord(new HAEntity(null, "semanta", null, null, null)),
 				new HAWord(new HAEntity(null, "barbara", null, null, null)),
 				new HAWord(new HAEntity(null, "software", null, null, null)),
 				new HAWord(new HAEntity(null, "engineering", null, null, null)),
+				new HAWord(new HAEntity(null, "amen", null, null, null)),
+				new HAWord(new HAEntity(null, "timberners", null, null, null)),
+				new HAWord(new HAEntity(null, "norbertlammert", null, null, null)),
+				new HAWord(new HAEntity(null, "robben", null, null, null)),
+				new HAWord(new HAEntity(null, "oliverkahn", null, null, null)),
+				new HAWord(new HAEntity(null, "ronaldo", null, null, null)),
 				new HAWord(new HAEntity(null, "angel", null, null, null)));
 		crossword.normalize();
         Map<Object, Object> customProperties = new HashMap<>();

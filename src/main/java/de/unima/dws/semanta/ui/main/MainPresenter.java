@@ -53,7 +53,7 @@ public class MainPresenter implements Initializable{
             rowConst.setPrefHeight(30);
             grid.getRowConstraints().add(rowConst);         
         }
-		grid.setGridLinesVisible(true);
+		grid.setGridLinesVisible(false);
 		for(HAWord word : crossword) {
 			for(Cell cell : word) {
 				TextField text = new TextField();

@@ -210,9 +210,23 @@ public class Crossword implements Iterable<HAWord>, Serializable, Supplier<Doubl
 		
 	}
 	
+	private double vertToHorRatio() {
+		int numHor = 0, numVert = 0;
+		for(HAWord word : words) {
+			if(word.getOrientation() == Orientation.HORIZONTAL) {
+				numHor++;
+			} else {
+				numVert++;
+			}
+		}
+		return numVert / numHor;
+	}
+	
 	@Override
 	public Double get() {
 		this.score = (double) (getWidth() * getHeight());
+		double ratio = vertToHorRatio();
+		this.score += 100 * Math.pow((vertToHorRatio()-1), 2);
 		return score;
 	}
 

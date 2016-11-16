@@ -21,10 +21,10 @@ public class SimpleCrosswordGenerator implements CrosswordGenerator{
 	@Override
 	public Crossword generate(List<HAWord> words) {
 		Crossword crossword = new Crossword();
-//		Collections.sort(words, (first, second) -> {
-//			return second.getWord().length() - first.getWord().length();
-//		});
-		Collections.shuffle(words);
+		Collections.sort(words, (first, second) -> {
+			return second.getWord().length() - first.getWord().length();
+		});
+//		Collections.shuffle(words);
 		for (int i = 0; i < words.size(); i++) {
 			HAWord word = words.get(i);
 			List<HAWord> possibleWords = getPositions(crossword, word);
@@ -59,6 +59,7 @@ public class SimpleCrosswordGenerator implements CrosswordGenerator{
 		HAWord word = new HAWord(originalWord.getHAEntity());
 		if(orientation == Orientation.HORIZONTAL) {
 			int count = 0;
+			word.addCell(new Cell(matchCell.getX(), matchCell.getY()-matchPos-1, String.valueOf("LA"), ""));
 			for (int i = matchCell.getY()-matchPos; i < 
 					originalWord.getWord().length()-matchPos; i++) {
 				word.addCell(new Cell(matchCell.getX(), i, 
@@ -68,6 +69,7 @@ public class SimpleCrosswordGenerator implements CrosswordGenerator{
 			word.setOrientation(Orientation.VERTICAL);
 		} else if(orientation == Orientation.VERTICAL) {
 			int count = 0;
+			word.addCell(new Cell(matchCell.getX()-matchPos-1, matchCell.getY(), String.valueOf("LA"), ""));
 			for (int i = matchCell.getX()-matchPos; i < 
 					originalWord.getWord().length()+matchCell.getX()-matchPos ; i++) {
 				word.addCell(new Cell(i, matchCell.getY(), 

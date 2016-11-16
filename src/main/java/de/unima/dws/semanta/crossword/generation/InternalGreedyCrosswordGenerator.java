@@ -33,7 +33,7 @@ public class InternalGreedyCrosswordGenerator implements CrosswordGenerator{
 
 	@Override
 	public Crossword generate(List<HAWord> words) {
-		final int multiplier = words.size() * sizeMultiplier;
+		final int multiplier = sizeMultiplier * sizeMultiplier;
 		for (int i = 0; i < multiplier; i++) {
 			try {
 			queue.add(internal.generate(words));

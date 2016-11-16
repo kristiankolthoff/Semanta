@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.effect.*?>
 <?import java.lang.*?>
@@ -59,7 +61,7 @@
       <items>
             <VBox prefHeight="644.0" prefWidth="349.0">
               <children>
-                  <VBox alignment="CENTER" prefHeight="335.0" prefWidth="349.0" style="-fx-background-color: #C0C0C0;">
+                  <VBox alignment="CENTER" prefHeight="500.0" prefWidth="349.0" style="-fx-background-color: #C0C0C0;">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -67,14 +69,18 @@
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                      </padding>
                      <children>
-                        <Label text="ACROSS" />
-                        <ListView prefHeight="200.0" prefWidth="200.0" />
+                        <Label text="ACROSS">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
+                        <ListView fx:id="listViewAcross" prefHeight="200.0" prefWidth="200.0" />
                      </children>
                   </VBox>
-                  <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="335.0" prefWidth="349.0" style="-fx-background-color: #C0C0C0;">
+                  <Separator prefWidth="200.0" />
+                  <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="500.0" prefWidth="349.0" style="-fx-background-color: #C0C0C0;">
                      <children>
                         <Label text="DOWN" />
-                        <ListView prefHeight="200.0" prefWidth="200.0" />
+                        <ListView fx:id="listViewDown" prefHeight="200.0" prefWidth="200.0" />
                      </children>
                      <opaqueInsets>
                         <Insets />
@@ -87,17 +93,55 @@
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label text="A:" />
-                        <Label text="Angela Merkel" />
-                     </children>
-                  </HBox>
-                  <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="551.0" prefWidth="311.0">
+                  <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="1000.0" prefWidth="617.0">
                      <content>
                         <AnchorPane fx:id="anchorPaneMain" prefHeight="200.0" prefWidth="200.0" />
                      </content>
                   </ScrollPane>
+                  <HBox alignment="CENTER" prefHeight="60.0" prefWidth="617.0">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #C0C0C0;">
+                           <children>
+                              <Label text="A : ">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="labelAnswerA" text="Answer A" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" layoutX="219.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label text="B : ">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="labelAnswerB" text="Answer B" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" layoutX="119.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #C0C0C0;">
+                           <children>
+                              <Label text="C : ">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="labelAnswerC" text="Answer C" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" layoutX="419.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label text="D : ">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="labelAnswerD" text="Answer D" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
                </children>
             </VBox>
             <VBox prefHeight="673.0" prefWidth="365.0">
@@ -177,13 +221,12 @@
             <Color blue="0.625" green="0.625" red="0.625" fx:id="x4" />
           </textFill>
         </Label>
-        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+        <Pane prefHeight="6.0" prefWidth="1156.0" HBox.hgrow="ALWAYS" />
         <Label font="$x3" maxWidth="-1.0" text="Right status" textFill="$x4" HBox.hgrow="NEVER" />
       </children>
       <padding>
         <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
       </padding>
     </HBox>
-      <Pane prefHeight="200.0" prefWidth="200.0" />
   </children>
 </VBox>

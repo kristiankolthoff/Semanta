@@ -31,6 +31,7 @@ public class Crossword implements Iterable<HAWord>, Serializable, Supplier<Doubl
 	}
 	
 	public boolean addWordWithCells(HAWord word) {
+		word.setIndex(this.words.size() + 1);
 		return (validateWord(word)) ? words.add(word) : false;
 	}
 	
@@ -79,6 +80,7 @@ public class Crossword implements Iterable<HAWord>, Serializable, Supplier<Doubl
 			for(Cell cell : cells) {
 				word.addCell(cell);
 			}
+			word.setIndex(this.words.size() + 1);
 			this.words.add(word);
 		}
 		return false;

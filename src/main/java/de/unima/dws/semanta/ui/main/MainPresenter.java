@@ -13,9 +13,17 @@ import de.unima.dws.semanta.crossword.model.Crossword;
 import de.unima.dws.semanta.crossword.model.HAWord;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -38,6 +46,13 @@ public class MainPresenter implements Initializable{
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		GridPane grid = new GridPane();
+		grid.setPrefWidth(1000);
+		grid.setPrefHeight(1000);
+//		grid.setBackground(new Background(new BackgroundImage(new Image("http://www.publicdomainpictures.net/pictures/60000/velka/dark-texture-background.jpg"), 
+//				BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1, 1, true, true, true, true))));
+		grid.setStyle("-fx-background-color : #C0C0C0");
+		int padding = 30;
+		grid.setPadding(new Insets(padding, padding, padding, padding));
 		grid.setHgap(1);
 		grid.setVgap(2);
 		this.cellMap = new HashMap<>();
@@ -86,6 +101,14 @@ public class MainPresenter implements Initializable{
 			}
 		}
 		anchorPaneMain.getChildren().add(grid);
+//		Image image = new Image("https://upload.wikimedia.org"
+//				+ "/wikipedia/commons/thumb/c/cb/Stephen_Maguire%2C_Ronnie_"
+//				+ "O%E2%80%99Sullivan%2C_and_Michaela_Tabb_at_German_Masters_Snooker"
+//				+ "_Final_%28DerHexer%29_2012-02-05_05_cropped.jpg/300px-Stephen_Maguire"
+//				+ "%2C_Ronnie_O%E2%80%99Sullivan%2C_and_Michaela_Tabb_at_German_"
+//				+ "Masters_Snooker_Final_%28DerHexer%29_2012-02-05_05_cropped.jpg");
+//		ImageView imageView = new ImageView(image);
+//		anchorPaneMain.getChildren().add(imageView);
 	}
 	
 	public void validate() {

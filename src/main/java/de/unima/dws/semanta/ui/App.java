@@ -15,6 +15,8 @@ import de.unima.dws.semanta.ui.main.MainView;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.jena.rdf.model.ResourceFactory;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -23,29 +25,22 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-//    	Crossword crossword = new Crossword();
-//    	crossword.addWord(new HAWord(
-//				new HAEntity(null, "test", null, null, null)), 0, 1, 3, 1);
-//		crossword.addWord(new HAWord(
-//				new HAEntity(null, "semanta", null, null, null)), 1, 0, 1, 6);
-//		crossword.addWord(new HAWord(
-//				new HAEntity(null, "aborting", null, null, null)), 1, 6, 8, 6);
-//    	CrosswordGenerator generator = new SimpleCrosswordGenerator();
     	CrosswordGenerator generator = new InternalGreedyCrosswordGenerator(
-    			new SimpleCrosswordGenerator(), 50, null);
+    			new SimpleCrosswordGenerator(), 10, null);
 		Crossword crossword = generator.generate(
-				new HAWord(new HAEntity(null, "tested", null, null, null)),
-				new HAWord(new HAEntity(null, "semanta", null, null, null)),
-				new HAWord(new HAEntity(null, "barbara", null, null, null)),
-				new HAWord(new HAEntity(null, "software", null, null, null)),
-				new HAWord(new HAEntity(null, "engineering", null, null, null)),
-				new HAWord(new HAEntity(null, "amen", null, null, null)),
-				new HAWord(new HAEntity(null, "timberners", null, null, null)),
-				new HAWord(new HAEntity(null, "norbertlammert", null, null, null)),
-				new HAWord(new HAEntity(null, "robben", null, null, null)),
-				new HAWord(new HAEntity(null, "oliverkahn", null, null, null)),
-				new HAWord(new HAEntity(null, "ronaldo", null, null, null)),
-				new HAWord(new HAEntity(null, "angel", null, null, null)));
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("tested").addHint("something that can be tested")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("semanta").addHint("name of this application")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("barbara").addHint("well known girl name")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("software").addHint("opposite of hardware")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("engineering").addHint("something that can be tested,"
+						+ " something that can be tested")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("amen").addHint("word of the catholic curch")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("timberners").addHint("inventor of the internet")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("norbertlammert").addHint("president of the bundestag")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("robben").addHint("famous soccer player of the netherlands")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("oliverkahn").addHint("well knwon german goal keeper, whats his name?")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("ronaldo").addHint("best soccer player of all time")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("angel").addHint("they can fly and help people, what is it?")));
 		crossword.normalize();
         Map<Object, Object> customProperties = new HashMap<>();
         customProperties.put("crossword", crossword);

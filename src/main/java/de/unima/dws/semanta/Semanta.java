@@ -1,7 +1,11 @@
 package de.unima.dws.semanta;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Observable;
 
 import javax.annotation.PostConstruct;
 
@@ -18,6 +22,7 @@ import de.unima.dws.semanta.selector.EntitySelector;
 import de.unima.dws.semanta.selector.OutEntitySelector;
 import de.unima.dws.semanta.service.SparqlService;
 import de.unima.dws.semanta.utilities.Settings;
+import javafx.collections.ObservableList;
 /**
  * Semanta is the main logical component for generating a semantic topic-based crossword
  * puzzle as combines strategies for selecting topic-related entities, generates HAEntities
@@ -89,5 +94,20 @@ public class Semanta {
 
 	public void setOptionalGenerator(OAGenerator optionalGenerator) {
 		this.optionalGenerator = optionalGenerator;
+	}
+	
+	public static List<ResourceInfo> getTopics(String keyword,int topicsCount)
+	{
+		List<ResourceInfo> topics = new ArrayList<>();
+		topics = SparqlService.getTopics(keyword.trim(), topicsCount);
+        
+		return topics;
+				
+		/*
+        for (Iterator<ResourceInfo> iterator = topics.iterator(); iterator.hasNext();) {
+			ResourceInfo topic = (ResourceInfo) iterator.next();
+			LstViewTopics.getItems().add(topic);
+		}
+		*/
 	}
 }

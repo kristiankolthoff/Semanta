@@ -7,26 +7,24 @@ import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 
-
+import de.unima.dws.semanta.Semanta;
 import de.unima.dws.semanta.crossword.model.Cell;
 import de.unima.dws.semanta.crossword.model.Crossword;
 import de.unima.dws.semanta.crossword.model.HAWord;
+import de.unima.dws.semanta.crossword.model.Orientation;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.text.Text;
+import javafx.util.Callback;
 
 public class MainPresenter implements Initializable{
 
@@ -34,10 +32,28 @@ public class MainPresenter implements Initializable{
 	private AnchorPane anchorPaneMain;
 	
 	@FXML
-	private Button buttonValidate;
+	private ListView<String> listViewAcross;
+	
+	@FXML
+	private ListView<String> listViewDown;
+	
+	@FXML
+	private Label labelAnswerA;
+	
+	@FXML 
+	private Label labelAnswerB;
+	
+	@FXML
+	private Label labelAnswerC;
+	
+	@FXML
+	private Label labelAnswerD;
 	
 	@Inject
 	private Crossword crossword;
+	
+	@Inject
+	private Semanta semanta;
 	
 	private Map<Cell, TextField> cellMap;
 	private Map<TextField, Cell> textMap;
@@ -45,6 +61,7 @@ public class MainPresenter implements Initializable{
 	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
+		initializeListViews();
 		GridPane grid = new GridPane();
 		grid.setPrefWidth(1000);
 		grid.setPrefHeight(1000);
@@ -53,8 +70,8 @@ public class MainPresenter implements Initializable{
 		grid.setStyle("-fx-background-color : #C0C0C0");
 		int padding = 30;
 		grid.setPadding(new Insets(padding, padding, padding, padding));
-		grid.setHgap(1);
-		grid.setVgap(2);
+		grid.setHgap(0);
+		grid.setVgap(0);
 		this.cellMap = new HashMap<>();
 		this.textMap = new HashMap<>();
 		this.wordMap = new HashMap<>();
@@ -70,9 +87,22 @@ public class MainPresenter implements Initializable{
         }
 		grid.setGridLinesVisible(false);
 		for(HAWord word : crossword) {
+			//Insert the hints of the words into fields
+			if(word.getOrientation() == Orientation.HORIZONTAL) {
+				listViewAcross.getItems().add(word.getIndex() + ". " + word.getHAEntity().getHintsBeautified());
+			} else if(word.getOrientation() == Orientation.VERTICAL) {
+				listViewDown.getItems().add(word.getIndex() + ". " + word.getHAEntity().getHintsBeautified());
+			}
 			for(Cell cell : word) {
+				//Build crossword textfield cells
 				TextField text = new TextField();
+				text.setPrefSize(1000, 1000);
 				text.setText(cell.getLabel());
+				if(cell.getLabel().equals("LA")) {
+					text.setStyle("-fx-border-color: #00cc66");
+					text.setStyle("-fx-background-color: transparent");
+					text.setText(String.valueOf(word.getIndex()));
+				}
 				cell.getSolutionProperty().bind(text.textProperty());
 				text.textProperty().addListener((observable, oldValue, newValue) -> {
 					if(newValue.length() > 1) {
@@ -110,6 +140,50 @@ public class MainPresenter implements Initializable{
 //		ImageView imageView = new ImageView(image);
 //		anchorPaneMain.getChildren().add(imageView);
 	}
+	
+	private void initializeListViews() {
+		listViewAcross.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+	        @Override
+	        public ListCell<String> call(ListView<String> list) {
+	            final ListCell<String> cell = new ListCell<String>() {
+	                private Text text;
+
+	                @Override
+	                public void updateItem(String item, boolean empty) {
+	                    super.updateItem(item, empty);
+	                    if (!isEmpty()) {
+	                        text = new Text(item.toString());
+	                        text.setWrappingWidth(listViewAcross.getPrefWidth());
+	                        setGraphic(text);
+	                    }
+	                }
+	            };
+
+	            return cell;
+	        }
+	    });
+		listViewDown.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+	        @Override
+	        public ListCell<String> call(ListView<String> list) {
+	            final ListCell<String> cell = new ListCell<String>() {
+	                private Text text;
+
+	                @Override
+	                public void updateItem(String item, boolean empty) {
+	                    super.updateItem(item, empty);
+	                    if (!isEmpty()) {
+	                        text = new Text(item.toString());
+	                        text.setWrappingWidth(listViewDown.getPrefWidth());
+	                        setGraphic(text);
+	                    }
+	                }
+	            };
+
+	            return cell;
+	        }
+	    });
+	}
+	
 	
 	public void validate() {
 		System.out.println("validate");

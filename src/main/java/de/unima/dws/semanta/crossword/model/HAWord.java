@@ -11,6 +11,7 @@ public class HAWord implements Iterable<Cell>{
 	private HAEntity entity;
 	private List<Cell> cells;
 	private Orientation orientation;
+	private int index;
 	
 	public HAWord(HAEntity entity, Orientation orientation) {
 		this.orientation = orientation;
@@ -81,6 +82,14 @@ public class HAWord implements Iterable<Cell>{
 	@Override
 	public String toString() {
 		return "HAWord [entity=" + entity + ", cells=" + cells + ", orientation=" + orientation + "]";
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	

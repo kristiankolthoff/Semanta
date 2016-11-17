@@ -68,6 +68,15 @@ public class HAEntity {
 	public String getEntAbstract() {
 		return entAbstract;
 	}
+	
+	public String getHintsBeautified() {
+		StringBuilder sb = new StringBuilder();
+		for(String s : hints) {
+			sb.append(s);
+			sb.append(", ");
+		}
+		return sb.toString();
+	}
 
 	public HAEntity setEntAbstract(String entAbstract) {
 		this.entAbstract = entAbstract;

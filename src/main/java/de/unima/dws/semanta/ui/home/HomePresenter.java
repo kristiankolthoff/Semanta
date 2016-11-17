@@ -1,8 +1,10 @@
 package de.unima.dws.semanta.ui.home;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
@@ -11,7 +13,6 @@ import javax.inject.Inject;
 import de.unima.dws.semanta.Semanta;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.model.ResourceInfo;
-import de.unima.dws.semanta.service.SparqlService;
 import de.unima.dws.semanta.ui.App;
 import de.unima.dws.semanta.ui.main.MainView;
 import javafx.beans.value.ObservableValue;
@@ -79,12 +80,8 @@ public class HomePresenter implements Initializable{
 		
 		LstViewTopics.getItems().clear();
 		
-        final List<ResourceInfo> topics = SparqlService.getTopics(TxtFieldSearch.getText().trim(), 10);
-        
-        for (Iterator<ResourceInfo> iterator = topics.iterator(); iterator.hasNext();) {
-			ResourceInfo topic = (ResourceInfo) iterator.next();
-			LstViewTopics.getItems().add(topic);
-		}
+		List<ResourceInfo> t  = Semanta.getTopics(TxtFieldSearch.getText(), 50);
+		LstViewTopics.getItems().addAll(t);
 
 	 };
 	

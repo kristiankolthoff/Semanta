@@ -76,6 +76,7 @@ public class HomePresenter implements Initializable{
 	 */
 	public void searchTopics() {
 		if(validateInput(textFieldSearch)) {
+			indicator.setVisible(true);
 			Task<List<ResourceInfo>> longTask = new Task<List<ResourceInfo>>() {
 	            @Override
 	            protected List<ResourceInfo> call() throws Exception {

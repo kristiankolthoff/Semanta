@@ -28,7 +28,14 @@ public class Application {
 	}
 	
 	public List<ResourceInfo> getTopicResults(String topic) {
-		return this.semanta.getTopics(topic, 1);
+		ResourceInfo info = new ResourceInfo(ResourceFactory.createResource(), "http://", "agent", "Barack Obama");
+        info.setIndex(1);
+        info.setImageURL("http://a5.files.biography.com/image/upload/c_fill,cs_srgb,dpr_1.0,g_face,h_300,q_80,w_300/MTE4MDAzNDEwNzg5ODI4MTEw.jpg");
+        info.setSummary("blac bla bla");
+        List<ResourceInfo> list = new ArrayList<>();
+        list.add(info);
+        return list;
+//		return this.semanta.getTopics(topic, 5);
 	}
 	
 	public Crossword generateCrossword(String topic) {

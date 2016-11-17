@@ -3,6 +3,8 @@ package de.unima.dws.semanta.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.jena.rdf.model.Resource;
 
 public class ResourceInfo {
@@ -22,6 +24,15 @@ public class ResourceInfo {
 		this.uri = uri;
 		this.type = type;
 		this.label = label;
+	}
+	
+	public ResourceInfo() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	@PostConstruct
+	public void initialize() {
+		
 	}
 
 	public String getUri() {

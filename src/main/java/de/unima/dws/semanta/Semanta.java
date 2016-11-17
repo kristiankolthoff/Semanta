@@ -96,7 +96,7 @@ public class Semanta {
 		this.optionalGenerator = optionalGenerator;
 	}
 	
-	public static List<ResourceInfo> getTopics(String keyword,int topicsCount)
+	public List<ResourceInfo> getTopics(String keyword,int topicsCount)
 	{
 		List<ResourceInfo> topics = new ArrayList<>();
 		topics = SparqlService.getTopics(keyword.trim(), topicsCount);

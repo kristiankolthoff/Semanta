@@ -55,9 +55,6 @@
                      </content>
                 </TitledPane>
                 <TitledPane text="Important Facts">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                  </content>
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>

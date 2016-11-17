@@ -43,7 +43,7 @@
             <Label text="Validation" />
             <ChoiceBox prefWidth="150.0" />
             <Label text="Zoom" />
-            <Slider />
+            <Slider fx:id="sliderZoom" blockIncrement="1.0" max="60.0" min="30.0" value="30.0" />
             <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="2.0" />
             <CheckBox mnemonicParsing="false" text="Answers" />
         </items>

@@ -15,9 +15,11 @@ import de.unima.dws.semanta.crossword.model.Orientation;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -49,11 +51,12 @@ public class MainPresenter implements Initializable{
 	@FXML
 	private Label labelAnswerD;
 	
+	@FXML
+	private Slider sliderZoom;
+	
 	@Inject
 	private Crossword crossword;
 	
-	@Inject
-	private Semanta semanta;
 	
 	private Map<Cell, TextField> cellMap;
 	private Map<TextField, Cell> textMap;
@@ -77,13 +80,13 @@ public class MainPresenter implements Initializable{
 		this.wordMap = new HashMap<>();
 		for (int i = 0; i < crossword.getWidth(); i++) {
             ColumnConstraints colConst = new ColumnConstraints();
-            colConst.setPrefWidth(30);
+            colConst.prefWidthProperty().bind(sliderZoom.valueProperty());
             grid.getColumnConstraints().add(colConst);
         }
         for (int i = 0; i < crossword.getHeight(); i++) {
             RowConstraints rowConst = new RowConstraints();
-            rowConst.setPrefHeight(30);
-            grid.getRowConstraints().add(rowConst);         
+            rowConst.prefHeightProperty().bind(sliderZoom.valueProperty());
+            grid.getRowConstraints().add(rowConst);        
         }
 		grid.setGridLinesVisible(false);
 		for(HAWord word : crossword) {
@@ -96,6 +99,7 @@ public class MainPresenter implements Initializable{
 			for(Cell cell : word) {
 				//Build crossword textfield cells
 				TextField text = new TextField();
+				text.setAlignment(Pos.CENTER);
 				text.setPrefSize(1000, 1000);
 				text.setText(cell.getLabel());
 				if(cell.getLabel().equals("LA")) {

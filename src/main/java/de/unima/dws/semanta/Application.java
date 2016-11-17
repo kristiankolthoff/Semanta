@@ -1,32 +1,75 @@
 package de.unima.dws.semanta;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.jena.vocabulary.RDFS;
-import org.apache.jena.vocabulary.VCARD;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
+import org.apache.jena.rdf.model.ResourceFactory;
+
+import de.unima.dws.semanta.crossword.generation.CrosswordGenerator;
+import de.unima.dws.semanta.crossword.generation.InternalGreedyCrosswordGenerator;
+import de.unima.dws.semanta.crossword.generation.SimpleCrosswordGenerator;
+import de.unima.dws.semanta.crossword.model.Crossword;
+import de.unima.dws.semanta.crossword.model.HAWord;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.model.ResourceInfo;
-import de.unima.dws.semanta.service.SparqlService;
-import de.unima.dws.semanta.utilities.Settings;
 
 public class Application {
 
-	public static void main(String[] args) {
-		SparqlService.setEndpoint(Settings.DEFAULT_ENDPOINT_DBPEDIA);
+	@Inject
+	private Semanta semanta;
+	private CrosswordGenerator generator;
+	
+	@PostConstruct
+	public void initialize() {
+		generator = new InternalGreedyCrosswordGenerator(new SimpleCrosswordGenerator(), 5, null);
+	}
+	
+	public List<ResourceInfo> getTopicResults(String topic) {
+		return this.semanta.getTopics(topic, 1);
+	}
+	
+	public Crossword generateCrossword(String topic) {
+//		List<HAEntity> entities = semanta.fetchEntities(topic, 5, true);
+//		List<HAWord> words = new ArrayList<>();
+//		for(HAEntity entity : entities) {
+//			words.add(new HAWord(entity));
+//		}
+//		Crossword crossword = this.generator.generate(words);
+//		crossword.normalize();
+		Crossword crossword = generator.generate(
+//				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("tested").addHint("something that can be tested")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("semanta").addHint("name of this application")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("barbara").addHint("well known girl name")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("software").addHint("opposite of hardware")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("engineering").addHint("something that can be tested,"
+						+ " something that can be tested")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("amen").addHint("word of the catholic curch")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("timberners").addHint("inventor of the internet")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("norbertlammert").addHint("president of the bundestag")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("robben").addHint("famous soccer player of the netherlands")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("oliverkahn").addHint("well knwon german goal keeper, whats his name?")),
+//				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("ronaldo").addHint("best soccer player of all time")),
+				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("angel").addHint("they can fly and help people, what is it?")));
+		crossword.normalize();
+		return crossword;
+	}
 
-		Semanta semanta = new Semanta();
-		List<HAEntity> haEntities = semanta.fetchEntities("germany", 5, true);
-		for(HAEntity entity : haEntities) {
-			System.out.println(entity);
-		}
+	public Semanta getSemanta() {
+		return semanta;
+	}
 
+	public void setSemanta(Semanta semanta) {
+		this.semanta = semanta;
+	}
 
-		/*
-		List<ResourceInfo> i = SparqlService.getTopics("Obama", 10);
+	public CrosswordGenerator getGenerator() {
+		return generator;
+	}
 
-		for (int j = 0; j < 10; j++) {
-			System.out.println(i.get(j).getResource().getProperty(VCARD.LABEL));
-		} */
+	public void setGenerator(CrosswordGenerator generator) {
+		this.generator = generator;
 	}
 }

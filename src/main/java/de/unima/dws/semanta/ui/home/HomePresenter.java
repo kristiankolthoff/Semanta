@@ -1,6 +1,7 @@
 package de.unima.dws.semanta.ui.home;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,18 +16,33 @@ import de.unima.dws.semanta.Application;
 import de.unima.dws.semanta.crossword.model.Crossword;
 import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.ResourceInfo;
+import de.unima.dws.semanta.ui.home.recommendation.RecommendationView;
 import de.unima.dws.semanta.ui.home.search.SearchView;
+import de.unima.dws.semanta.ui.home.search.info.InfoView;
 import de.unima.dws.semanta.ui.main.MainView;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class HomePresenter implements Initializable{
 
@@ -38,9 +54,23 @@ public class HomePresenter implements Initializable{
 	
 	@FXML
 	private ProgressIndicator indicator;
+	
+	@FXML
+	private Pane paneRecommendation;
 
 	@Inject
 	private Application application;
+	
+	private Timeline anim;
+	
+	private static double RECOMMENDATION_WIDTH = 246*4;
+	private static double RECOMMENDATION_HEIGHT = 313;
+	private static int NUM_OF_RECOMMENDATIONS;
+	private final double IMG_WIDTH = 600;
+    private final double IMG_HEIGHT = 300;
+ 
+    private final int NUM_OF_IMGS = 3;
+    private final int SLIDE_FREQ = 4; // in secs
 	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -56,19 +86,58 @@ public class HomePresenter implements Initializable{
 				textFieldSearch.setStyle("-fx-border-color: red ;-fx-border-width: 2px;");
 			}
 		});
+ 
+        HBox hBox = new HBox();
+		initializeRecommendations(hBox);
+		paneRecommendation.setMaxSize(RECOMMENDATION_WIDTH, RECOMMENDATION_HEIGHT);
+		paneRecommendation.setClip(new Rectangle(RECOMMENDATION_WIDTH, RECOMMENDATION_HEIGHT));
+		paneRecommendation.getChildren().add(hBox);
+		startAnimation(hBox, (int) RECOMMENDATION_WIDTH, NUM_OF_RECOMMENDATIONS);
 	}
 	
-
-	public void getTopicsAction() {
-		
-//		listViewTopics.getItems().clear();
-//		
-//		List<ResourceInfo> t  = Semanta.getTopics(textFieldSearch.getText(), 50);
-//		listViewTopics.getItems().addAll(t);
-
-	 };
 	
+	private void initializeRecommendations(HBox hBox) {
+		List<ResourceInfo> recommendations = this.application.generateRecommendations();
+		for(ResourceInfo recommendation : recommendations) {
+			RecommendationView view = new RecommendationView((f) -> recommendation);
+			hBox.getChildren().add(view.getView());
+		}
+		NUM_OF_RECOMMENDATIONS = recommendations.size();
+	}
 	
+    private void startAnimation(final HBox hbox, final int RECOMMENDATION_WIDTH, final int NUM_OF_RECOMMENDATIONS) {
+    	 final int SLIDE_FREQ = 4; 
+    	
+        EventHandler<ActionEvent> slideAction = (ActionEvent t) -> {
+            TranslateTransition trans = new TranslateTransition(Duration.seconds(1.5), hbox);
+            trans.setByX(-RECOMMENDATION_WIDTH);
+            trans.setInterpolator(Interpolator.EASE_BOTH);
+            trans.play();
+        };
+        
+        final int its = (NUM_OF_RECOMMENDATIONS % 2 == 0) ? 
+        		NUM_OF_RECOMMENDATIONS/4 : NUM_OF_RECOMMENDATIONS/4 + 1;
+        EventHandler<ActionEvent> resetAction = (ActionEvent t) -> {
+            TranslateTransition trans = new TranslateTransition(Duration.seconds(1), hbox);
+            trans.setByX((its - 1) * RECOMMENDATION_WIDTH);
+            trans.setInterpolator(Interpolator.EASE_BOTH);
+            trans.play();
+        };
+ 
+        List<KeyFrame> keyFrames = new ArrayList<>();
+        for (int i = 1; i <= its; i++) {
+            if (i == its) {
+                keyFrames.add(new KeyFrame(Duration.seconds(i * SLIDE_FREQ), resetAction));
+            } else {
+                keyFrames.add(new KeyFrame(Duration.seconds(i * SLIDE_FREQ), slideAction));
+            }
+        }
+        this.anim = new Timeline(keyFrames.toArray(new KeyFrame[its]));
+        anim.setCycleCount(Timeline.INDEFINITE);
+        anim.playFromStart();
+    }
+
+
 	/**
 	 * Based on the user input, retrieve a list
 	 * of ResourceInfo for selection to be displayed
@@ -76,6 +145,7 @@ public class HomePresenter implements Initializable{
 	 */
 	public void searchTopics() {
 		if(validateInput(textFieldSearch)) {
+			anim.stop();
 			indicator.setVisible(true);
 			Task<List<ResourceInfo>> longTask = new Task<List<ResourceInfo>>() {
 	            @Override
@@ -111,6 +181,7 @@ public class HomePresenter implements Initializable{
 	 */
 	public void generateCrossword() {
 		if(validateInput(textFieldSearch)) {
+			anim.stop();
 			indicator.setVisible(true);
 			Task<Crossword> longTask = new Task<Crossword>() {
 		            @Override

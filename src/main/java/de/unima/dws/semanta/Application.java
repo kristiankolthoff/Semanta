@@ -15,12 +15,14 @@ import de.unima.dws.semanta.crossword.model.Crossword;
 import de.unima.dws.semanta.crossword.model.HAWord;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.model.ResourceInfo;
+import de.unima.dws.semanta.recommender.Recommender;
 
 public class Application {
 
 	@Inject
 	private Semanta semanta;
 	private CrosswordGenerator generator;
+	private Recommender recommender;
 	
 	@PostConstruct
 	public void initialize() {
@@ -63,6 +65,28 @@ public class Application {
 		crossword.normalize();
 		return crossword;
 	}
+	
+	public List<ResourceInfo> generateRecommendations() {
+		ResourceInfo info = new ResourceInfo(ResourceFactory.createResource(), "http://", "agent", "Barack Obama");
+        info.setIndex(1);
+        info.setType("Agent");
+        info.setImageURL("http://a5.files.biography.com/image/upload/c_fill,cs_srgb,dpr_1.0,g_face,h_300,q_80,w_300/MTE4MDAzNDEwNzg5ODI4MTEw.jpg");
+        info.setSummary("blac bla bla");
+        List<ResourceInfo> list = new ArrayList<>();
+        list.add(info);
+        list.add(info);
+        list.add(info);
+        list.add(info);
+        list.add(info);
+        list.add(info);
+        list.add(info);
+        list.add(info);
+        list.add(info);
+        list.add(info);
+        list.add(info);
+        list.add(info);
+        return list;
+	}
 
 	public Semanta getSemanta() {
 		return semanta;
@@ -78,5 +102,13 @@ public class Application {
 
 	public void setGenerator(CrosswordGenerator generator) {
 		this.generator = generator;
+	}
+
+	public Recommender getRecommender() {
+		return recommender;
+	}
+
+	public void setRecommender(Recommender recommender) {
+		this.recommender = recommender;
 	}
 }

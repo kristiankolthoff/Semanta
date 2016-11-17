@@ -1,4 +1,4 @@
-package de.unima.dws.semanta.ui.home.search.info;
+package de.unima.dws.semanta.ui.home.recommendation;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,11 +15,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
-public class InfoPresenter implements Initializable{
+public class RecommendationPresenter implements Initializable{
 
-	@FXML
-	private Label labelIndex;
-	
 	@FXML
 	private ImageView imageView;
 	
@@ -27,31 +24,30 @@ public class InfoPresenter implements Initializable{
 	private Label labelName;
 	
 	@FXML
-	private Label labelType;
-	
-	@FXML
-	private ComboBox<Difficulty> comboBoxDifficulty;
+	private Text textType;
 	
 	@FXML
 	private Text textAbstract;
 	
+	@FXML
+	private ComboBox<Difficulty> comboBoxDifficulty;
+	
 	@Inject
-	private ResourceInfo info;
+	private ResourceInfo recommendation;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		labelIndex.setText(String.valueOf(info.getIndex() + "."));
-		imageView.setImage(new Image(info.getImageURL()));
-		labelName.setText(info.getLabel());
-		labelType.setText(info.getTypes());
-		textAbstract.setText(info.getSummary());
+		imageView.setImage(new Image(recommendation.getImageURL()));
+		labelName.setText(recommendation.getLabel());
+		textType.setText(recommendation.getTypes());
+		textAbstract.setText(recommendation.getSummary());
 		comboBoxDifficulty.getItems().add(Difficulty.BEGINNER);
 		comboBoxDifficulty.getItems().add(Difficulty.ADVANCED);
 		comboBoxDifficulty.getItems().add(Difficulty.EXPERT);
 		comboBoxDifficulty.getSelectionModel().select(Difficulty.EXPERT);
 	}
 	
-	public void generate() {
+	public void generateCrossword() {
 		
 	}
 

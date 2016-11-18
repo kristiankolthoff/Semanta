@@ -16,9 +16,9 @@ import de.unima.dws.semanta.Application;
 import de.unima.dws.semanta.crossword.model.Crossword;
 import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.ResourceInfo;
+import de.unima.dws.semanta.ui.home.recommendation.RecommendationPresenter;
 import de.unima.dws.semanta.ui.home.recommendation.RecommendationView;
 import de.unima.dws.semanta.ui.home.search.SearchView;
-import de.unima.dws.semanta.ui.home.search.info.InfoView;
 import de.unima.dws.semanta.ui.main.MainView;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -30,14 +30,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
@@ -57,20 +56,15 @@ public class HomePresenter implements Initializable{
 	
 	@FXML
 	private Pane paneRecommendation;
-
+	
 	@Inject
 	private Application application;
 	
 	private Timeline anim;
 	
-	private static double RECOMMENDATION_WIDTH = 246*4;
-	private static double RECOMMENDATION_HEIGHT = 313;
-	private static int NUM_OF_RECOMMENDATIONS;
-	private final double IMG_WIDTH = 600;
-    private final double IMG_HEIGHT = 300;
- 
-    private final int NUM_OF_IMGS = 3;
-    private final int SLIDE_FREQ = 4; // in secs
+	private final static double RECOMMENDATION_WIDTH = 246*4+65;
+	private final static double RECOMMENDATION_HEIGHT = 313;
+	private static int numOfRecommendations;
 	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -92,7 +86,15 @@ public class HomePresenter implements Initializable{
 		paneRecommendation.setMaxSize(RECOMMENDATION_WIDTH, RECOMMENDATION_HEIGHT);
 		paneRecommendation.setClip(new Rectangle(RECOMMENDATION_WIDTH, RECOMMENDATION_HEIGHT));
 		paneRecommendation.getChildren().add(hBox);
-		startAnimation(hBox, (int) RECOMMENDATION_WIDTH, NUM_OF_RECOMMENDATIONS);
+		startAnimation(hBox, (int) RECOMMENDATION_WIDTH, numOfRecommendations);
+	}
+	
+	public void slideLeft() {
+		
+	}
+	
+	public void slideRight() {
+		
 	}
 	
 	
@@ -100,9 +102,14 @@ public class HomePresenter implements Initializable{
 		List<ResourceInfo> recommendations = this.application.generateRecommendations();
 		for(ResourceInfo recommendation : recommendations) {
 			RecommendationView view = new RecommendationView((f) -> recommendation);
+			((RecommendationPresenter)view.getPresenter()).setApplication(this.application);
+			Separator separator = new Separator(Orientation.VERTICAL);
+			separator.setVisible(false);
+			separator.setPadding(new Insets(5));
+			hBox.getChildren().add(separator);
 			hBox.getChildren().add(view.getView());
 		}
-		NUM_OF_RECOMMENDATIONS = recommendations.size();
+		numOfRecommendations = recommendations.size();
 	}
 	
     private void startAnimation(final HBox hbox, final int RECOMMENDATION_WIDTH, final int NUM_OF_RECOMMENDATIONS) {
@@ -115,24 +122,24 @@ public class HomePresenter implements Initializable{
             trans.play();
         };
         
-        final int its = (NUM_OF_RECOMMENDATIONS % 2 == 0) ? 
+        final int ITS = (NUM_OF_RECOMMENDATIONS % 2 == 0) ? 
         		NUM_OF_RECOMMENDATIONS/4 : NUM_OF_RECOMMENDATIONS/4 + 1;
         EventHandler<ActionEvent> resetAction = (ActionEvent t) -> {
             TranslateTransition trans = new TranslateTransition(Duration.seconds(1), hbox);
-            trans.setByX((its - 1) * RECOMMENDATION_WIDTH);
+            trans.setByX((ITS - 1) * RECOMMENDATION_WIDTH);
             trans.setInterpolator(Interpolator.EASE_BOTH);
             trans.play();
         };
  
         List<KeyFrame> keyFrames = new ArrayList<>();
-        for (int i = 1; i <= its; i++) {
-            if (i == its) {
+        for (int i = 1; i <= ITS; i++) {
+            if (i == ITS) {
                 keyFrames.add(new KeyFrame(Duration.seconds(i * SLIDE_FREQ), resetAction));
             } else {
                 keyFrames.add(new KeyFrame(Duration.seconds(i * SLIDE_FREQ), slideAction));
             }
         }
-        this.anim = new Timeline(keyFrames.toArray(new KeyFrame[its]));
+        anim = new Timeline(keyFrames.toArray(new KeyFrame[ITS]));
         anim.setCycleCount(Timeline.INDEFINITE);
         anim.playFromStart();
     }
@@ -194,17 +201,9 @@ public class HomePresenter implements Initializable{
 		            @Override
 		            public void handle(WorkerStateEvent t) {
 		    			indicator.setVisible(false);
-						try {
 							System.out.println("success");
-							Crossword crossword = longTask.get();
-							Map<Object, Object> customProperties = new HashMap<>();
-					        customProperties.put("crossword", crossword);
-					        Injector.setConfigurationSource(customProperties::get);
 							Stage stage = (Stage) textFieldSearch.getScene().getWindow();
-							stage.setScene(new Scene(new MainView().getView()));
-						} catch (InterruptedException | ExecutionException e) {
-							e.printStackTrace();
-						}
+							stage.setScene(new Scene(new MainView((f) -> application).getView()));
 		            }
 		        });
 		        new Thread(longTask).start();

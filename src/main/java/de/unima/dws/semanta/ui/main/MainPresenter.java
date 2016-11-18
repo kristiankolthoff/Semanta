@@ -7,31 +7,41 @@ import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 
-import de.unima.dws.semanta.Semanta;
+import de.unima.dws.semanta.Application;
 import de.unima.dws.semanta.crossword.model.Cell;
 import de.unima.dws.semanta.crossword.model.Crossword;
 import de.unima.dws.semanta.crossword.model.HAWord;
 import de.unima.dws.semanta.crossword.model.Orientation;
+import de.unima.dws.semanta.ui.home.HomeView;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 public class MainPresenter implements Initializable{
 
 	@FXML
-	private AnchorPane anchorPaneMain;
+	private BorderPane borderPane;
 	
 	@FXML
 	private ListView<String> listViewAcross;
@@ -54,7 +64,26 @@ public class MainPresenter implements Initializable{
 	@FXML
 	private Slider sliderZoom;
 	
+	@FXML
+	private Label labelTopic;
+	
+	@FXML
+	private Label labelName;
+	
+	@FXML
+	private Label labelLinkWithTopic;
+	
+	@FXML
+	private ImageView imageViewEntity;
+	
+	@FXML
+	private Text textAbtract;
+	
+	@FXML
+	private VBox vBoxFacts;
+
 	@Inject
+	private Application application;
 	private Crossword crossword;
 	
 	
@@ -65,11 +94,16 @@ public class MainPresenter implements Initializable{
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		initializeListViews();
+		initialzeCrosswordGrid();
+	}
+	
+	private void initialzeCrosswordGrid() {
+		listViewAcross.getItems().clear();
+		listViewDown.getItems().clear();
+		crossword = application.getCrossword();
 		GridPane grid = new GridPane();
 		grid.setPrefWidth(1000);
 		grid.setPrefHeight(1000);
-//		grid.setBackground(new Background(new BackgroundImage(new Image("http://www.publicdomainpictures.net/pictures/60000/velka/dark-texture-background.jpg"), 
-//				BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1, 1, true, true, true, true))));
 		grid.setStyle("-fx-background-color : #C0C0C0");
 		int padding = 30;
 		grid.setPadding(new Insets(padding, padding, padding, padding));
@@ -134,17 +168,9 @@ public class MainPresenter implements Initializable{
 				grid.add(text, cell.getX(), cell.getY());
 			}
 		}
-		anchorPaneMain.getChildren().add(grid);
-//		Image image = new Image("https://upload.wikimedia.org"
-//				+ "/wikipedia/commons/thumb/c/cb/Stephen_Maguire%2C_Ronnie_"
-//				+ "O%E2%80%99Sullivan%2C_and_Michaela_Tabb_at_German_Masters_Snooker"
-//				+ "_Final_%28DerHexer%29_2012-02-05_05_cropped.jpg/300px-Stephen_Maguire"
-//				+ "%2C_Ronnie_O%E2%80%99Sullivan%2C_and_Michaela_Tabb_at_German_"
-//				+ "Masters_Snooker_Final_%28DerHexer%29_2012-02-05_05_cropped.jpg");
-//		ImageView imageView = new ImageView(image);
-//		anchorPaneMain.getChildren().add(imageView);
+		borderPane.setCenter(grid);
 	}
-	
+
 	private void initializeListViews() {
 		listViewAcross.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
 	        @Override
@@ -202,5 +228,45 @@ public class MainPresenter implements Initializable{
 			}
 		}
 	}
+	
+	public void backToHome() {
+		Stage stage = (Stage) borderPane.getScene().getWindow();
+		stage.setScene(new Scene(new HomeView().getView()));
+	}
+	
+	public void regenerateCrossword() {
+		this.borderPane.getChildren().clear();
+		ProgressIndicator indicator = new ProgressIndicator();
+		indicator.setPrefSize(60, 60);
+		indicator.setMaxSize(60, 60);
+		indicator.setProgress(-1);
+		indicator.setVisible(true);
+		this.borderPane.setCenter(indicator);
+		Task<Void> longTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+            	//TODO sanitize string
+            	application.regenerateCrossword();
+				return null;
+            }
+        };
+       longTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent t) {
+    			indicator.setVisible(false);
+				System.out.println("success");
+				initialzeCrosswordGrid();
+            }
+        });
+        new Thread(longTask).start();
+		
+	}
+	
+	public void save() {
+		
+	}
 
+	public void cloud() {
+		
+	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.builder.Diff;
 import org.apache.jena.rdf.model.ResourceFactory;
 
 import de.unima.dws.semanta.crossword.generation.CrosswordGenerator;
@@ -13,6 +14,7 @@ import de.unima.dws.semanta.crossword.generation.InternalGreedyCrosswordGenerato
 import de.unima.dws.semanta.crossword.generation.SimpleCrosswordGenerator;
 import de.unima.dws.semanta.crossword.model.Crossword;
 import de.unima.dws.semanta.crossword.model.HAWord;
+import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.recommender.Recommender;
@@ -23,10 +25,15 @@ public class Application {
 	private Semanta semanta;
 	private CrosswordGenerator generator;
 	private Recommender recommender;
+	private Crossword crossword;
+	private Difficulty difficulty;
+	private String topic;
 	
 	@PostConstruct
 	public void initialize() {
 		generator = new InternalGreedyCrosswordGenerator(new SimpleCrosswordGenerator(), 5, null);
+		crossword = null;
+		topic = null;
 	}
 	
 	public List<ResourceInfo> getTopicResults(String topic) {
@@ -63,6 +70,19 @@ public class Application {
 //				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("ronaldo").addHint("best soccer player of all time")),
 				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("angel").addHint("they can fly and help people, what is it?")));
 		crossword.normalize();
+		this.topic = topic;
+		this.crossword = crossword;
+		return crossword;
+	}
+	
+	public Crossword generateCrossword(ResourceInfo info) {
+		return null;
+	}
+	
+	public Crossword regenerateCrossword() {
+		if(topic != null) {
+			return generateCrossword(topic);
+		}
 		return crossword;
 	}
 	
@@ -111,4 +131,21 @@ public class Application {
 	public void setRecommender(Recommender recommender) {
 		this.recommender = recommender;
 	}
+
+	public Crossword getCrossword() {
+		return crossword;
+	}
+
+	public String getTopic() {
+		return topic;
+	}
+
+	public Difficulty getDifficulty() {
+		return difficulty;
+	}
+
+	public void setDifficulty(Difficulty difficulty) {
+		this.difficulty = difficulty;
+	}
+
 }

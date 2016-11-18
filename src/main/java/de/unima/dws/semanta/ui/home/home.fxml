@@ -58,12 +58,6 @@
       </HBox>
       <Separator prefWidth="200.0" />
       <BorderPane prefHeight="336.0" prefWidth="1104.0">
-         <left>
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="36.0" text="Left" BorderPane.alignment="CENTER" />
-         </left>
-         <right>
-            <Button mnemonicParsing="false" prefHeight="56.0" prefWidth="45.0" text="Right" BorderPane.alignment="CENTER" />
-         </right>
          <center>
             <Pane fx:id="paneRecommendation" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
          </center>

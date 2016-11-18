@@ -10,7 +10,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="313.0" prefWidth="246.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.unima.dws.semanta.ui.home.recommendation.RecommendationPresenter">
+<VBox prefHeight="313.0" prefWidth="246.0" style="-fx-background-radius: 10;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.unima.dws.semanta.ui.home.recommendation.RecommendationPresenter">
    <children>
       <HBox prefHeight="220.0" prefWidth="246.0" style="-fx-background-color: #C0C0C0;">
          <children>
@@ -63,4 +63,7 @@
          </children>
       </HBox>
    </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
 </VBox>

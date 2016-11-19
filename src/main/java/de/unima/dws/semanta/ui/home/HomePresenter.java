@@ -101,8 +101,9 @@ public class HomePresenter implements Initializable{
 	private void initializeRecommendations(HBox hBox) {
 		List<ResourceInfo> recommendations = this.application.generateRecommendations();
 		for(ResourceInfo recommendation : recommendations) {
+			//TODO only inject application
 			RecommendationView view = new RecommendationView((f) -> recommendation);
-			((RecommendationPresenter)view.getPresenter()).setApplication(this.application);
+//			((RecommendationPresenter)view.getPresenter());
 			Separator separator = new Separator(Orientation.VERTICAL);
 			separator.setVisible(false);
 			separator.setPadding(new Insets(5));
@@ -165,28 +166,17 @@ public class HomePresenter implements Initializable{
 	            @Override
 	            public void handle(WorkerStateEvent t) {
 	    			indicator.setVisible(false);
-					try {
-						System.out.println("success");
-						List<ResourceInfo> resourceInfos = longTask.get();
-						Map<Object, Object> customProperties = new HashMap<>();
-				        customProperties.put("resourceInfos", resourceInfos);
-				        Injector.setConfigurationSource(customProperties::get);
-						Stage stage = (Stage) textFieldSearch.getScene().getWindow();
-						stage.setScene(new Scene(new SearchView().getView()));
-					} catch (InterruptedException | ExecutionException e) {
-						e.printStackTrace();
-					}
+					System.out.println("success");
+					Stage stage = (Stage) textFieldSearch.getScene().getWindow();
+					stage.setScene(new Scene(new SearchView((f) -> application).getView()));
+					
 	            }
 	        });
 	        new Thread(longTask).start();
 		}
 	}
-
-	/**
-	 * Get the most ranked topic resource and directly
-	 * generate crossword puzzle
-	 */
-	public void generateCrossword() {
+	
+	public void generateCrossword(String topic) {
 		if(validateInput(textFieldSearch)) {
 			anim.stop();
 			indicator.setVisible(true);
@@ -208,6 +198,14 @@ public class HomePresenter implements Initializable{
 		        });
 		        new Thread(longTask).start();
 		}
+	}
+
+	/**
+	 * Get the most ranked topic resource and directly
+	 * generate crossword puzzle
+	 */
+	public void generateCrossword() {
+		
 	}
 	
 	private boolean validateInput(TextField textField) {

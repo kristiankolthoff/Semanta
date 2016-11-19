@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 
+import de.unima.dws.semanta.Application;
 import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.ResourceInfo;
 import javafx.fxml.FXML;
@@ -38,6 +39,8 @@ public class InfoPresenter implements Initializable{
 	@Inject
 	private ResourceInfo info;
 	
+	private Application application;
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		labelIndex.setText(String.valueOf(info.getIndex() + "."));
@@ -53,6 +56,14 @@ public class InfoPresenter implements Initializable{
 	
 	public void generate() {
 		
+	}
+
+	public Application getApplication() {
+		return application;
+	}
+
+	public void setApplication(Application application) {
+		this.application = application;
 	}
 
 }

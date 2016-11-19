@@ -25,6 +25,7 @@ public class Application {
 	private Semanta semanta;
 	private CrosswordGenerator generator;
 	private Recommender recommender;
+	private List<ResourceInfo> infos;
 	private Crossword crossword;
 	private Difficulty difficulty;
 	private String topic;
@@ -43,6 +44,7 @@ public class Application {
         info.setSummary("blac bla bla");
         List<ResourceInfo> list = new ArrayList<>();
         list.add(info);
+        this.infos = list;
         return list;
 //		return this.semanta.getTopics(topic, 5);
 	}
@@ -146,6 +148,10 @@ public class Application {
 
 	public void setDifficulty(Difficulty difficulty) {
 		this.difficulty = difficulty;
+	}
+
+	public List<ResourceInfo> getInfos() {
+		return infos;
 	}
 
 }

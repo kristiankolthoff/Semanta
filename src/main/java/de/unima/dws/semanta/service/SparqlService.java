@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.StringTokenizer;
 
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Query;
@@ -50,16 +51,28 @@ public class SparqlService {
 
 	// Get topics related to a search word
 		public static List<ResourceInfo> getTopics(String topic, int limit) {
+			
+			topic = topic.replace(" ", " AND ");
+
 			final StringBuilder query = new StringBuilder();
-			query.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n");
-			query.append("select distinct ?s ?o where {\n");
-			query.append("?s rdfs:label ?o.\n");
-			query.append("FILTER (lang(?o) = 'en').\n");
+			query.append("PREFIX dbo:<http://dbpedia.org/ontology/> \n");
+			query.append("PREFIX vrank:<http://purl.org/voc/vrank#> \n");
+			query.append("SELECT distinct ?s ?o ?abstract ?img \n");
+			query.append("FROM <http://dbpedia.org> \n");
+			query.append("FROM <http://people.aifb.kit.edu/ath/#DBpedia_PageRank> \n");
+			query.append("WHERE { \n");
+			query.append("?s rdfs:label ?o. \n");
+			query.append("?s dbo:abstract ?abstract. \n");
+			query.append("OPTIONAL {?s dbo:thumbnail ?img} \n");	
+			query.append("?s vrank:hasRank/vrank:rankValue ?v. \n");
+			query.append("FILTER (lang(?o) = 'en'). \n");
+			query.append("FILTER (lang(?abstract) = 'en'). \n");
+			query.append("FILTER (!EXISTS {?s rdf:type skos:Concept}) \n");
 			query.append("?o <bif:contains> \"");
 			query.append(topic);
-			query.append("\".} LIMIT ");
+			query.append("\".} ORDER BY DESC(?v) LIMIT ");
 			query.append(limit);
-			
+
 			System.out.println(query.toString());
 
 			List<ResourceInfo> resourceInfos = new ArrayList<>();
@@ -68,6 +81,11 @@ public class SparqlService {
 				QuerySolution qs = result.next();
 				Resource resource = qs.getResource("s");
 				Literal label =  qs.getLiteral("o");
+				
+				Literal abst = qs.getLiteral("abstract");
+				Literal img = qs.getLiteral("img");
+				
+				//TODO use abstract and image in resourceInfo
 				
 				resourceInfos.add(new ResourceInfo(resource, resource.getURI(),null, label.toString()));
 			}

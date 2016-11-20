@@ -34,6 +34,12 @@ public class SparqlServiceTest {
 	}
 	
 	@Test
+	public void getTopics()
+	{
+		SparqlService.getTopics("red blue green", 10);
+	}
+	
+	@Test
 	public void queryDescribeTest() {
 		Model model = SparqlService.queryDescribe("http://dbpedia.org/resource/Ansungtangmyun");
 		StmtIterator it = model.listStatements();

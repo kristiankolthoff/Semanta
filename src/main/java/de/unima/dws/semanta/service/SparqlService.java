@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.StringTokenizer;
 
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Query;
@@ -22,9 +21,6 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
-import org.apache.jena.vocabulary.VCARD;
-import javafx.collections.ObservableList;
-import javafx.collections.FXCollections;
 
 import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.utilities.Settings;

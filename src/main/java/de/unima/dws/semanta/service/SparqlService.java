@@ -53,6 +53,9 @@ public class SparqlService {
 			final StringBuilder query = new StringBuilder();
 			query.append("PREFIX dbo:<http://dbpedia.org/ontology/> \n");
 			query.append("PREFIX vrank:<http://purl.org/voc/vrank#> \n");
+			query.append("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
+			query.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n");
+			query.append("PREFIX skos: <http://www.w3.org/2004/02/skos/core#>");
 			query.append("SELECT distinct ?s ?o ?abstract ?img \n");
 			query.append("FROM <http://dbpedia.org> \n");
 			query.append("FROM <http://people.aifb.kit.edu/ath/#DBpedia_PageRank> \n");
@@ -79,11 +82,10 @@ public class SparqlService {
 				Literal label =  qs.getLiteral("o");
 				
 				Literal abst = qs.getLiteral("abstract");
-				Literal img = qs.getLiteral("img");
-				
-				//TODO use abstract and image in resourceInfo
-				
-				resourceInfos.add(new ResourceInfo(resource, resource.getURI(),null, label.toString()));
+				Resource img = qs.getResource("img");
+				String imgURL = (img != null) ? img.getURI().substring(0, 4) + "s" + img.getURI().substring(4) : null;
+				resourceInfos.add(new ResourceInfo(resource, resource.getURI(), 
+						label.toString(), abst.toString(), imgURL, resourceInfos.size()+1));
 			}
 			return resourceInfos;
 		}
@@ -109,11 +111,13 @@ public class SparqlService {
 	public static ResultSet queryNodeSumEntities(String uri, int threshold, 
 			List<String> filterSubjects, List<String> filterPredicates) {
 		StringBuilder sb = new StringBuilder();
+		sb.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>");
 		sb.append("PREFIX dbo: <http://dbpedia.org/ontology/> " +
 		"SELECT ?s ?p (count(?p1) as ?c) " +
 		"WHERE {" +
 		"?s ?p <" + uri + "> . " +
 		"?s ?p1 ?out . ");
+		sb.append("?s rdfs:label ?label . ");
 		for(String filterS : filterSubjects) {
 			sb.append("FILTER(!REGEX(STR(?s), \"" + filterS + "\")) . ");
 		}
@@ -127,6 +131,7 @@ public class SparqlService {
 		sb.append("group by ?s ?p " +
 		"having (count(?out) > " + threshold + ") " +
 		"order by desc(?c) ");
+		System.out.println(sb.toString());
 		return SparqlService.query(sb.toString());
 	}
 	

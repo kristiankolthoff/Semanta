@@ -1,5 +1,7 @@
 package de.unima.dws.semanta.utilities;
 
+import javafx.scene.image.Image;
+
 public class Settings {
 
 	public static final String LANG = "en";
@@ -11,4 +13,6 @@ public class Settings {
 	public static final String DBO_ABSTRACT = "http://dbpedia.org/ontology/abstract";
 	
 	public static final String DEFAULT_ENDPOINT_DBPEDIA = "http://dbpedia.org/sparql";
+	
+	public static final String DEFAULT_IMG = "http://www.eisl.at/images/joomlart/demo/default.jpg";
 }

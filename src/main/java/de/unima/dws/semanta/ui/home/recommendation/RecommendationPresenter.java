@@ -16,6 +16,7 @@ import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.ui.home.HomePresenter;
 import de.unima.dws.semanta.ui.main.MainView;
+import de.unima.dws.semanta.utilities.Settings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -50,7 +51,11 @@ public class RecommendationPresenter implements Initializable{
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		imageView.setImage(new Image(recommendation.getImageURL()));
+		if(recommendation.getImageURL().isPresent()) {
+			imageView.setImage(new Image(recommendation.getImageURL().get()));			
+		} else {
+			imageView.setImage(new Image(Settings.DEFAULT_IMG));
+		}
 		labelName.setText(recommendation.getLabel());
 		textType.setText(recommendation.getTypes());
 		textAbstract.setText(recommendation.getSummary());
@@ -61,15 +66,11 @@ public class RecommendationPresenter implements Initializable{
 	}
 	
 	public void generateCrossword() {
-		homePresenter.generateCrossword();
-//		Crossword crossword = this.application.generateCrossword("test");
-//		crossword.normalize();
-//		Map<Object, Object> customProperties = new HashMap<>();
-//        customProperties.put("crossword", crossword);
-//        Injector.setConfigurationSource(customProperties::get);
-//		Stage stage = (Stage) textAbstract.getScene().getWindow();
-//		stage.setScene(new Scene(new MainView((f) -> application).getView()));
+		homePresenter.generateCrossword(recommendation.getLabel(), (Stage) textAbstract.getScene().getWindow());
 	}
 
-
+	public void setHomePresenter(HomePresenter homePresenter) {
+		this.homePresenter = homePresenter;
+	}
+	
 }

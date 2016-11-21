@@ -9,14 +9,14 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="153.0" prefWidth="686.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.unima.dws.semanta.ui.home.search.info.InfoPresenter">
+<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="153.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.unima.dws.semanta.ui.home.search.info.InfoPresenter">
    <children>
       <Label fx:id="labelIndex" text="1.">
          <font>
             <Font name="System Bold" size="30.0" />
          </font>
       </Label>
-      <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" style="-fx-image: url(http://a5.files.biography.com/image/upload/c_fill,cs_srgb,dpr_1.0,g_face,h_300,q_80,w_300/MTE4MDAzNDEwNzg5ODI4MTEw.jpg);">
+      <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
          <HBox.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </HBox.margin>

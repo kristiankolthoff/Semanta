@@ -2,6 +2,7 @@ package de.unima.dws.semanta.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
@@ -13,7 +14,7 @@ public class ResourceInfo {
 	private String uri;
 	private String label;
 	private String summary;
-	private String imageURL;
+	private Optional<String> imageURL;
 	private List<String> types;
 	private int index;
 	private String type;
@@ -26,9 +27,21 @@ public class ResourceInfo {
 		this.label = label;
 	}
 	
-	public ResourceInfo() {
-		// TODO Auto-generated constructor stub
+	
+	
+	 public ResourceInfo(Resource resource, String uri, String label, 
+			 String summary, String imageURL, int index) {
+		this.resource = resource;
+		this.uri = uri;
+		this.label = label;
+		this.summary = summary;
+		this.imageURL = Optional.ofNullable(imageURL);
+		this.index = index;
 	}
+
+
+
+	public ResourceInfo() {	}
 	
 	@PostConstruct
 	public void initialize() {
@@ -67,12 +80,12 @@ public class ResourceInfo {
 		this.summary = summary;
 	}
 
-	public String getImageURL() {
+	public Optional<String> getImageURL() {
 		return imageURL;
 	}
 
 	public void setImageURL(String imageURL) {
-		this.imageURL = imageURL;
+		this.imageURL = Optional.ofNullable(imageURL);
 	}
 
 	public String getTypes() {

@@ -2,15 +2,12 @@ package de.unima.dws.semanta.ui.home;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 
-import com.airhacks.afterburner.injection.Injector;
 
 import de.unima.dws.semanta.Application;
 import de.unima.dws.semanta.crossword.model.Crossword;
@@ -18,6 +15,7 @@ import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.ui.home.recommendation.RecommendationPresenter;
 import de.unima.dws.semanta.ui.home.recommendation.RecommendationView;
+import de.unima.dws.semanta.ui.home.search.SearchPresenter;
 import de.unima.dws.semanta.ui.home.search.SearchView;
 import de.unima.dws.semanta.ui.main.MainView;
 import javafx.animation.Interpolator;
@@ -103,7 +101,7 @@ public class HomePresenter implements Initializable{
 		for(ResourceInfo recommendation : recommendations) {
 			//TODO only inject application
 			RecommendationView view = new RecommendationView((f) -> recommendation);
-//			((RecommendationPresenter)view.getPresenter());
+			((RecommendationPresenter)view.getPresenter()).setHomePresenter(this);
 			Separator separator = new Separator(Orientation.VERTICAL);
 			separator.setVisible(false);
 			separator.setPadding(new Insets(5));
@@ -153,60 +151,68 @@ public class HomePresenter implements Initializable{
 	 */
 	public void searchTopics() {
 		if(validateInput(textFieldSearch)) {
+			searchTopics(textFieldSearch.getText());
+		}
+	}
+	
+	public void searchTopics(String topic) {
 			anim.stop();
 			indicator.setVisible(true);
 			Task<List<ResourceInfo>> longTask = new Task<List<ResourceInfo>>() {
 	            @Override
 	            protected List<ResourceInfo> call() throws Exception {
 	            	//TODO sanitize string
-	            	return application.getTopicResults(textFieldSearch.getText());
+	            	return application.getTopicResults(topic);
 	            }
 	        };
 	       longTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 	            @Override
 	            public void handle(WorkerStateEvent t) {
-	    			indicator.setVisible(false);
 					System.out.println("success");
-					Stage stage = (Stage) textFieldSearch.getScene().getWindow();
-					stage.setScene(new Scene(new SearchView((f) -> application).getView()));
+					try {
+						List<ResourceInfo> searchInfo = longTask.get();
+						SearchView view = new SearchView((f) -> searchInfo);
+						((SearchPresenter)view.getPresenter()).setHomePresenter(HomePresenter.this);
+						((SearchPresenter)view.getPresenter()).initialize();
+						indicator.setVisible(false);
+						Stage stage = (Stage) textFieldSearch.getScene().getWindow();
+						stage.setScene(new Scene(view.getView()));
+					} catch (InterruptedException | ExecutionException e) {
+						e.printStackTrace();
+					}
 					
 	            }
 	        });
 	        new Thread(longTask).start();
+	}
+	
+	public void generateCrossword(String topic, Stage stage) {
+		anim.stop();
+		indicator.setVisible(true);
+		Task<Crossword> longTask = new Task<Crossword>() {
+		         @Override
+		         protected Crossword call() throws Exception {
+		         //TODO sanitize string
+		         return application.generateCrossword(topic);
+		         }
+		};
+		longTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+		         @Override
+		         public void handle(WorkerStateEvent t) {
+		        	 indicator.setVisible(false);
+					 System.out.println("success");
+					 stage.setScene(new Scene(new MainView((f) -> application).getView()));
+		         }
+		});
+		new Thread(longTask).start();
+	}
+
+	public void generateCrossword() {
+		if(validateInput(textFieldSearch)) {
+			generateCrossword(textFieldSearch.getText(),(Stage) textFieldSearch.getScene().getWindow());
 		}
 	}
 	
-	public void generateCrossword(String topic) {
-		if(validateInput(textFieldSearch)) {
-			anim.stop();
-			indicator.setVisible(true);
-			Task<Crossword> longTask = new Task<Crossword>() {
-		            @Override
-		            protected Crossword call() throws Exception {
-		            	//TODO sanitize string
-		            	return application.generateCrossword(textFieldSearch.getText());
-		            }
-		        };
-		       longTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-		            @Override
-		            public void handle(WorkerStateEvent t) {
-		    			indicator.setVisible(false);
-							System.out.println("success");
-							Stage stage = (Stage) textFieldSearch.getScene().getWindow();
-							stage.setScene(new Scene(new MainView((f) -> application).getView()));
-		            }
-		        });
-		        new Thread(longTask).start();
-		}
-	}
-
-	/**
-	 * Get the most ranked topic resource and directly
-	 * generate crossword puzzle
-	 */
-	public void generateCrossword() {
-		
-	}
 	
 	private boolean validateInput(TextField textField) {
 		if(textField.getText() == null || textField.getText().isEmpty()) {

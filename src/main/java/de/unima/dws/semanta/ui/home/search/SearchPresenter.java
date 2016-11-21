@@ -1,12 +1,13 @@
 package de.unima.dws.semanta.ui.home.search;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 
-import de.unima.dws.semanta.Application;
 import de.unima.dws.semanta.model.ResourceInfo;
+import de.unima.dws.semanta.ui.home.HomePresenter;
 import de.unima.dws.semanta.ui.home.search.info.InfoPresenter;
 import de.unima.dws.semanta.ui.home.search.info.InfoView;
 import javafx.fxml.FXML;
@@ -21,13 +22,23 @@ public class SearchPresenter implements Initializable{
 	private VBox vBoxResults;
 	
 	@Inject
-	private Application application;
+	private ArrayList<ResourceInfo> infos;
+	
+	private HomePresenter homePresenter;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		for(ResourceInfo info : application.getInfos()) {
+		
+	}
+
+	public void setHomePresenter(HomePresenter homePresenter) {
+		this.homePresenter = homePresenter;
+	}
+	
+	public void initialize() {
+		for(ResourceInfo info : infos) {
 			InfoView view = new InfoView((f) -> info);
-			((InfoPresenter)view.getPresenter()).setApplication(this.application);;
+			((InfoPresenter)view.getPresenter()).setHomePresenter(homePresenter);
             vBoxResults.getChildren().add(view.getView());
             vBoxResults.getChildren().add(new Separator(Orientation.HORIZONTAL));
 		}

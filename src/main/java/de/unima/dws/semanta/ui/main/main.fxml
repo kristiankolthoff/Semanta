@@ -107,7 +107,10 @@
                   <Separator prefWidth="200.0" />
                   <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="500.0" prefWidth="349.0" style="-fx-background-color: #C0C0C0;">
                      <children>
-                        <Label text="DOWN" />
+                        <Label text="DOWN">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
                         <ListView fx:id="listViewDown" prefHeight="200.0" prefWidth="200.0" />
                      </children>
                      <opaqueInsets>
@@ -197,9 +200,9 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="1000.0" prefWidth="349.0">
                      <children>
-                        <Accordion maxWidth="1000.0" prefHeight="1000.0">
+                        <Accordion expandedPane="$abstractPane" maxWidth="1000.0" prefHeight="1000.0">
                           <panes>
-                            <TitledPane text="Abstract">
+                            <TitledPane fx:id="abstractPane" text="Abstract">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>

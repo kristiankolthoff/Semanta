@@ -36,6 +36,7 @@ public class OutEntitySelector implements EntitySelector{
 		return new Entity(ResourceFactory.createResource(), ResourceFactory.createProperty(""), true);
 	}
 	
+	
 	public boolean isCached(Resource resource) {
 		return this.cache.contains(resource);
 	}

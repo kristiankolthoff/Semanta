@@ -8,6 +8,9 @@ import javax.inject.Inject;
 import de.unima.dws.semanta.Application;
 import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.ResourceInfo;
+import de.unima.dws.semanta.ui.home.HomePresenter;
+import de.unima.dws.semanta.utilities.Settings;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
@@ -15,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class InfoPresenter implements Initializable{
 
@@ -39,14 +43,14 @@ public class InfoPresenter implements Initializable{
 	@Inject
 	private ResourceInfo info;
 	
-	private Application application;
+	private HomePresenter homePresenter;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		loadImageOnBackgroundThread();
 		labelIndex.setText(String.valueOf(info.getIndex() + "."));
-		imageView.setImage(new Image(info.getImageURL()));
 		labelName.setText(info.getLabel());
-		labelType.setText(info.getTypes());
+//		labelType.setText(info.getTypes());
 		textAbstract.setText(info.getSummary());
 		comboBoxDifficulty.getItems().add(Difficulty.BEGINNER);
 		comboBoxDifficulty.getItems().add(Difficulty.ADVANCED);
@@ -54,16 +58,29 @@ public class InfoPresenter implements Initializable{
 		comboBoxDifficulty.getSelectionModel().select(Difficulty.EXPERT);
 	}
 	
+	private void loadImageOnBackgroundThread() {
+		 Task<Void> imageDisplayTask = new Task<Void>() {
+	            @Override
+	            public Void call() throws InterruptedException {
+	            	if(info.getImageURL().isPresent()) {
+	        			imageView.setImage(new Image(info.getImageURL().get()));			
+	        		} else {
+	        			imageView.setImage(new Image(Settings.DEFAULT_IMG));
+	        		}
+	            	return null;
+	            }
+	        };
+	        Thread th = new Thread(imageDisplayTask);
+	        th.setDaemon(true);
+	        th.start();
+	}
+	
 	public void generate() {
-		
+		homePresenter.generateCrossword(info.getUri(), (Stage) labelIndex.getScene().getWindow());
 	}
 
-	public Application getApplication() {
-		return application;
-	}
-
-	public void setApplication(Application application) {
-		this.application = application;
+	public void setHomePresenter(HomePresenter homePresenter) {
+		this.homePresenter = homePresenter;
 	}
 
 }

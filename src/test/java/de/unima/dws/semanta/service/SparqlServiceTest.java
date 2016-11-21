@@ -2,6 +2,8 @@ package de.unima.dws.semanta.service;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
@@ -12,6 +14,7 @@ import org.apache.jena.rdf.model.StmtIterator;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.utilities.Settings;
 
 public class SparqlServiceTest {
@@ -36,7 +39,8 @@ public class SparqlServiceTest {
 	@Test
 	public void getTopics()
 	{
-		SparqlService.getTopics("red blue green", 10);
+		List<ResourceInfo> infos = SparqlService.getTopics("barack obama", 10);
+		System.out.println(infos.size());
 	}
 	
 	@Test
@@ -71,7 +75,7 @@ public class SparqlServiceTest {
 			it.next();
 			count++;
 		}
-		assertEquals(168, count);
+		assertEquals(170, count);
 	}
 	
 	@Test

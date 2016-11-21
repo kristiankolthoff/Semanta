@@ -1,11 +1,7 @@
 package de.unima.dws.semanta;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Observable;
 
 import javax.annotation.PostConstruct;
 
@@ -19,10 +15,10 @@ import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.selector.EntitySelector;
+import de.unima.dws.semanta.selector.NodeSumSelector;
 import de.unima.dws.semanta.selector.OutEntitySelector;
 import de.unima.dws.semanta.service.SparqlService;
 import de.unima.dws.semanta.utilities.Settings;
-import javafx.collections.ObservableList;
 /**
  * Semanta is the main logical component for generating a semantic topic-based crossword
  * puzzle as combines strategies for selecting topic-related entities, generates HAEntities
@@ -49,14 +45,14 @@ public class Semanta {
 	@PostConstruct
 	public void initialize() {
 		SparqlService.setEndpoint(Settings.DEFAULT_ENDPOINT_DBPEDIA);
-		this.selector = new OutEntitySelector();
+		this.selector = new NodeSumSelector();
 		this.generator = new SummaryHAGenerator();
 		this.optionalGenerator = new HardOAGenerator();
 	}
 	
-	public List<HAEntity> fetchEntities(String topic, int numEntities, boolean optionalAnswers) {
+	public List<HAEntity> fetchEntities(String uri, int numEntities, boolean optionalAnswers) {
 		List<HAEntity> haEntities = new ArrayList<>();
-		Resource topicResource = SparqlService.queryResource("http://dbpedia.org/resource/Germany");
+		Resource topicResource = SparqlService.queryResource(uri);
 		for (int i = 0; i < numEntities; i++) {
 			Entity resourceEntity = this.selector.select(topicResource);
 			HAEntity entity = this.generator.generate(resourceEntity, topicResource);
@@ -68,9 +64,6 @@ public class Semanta {
 		return haEntities;
 	}
 	
-	public List<ResourceInfo> fetchResources(String topic) {
-		return null;
-	}
 
 	public EntitySelector getSelector() {
 		return selector;
@@ -96,18 +89,8 @@ public class Semanta {
 		this.optionalGenerator = optionalGenerator;
 	}
 	
-	public List<ResourceInfo> getTopics(String keyword,int topicsCount)
-	{
-		List<ResourceInfo> topics = new ArrayList<>();
-		topics = SparqlService.getTopics(keyword.trim(), topicsCount);
-        
-		return topics;
-				
-		/*
-        for (Iterator<ResourceInfo> iterator = topics.iterator(); iterator.hasNext();) {
-			ResourceInfo topic = (ResourceInfo) iterator.next();
-			LstViewTopics.getItems().add(topic);
-		}
-		*/
+	public List<ResourceInfo> fetchTopics(String keyword,int topicsCount) {
+		return SparqlService.getTopics(keyword, topicsCount);
 	}
+	
 }

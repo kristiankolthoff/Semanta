@@ -38,47 +38,54 @@ public class Application {
 	}
 	
 	public List<ResourceInfo> getTopicResults(String topic) {
-		ResourceInfo info = new ResourceInfo(ResourceFactory.createResource(), "http://", "agent", "Barack Obama");
-        info.setIndex(1);
-        info.setImageURL("http://a5.files.biography.com/image/upload/c_fill,cs_srgb,dpr_1.0,g_face,h_300,q_80,w_300/MTE4MDAzNDEwNzg5ODI4MTEw.jpg");
-        info.setSummary("blac bla bla");
-        List<ResourceInfo> list = new ArrayList<>();
-        list.add(info);
-        this.infos = list;
-        return list;
-//		return this.semanta.getTopics(topic, 5);
+//		ResourceInfo info = new ResourceInfo(ResourceFactory.createResource(), "http://", "agent", "Barack Obama");
+//        info.setIndex(1);
+//        info.setImageURL("http://a5.files.biography.com/image/upload/c_fill,cs_srgb,dpr_1.0,g_face,h_300,q_80,w_300/MTE4MDAzNDEwNzg5ODI4MTEw.jpg");
+//        info.setSummary("blac bla bla");
+//        List<ResourceInfo> list = new ArrayList<>();
+//        list.add(info);
+//        this.infos = list;
+//        return list;
+		return this.semanta.fetchTopics(topic, 10);
 	}
 	
 	public Crossword generateCrossword(String topic) {
-//		List<HAEntity> entities = semanta.fetchEntities(topic, 5, true);
-//		List<HAWord> words = new ArrayList<>();
-//		for(HAEntity entity : entities) {
-//			words.add(new HAWord(entity));
-//		}
-//		Crossword crossword = this.generator.generate(words);
-//		crossword.normalize();
-		Crossword crossword = generator.generate(
-//				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("tested").addHint("something that can be tested")),
-				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("semanta").addHint("name of this application")),
-				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("barbara").addHint("well known girl name")),
-				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("software").addHint("opposite of hardware")),
-				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("engineering").addHint("something that can be tested,"
-						+ " something that can be tested")),
-				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("amen").addHint("word of the catholic curch")),
-				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("timberners").addHint("inventor of the internet")),
-				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("norbertlammert").addHint("president of the bundestag")),
-				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("robben").addHint("famous soccer player of the netherlands")),
-				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("oliverkahn").addHint("well knwon german goal keeper, whats his name?")),
-//				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("ronaldo").addHint("best soccer player of all time")),
-				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("angel").addHint("they can fly and help people, what is it?")));
+		if(!topic.contains("http")) {
+			List<ResourceInfo> infos = semanta.fetchTopics(topic, 5);
+			if(!infos.isEmpty()) {
+				topic = infos.get(0).getUri();
+			}
+		}
+		List<HAEntity> entities = semanta.fetchEntities(topic, 5, true);
+		List<HAWord> words = new ArrayList<>();
+		for(HAEntity entity : entities) {
+			System.out.println(entity);
+			words.add(new HAWord(entity));
+		}
+		Crossword crossword = this.generator.generate(words);
 		crossword.normalize();
+//		Crossword crossword = generator.generate(
+////				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("tested").addHint("something that can be tested")),
+//				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("semanta").addHint("name of this application")),
+//				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("barbara").addHint("well known girl name")),
+//				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("software").addHint("opposite of hardware")),
+//				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("engineering").addHint("something that can be tested,"
+//						+ " something that can be tested")),
+//				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("amen").addHint("word of the catholic curch")),
+//				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("timberners").addHint("inventor of the internet")),
+//				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("norbertlammert").addHint("president of the bundestag")),
+//				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("robben").addHint("famous soccer player of the netherlands")),
+//				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("oliverkahn").addHint("well knwon german goal keeper, whats his name?")),
+////				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("ronaldo").addHint("best soccer player of all time")),
+//				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("angel").addHint("they can fly and help people, what is it?")));
+//		crossword.normalize();
 		this.topic = topic;
 		this.crossword = crossword;
 		return crossword;
 	}
 	
 	public Crossword generateCrossword(ResourceInfo info) {
-		return null;
+		return generateCrossword(info.getUri());
 	}
 	
 	public Crossword regenerateCrossword() {

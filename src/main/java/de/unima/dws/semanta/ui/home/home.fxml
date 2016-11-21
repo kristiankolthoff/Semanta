@@ -11,7 +11,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="700.0" prefWidth="1104.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.unima.dws.semanta.ui.home.HomePresenter">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.unima.dws.semanta.ui.home.HomePresenter">
   <children>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #C0C0C0;">
          <children>

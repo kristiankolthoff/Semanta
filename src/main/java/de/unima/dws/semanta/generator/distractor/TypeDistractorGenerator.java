@@ -1,4 +1,4 @@
-package de.unima.dws.semanta.generator.oa;
+package de.unima.dws.semanta.generator.distractor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +13,13 @@ import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.service.SparqlService;
 import de.unima.dws.semanta.utilities.Settings;
 
-public class HardOAGenerator implements OAGenerator{
+public class TypeDistractorGenerator implements DistractorGenerator{
 
 	private Random random;
 	
 	public static final int LIMIT = 200;
 	
-	public HardOAGenerator() {
+	public TypeDistractorGenerator() {
 		this.random = new Random();
 	}
 	

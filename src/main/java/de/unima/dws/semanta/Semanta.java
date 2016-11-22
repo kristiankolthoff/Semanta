@@ -7,17 +7,16 @@ import javax.annotation.PostConstruct;
 
 import org.apache.jena.rdf.model.Resource;
 
+import de.unima.dws.semanta.generator.distractor.DistractorGenerator;
+import de.unima.dws.semanta.generator.distractor.TypeDistractorGenerator;
 import de.unima.dws.semanta.generator.ha.HAGenerator;
 import de.unima.dws.semanta.generator.ha.SummaryHAGenerator;
-import de.unima.dws.semanta.generator.oa.HardOAGenerator;
-import de.unima.dws.semanta.generator.oa.OAGenerator;
 import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.selector.EntitySelector;
 import de.unima.dws.semanta.selector.NodeSumSelector;
-import de.unima.dws.semanta.selector.OutEntitySelector;
 import de.unima.dws.semanta.service.SparqlService;
 import de.unima.dws.semanta.utilities.Settings;
 /**
@@ -30,13 +29,13 @@ public class Semanta {
 
 	private EntitySelector selector;
 	private HAGenerator generator;
-	private OAGenerator optionalGenerator;
+	private DistractorGenerator distractorGenerator;
 	
 	public Semanta(EntitySelector selector, HAGenerator generator,
-			OAGenerator optionalGenerator) {
+			DistractorGenerator distractorGenerator) {
 		this.selector = selector;
 		this.generator = generator;
-		this.optionalGenerator = optionalGenerator;
+		this.distractorGenerator = distractorGenerator;
 	}
 
 	public Semanta() {
@@ -48,7 +47,7 @@ public class Semanta {
 		SparqlService.setEndpoint(Settings.DEFAULT_ENDPOINT_DBPEDIA);
 		this.selector = new NodeSumSelector();
 		this.generator = new SummaryHAGenerator();
-		this.optionalGenerator = new HardOAGenerator();
+		this.distractorGenerator = new TypeDistractorGenerator();
 	}
 	
 	public List<HAEntity> fetchEntities(String uri, int numEntities, boolean optionalAnswers, Difficulty difficulty) {
@@ -58,7 +57,7 @@ public class Semanta {
 			Entity resourceEntity = this.selector.select(topicResource, difficulty);
 			HAEntity entity = this.generator.generate(resourceEntity, topicResource, difficulty);
 			if(optionalAnswers) {
-				entity.setOAResources(this.optionalGenerator.generate(resourceEntity, topicResource, difficulty, 3));
+				entity.setOAResources(this.distractorGenerator.generate(resourceEntity, topicResource, difficulty, 3));
 			}
 			haEntities.add(entity);
 		}
@@ -86,12 +85,12 @@ public class Semanta {
 		this.generator = generator;
 	}
 
-	public OAGenerator getOptionalGenerator() {
-		return optionalGenerator;
+	public DistractorGenerator getOptionalGenerator() {
+		return distractorGenerator;
 	}
 
-	public void setOptionalGenerator(OAGenerator optionalGenerator) {
-		this.optionalGenerator = optionalGenerator;
+	public void setOptionalGenerator(DistractorGenerator optionalGenerator) {
+		this.distractorGenerator = optionalGenerator;
 	}
 	
 	public List<ResourceInfo> fetchTopics(String keyword,int topicsCount) {

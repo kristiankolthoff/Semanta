@@ -1,4 +1,4 @@
-package de.unima.dws.semanta.generator.oa;
+package de.unima.dws.semanta.generator.distractor;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.model.ResourceInfo;
 
 @FunctionalInterface
-public interface OAGenerator {
+public interface DistractorGenerator {
 
 	/**
 	 * Given a Resource, generates a list of related Resource objects

@@ -14,6 +14,7 @@ public class HAEntity {
 
 	private List<String> hints;
 	private String answer;
+	//TODO refactor to entity
 	private Resource resource;
 	private String entAbstract;
 	private String imageURL;

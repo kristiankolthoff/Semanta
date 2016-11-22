@@ -9,7 +9,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 
-
+import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.service.NLPService;
@@ -19,7 +19,7 @@ public class SummaryHAGenerator implements HAGenerator {
 
 	
 	@Override
-	public HAEntity generate(Entity entity, Resource topicResource) {
+	public HAEntity generate(Entity entity, Resource topicResource, Difficulty difficulty) {
 		String summary = this.extractSummary(entity.getResource());
 		String[] sentences = NLPService.detectSentences(summary);
 		String hint = this.getHint(entity, sentences, 1);

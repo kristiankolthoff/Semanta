@@ -76,7 +76,8 @@ public class InfoPresenter implements Initializable{
 	}
 	
 	public void generate() {
-		homePresenter.generateCrossword(info.getUri(), (Stage) labelIndex.getScene().getWindow());
+		homePresenter.generateCrossword(info, 
+				(Stage) labelIndex.getScene().getWindow(), comboBoxDifficulty.getValue());
 	}
 
 	public void setHomePresenter(HomePresenter homePresenter) {

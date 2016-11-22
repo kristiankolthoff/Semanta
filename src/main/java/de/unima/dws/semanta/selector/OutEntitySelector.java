@@ -9,6 +9,7 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 
+import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.service.SparqlService;
 
@@ -21,7 +22,7 @@ public class OutEntitySelector implements EntitySelector{
 	}
 	
 	@Override
-	public Entity select(Resource topicResource) {
+	public Entity select(Resource topicResource, Difficulty difficulty) {
 		StmtIterator it = topicResource.listProperties();
 		while(it.hasNext()) {
 			Statement stmt = it.next();

@@ -2,6 +2,7 @@ package de.unima.dws.semanta.selector;
 
 import org.apache.jena.rdf.model.Resource;
 
+import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.Entity;
 
 public interface EntitySelector {
@@ -16,7 +17,7 @@ public interface EntitySelector {
 	 * @param topicResource the topic entity represented as a resource
 	 * @return an Entity contining the selected resource
 	 */
-	public Entity select(Resource topicResource);
+	public Entity select(Resource topicResource, Difficulty difficulty);
 	
 	/**
 	 * Clear the cache of already selected and retrieved

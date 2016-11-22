@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.jena.rdf.model.Resource;
 
+import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.service.NLPService;
@@ -11,7 +12,7 @@ import de.unima.dws.semanta.service.NLPService;
 public class PropertyLinkHAGenerator implements HAGenerator{
 
 	@Override
-	public HAEntity generate(Entity entity, Resource topicResource) {
+	public HAEntity generate(Entity entity, Resource topicResource, Difficulty difficulty) {
 		HAEntity haEntity = new HAEntity(entity.getResource());
 		haEntity.setAnswer(entity.getLabel()).
 				 addHint(getHint(entity, topicResource));

@@ -11,6 +11,7 @@ import de.unima.dws.semanta.generator.ha.HAGenerator;
 import de.unima.dws.semanta.generator.ha.SummaryHAGenerator;
 import de.unima.dws.semanta.generator.oa.HardOAGenerator;
 import de.unima.dws.semanta.generator.oa.OAGenerator;
+import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.model.ResourceInfo;
@@ -50,18 +51,22 @@ public class Semanta {
 		this.optionalGenerator = new HardOAGenerator();
 	}
 	
-	public List<HAEntity> fetchEntities(String uri, int numEntities, boolean optionalAnswers) {
+	public List<HAEntity> fetchEntities(String uri, int numEntities, boolean optionalAnswers, Difficulty difficulty) {
 		List<HAEntity> haEntities = new ArrayList<>();
 		Resource topicResource = SparqlService.queryResource(uri);
 		for (int i = 0; i < numEntities; i++) {
-			Entity resourceEntity = this.selector.select(topicResource);
-			HAEntity entity = this.generator.generate(resourceEntity, topicResource);
+			Entity resourceEntity = this.selector.select(topicResource, difficulty);
+			HAEntity entity = this.generator.generate(resourceEntity, topicResource, difficulty);
 			if(optionalAnswers) {
-				entity.setOAResources(this.optionalGenerator.generate(resourceEntity, topicResource, 3));
+				entity.setOAResources(this.optionalGenerator.generate(resourceEntity, topicResource, difficulty, 3));
 			}
 			haEntities.add(entity);
 		}
 		return haEntities;
+	}
+	
+	public List<HAEntity> fetchEntities(String uri, int numEntities, boolean optionalAnswers) {
+		return fetchEntities(uri, numEntities, optionalAnswers, Difficulty.BEGINNER);
 	}
 	
 

@@ -2,6 +2,7 @@ package de.unima.dws.semanta.generator.ha;
 
 import org.apache.jena.rdf.model.Resource;
 
+import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.model.HAEntity;
 
@@ -14,5 +15,5 @@ public interface HAGenerator {
 	 * @param topicResource the resource of the topic entity
 	 * @return hint/answer entity based on the given resource
 	 */
-	public HAEntity generate(Entity entitiy, Resource topicResource);
+	public HAEntity generate(Entity entitiy, Resource topicResource, Difficulty difficulty);
 }

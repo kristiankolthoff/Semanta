@@ -49,7 +49,9 @@ public class Application {
 		return this.semanta.fetchTopics(topic, 10);
 	}
 	
-	public Crossword generateCrossword(String topic) {
+	public Crossword generateCrossword(String topic, Difficulty difficulty) {
+		System.out.println(difficulty);
+		this.difficulty = difficulty;
 		if(!topic.contains("http")) {
 			List<ResourceInfo> infos = semanta.fetchTopics(topic, 5);
 			if(!infos.isEmpty()) {
@@ -58,7 +60,7 @@ public class Application {
 				topic = this.topic.getUri();
 			}
 		}
-		List<HAEntity> entities = semanta.fetchEntities(topic, 5, true);
+		List<HAEntity> entities = semanta.fetchEntities(topic, 5, true, difficulty);
 		List<HAWord> words = new ArrayList<>();
 		for(HAEntity entity : entities) {
 			System.out.println(entity);
@@ -85,13 +87,14 @@ public class Application {
 		return crossword;
 	}
 	
-	public Crossword generateCrossword(ResourceInfo info) {
-		return generateCrossword(info.getUri());
+	public Crossword generateCrossword(ResourceInfo info, Difficulty difficulty) {
+		this.topic = info;
+		return generateCrossword(info.getUri(), difficulty);
 	}
 	
 	public Crossword regenerateCrossword() {
 		if(topic != null) {
-			return generateCrossword(topic);
+			return generateCrossword(topic, difficulty);
 		}
 		return crossword;
 	}

@@ -7,6 +7,7 @@ import java.util.Random;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Resource;
 
+import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.service.SparqlService;
@@ -23,7 +24,7 @@ public class HardOAGenerator implements OAGenerator{
 	}
 	
 	@Override
-	public List<ResourceInfo> generate(Entity entity, Resource topicResource, int numEntities) {
+	public List<ResourceInfo> generate(Entity entity, Resource topicResource, Difficulty difficulty,int numEntities) {
 		ResultSet result = null;
 		if(entity.isTyped()) {
 			result = SparqlService.querySimilarResources(topicResource.getURI(), 

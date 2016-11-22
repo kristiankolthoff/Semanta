@@ -8,6 +8,7 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 
+import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.service.SparqlService;
 
@@ -23,7 +24,7 @@ public class NodeSumSelector implements EntitySelector {
 		this.filterPredicates = new ArrayList<>();
 	}
 	
-	public Entity select(Resource topicResource) {
+	public Entity select(Resource topicResource, Difficulty difficulty) {
 		for(Entity entity : this.cache) {
 			filterSubjects.add(entity.getResource().getURI());
 			filterPredicates.add(entity.getProperty().getURI());

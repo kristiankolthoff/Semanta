@@ -192,14 +192,35 @@ public class HomePresenter implements Initializable{
 	        new Thread(longTask).start();
 	}
 	
-	public void generateCrossword(String topic, Stage stage) {
+	public void generateCrossword(String topic, Stage stage, Difficulty difficulty) {
 		anim.stop();
 		indicator.setVisible(true);
 		Task<Crossword> longTask = new Task<Crossword>() {
 		         @Override
 		         protected Crossword call() throws Exception {
 		         //TODO sanitize string
-		         return application.generateCrossword(topic);
+		         return application.generateCrossword(topic, difficulty);
+		         }
+		};
+		longTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+		         @Override
+		         public void handle(WorkerStateEvent t) {
+		        	 indicator.setVisible(false);
+					 System.out.println("success");
+					 stage.setScene(new Scene(new MainView((f) -> application).getView()));
+		         }
+		});
+		new Thread(longTask).start();
+	}
+	
+	public void generateCrossword(ResourceInfo topic, Stage stage, Difficulty difficulty) {
+		anim.stop();
+		indicator.setVisible(true);
+		Task<Crossword> longTask = new Task<Crossword>() {
+		         @Override
+		         protected Crossword call() throws Exception {
+		         //TODO sanitize string
+		         return application.generateCrossword(topic, difficulty);
 		         }
 		};
 		longTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
@@ -215,7 +236,8 @@ public class HomePresenter implements Initializable{
 
 	public void generateCrossword() {
 		if(validateInput(textFieldSearch)) {
-			generateCrossword(textFieldSearch.getText(),(Stage) textFieldSearch.getScene().getWindow());
+			generateCrossword(textFieldSearch.getText(),(Stage) textFieldSearch.getScene().getWindow(), 
+					comboBoxDifficulty.getValue());
 		}
 	}
 	

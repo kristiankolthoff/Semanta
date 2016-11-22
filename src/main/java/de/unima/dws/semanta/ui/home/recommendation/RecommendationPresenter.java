@@ -58,7 +58,8 @@ public class RecommendationPresenter implements Initializable{
 	}
 	
 	public void generateCrossword() {
-		homePresenter.generateCrossword(recommendation.getLabel(), (Stage) textAbstract.getScene().getWindow());
+		homePresenter.generateCrossword(recommendation, 
+				(Stage) textAbstract.getScene().getWindow(), comboBoxDifficulty.getValue());
 	}
 
 	public void setHomePresenter(HomePresenter homePresenter) {

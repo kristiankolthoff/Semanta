@@ -28,7 +28,7 @@ public class Application {
 	private List<ResourceInfo> infos;
 	private Crossword crossword;
 	private Difficulty difficulty;
-	private String topic;
+	private ResourceInfo topic;
 	
 	@PostConstruct
 	public void initialize() {
@@ -53,7 +53,9 @@ public class Application {
 		if(!topic.contains("http")) {
 			List<ResourceInfo> infos = semanta.fetchTopics(topic, 5);
 			if(!infos.isEmpty()) {
-				topic = infos.get(0).getUri();
+				//TODO only set if topic not resource uri already
+				this.topic = infos.get(0);
+				topic = this.topic.getUri();
 			}
 		}
 		List<HAEntity> entities = semanta.fetchEntities(topic, 5, true);
@@ -79,7 +81,6 @@ public class Application {
 ////				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("ronaldo").addHint("best soccer player of all time")),
 //				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("angel").addHint("they can fly and help people, what is it?")));
 		crossword.normalize();
-		this.topic = topic;
 		this.crossword = crossword;
 		return crossword;
 	}
@@ -145,7 +146,7 @@ public class Application {
 		return crossword;
 	}
 
-	public String getTopic() {
+	public ResourceInfo getTopic() {
 		return topic;
 	}
 

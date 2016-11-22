@@ -13,6 +13,7 @@ import de.unima.dws.semanta.crossword.model.Crossword;
 import de.unima.dws.semanta.crossword.model.HAWord;
 import de.unima.dws.semanta.crossword.model.Orientation;
 import de.unima.dws.semanta.model.HAEntity;
+import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.ui.home.HomeView;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -117,7 +118,8 @@ public class MainPresenter implements Initializable{
 	
 	private void initialzeCrosswordGrid() {
 		accordion.setExpandedPane(titledPaneAbstract);
-		labelLinkWithTopic.setText(application.getTopic());
+		labelLinkWithTopic.setText(application.getTopic().getLabel());
+		updateEntityInfo(application.getTopic());
 		listViewAcross.getItems().clear();
 		listViewDown.getItems().clear();
 		crossword = application.getCrossword();
@@ -199,7 +201,9 @@ public class MainPresenter implements Initializable{
 			word.setSolved(true);
 			updateEntityInfo(word);
 			for(Cell cell : word) {
-				cellMap.get(cell).setStyle("-fx-border-color: #00cc66 ;-fx-border-width: 1px ;");
+				if(!cell.getLabel().equals("LA")) {
+					cellMap.get(cell).setStyle("-fx-border-color: #00cc66 ;-fx-border-width: 1px ;");
+				}
 			}
 		}
 	}
@@ -271,6 +275,18 @@ public class MainPresenter implements Initializable{
 	    });
 	}
 	
+	private void updateEntityInfo(ResourceInfo info) {
+		labelName.setText(info.getLabel());
+		textAbtract.setText(info.getSummary());
+//		labelTopic.setText(info.getType());
+		imageViewEntity.setImage(new Image(info.getImageURL().get()));
+		accordion.setExpandedPane(titledPaneAbstract);
+	}
+	
+	public void updateEntityInfoToTopic() {
+		updateEntityInfo(application.getTopic());
+	}
+	
 	private void updateEntityInfo(HAWord word) {
 		HAEntity entity = word.getHAEntity();
 		labelName.setText(entity.getAnswer());
@@ -330,6 +346,20 @@ public class MainPresenter implements Initializable{
         });
         new Thread(longTask).start();
 		
+	}
+	
+	public void solve() {
+		for(HAWord word : crossword) {
+			if(!word.isSolved()) {
+				word.setSolved(true);
+				for(Cell cell : word) {
+					if(!cell.getLabel().equals("LA")) {
+						cellMap.get(cell).setText(cell.getLabel());
+						cellMap.get(cell).setStyle("-fx-border-color: red ;-fx-border-width: 1px ;");
+					}
+				}
+			}
+		}
 	}
 	
 	public void save() {

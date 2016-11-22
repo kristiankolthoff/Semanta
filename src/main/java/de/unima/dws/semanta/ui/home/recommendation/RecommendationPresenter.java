@@ -1,25 +1,17 @@
 package de.unima.dws.semanta.ui.home.recommendation;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 
-import com.airhacks.afterburner.injection.Injector;
 
-import de.unima.dws.semanta.Application;
-import de.unima.dws.semanta.Semanta;
-import de.unima.dws.semanta.crossword.model.Crossword;
 import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.ui.home.HomePresenter;
-import de.unima.dws.semanta.ui.main.MainView;
 import de.unima.dws.semanta.utilities.Settings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;

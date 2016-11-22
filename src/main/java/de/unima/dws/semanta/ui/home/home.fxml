@@ -15,11 +15,11 @@
   <children>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #C0C0C0;">
          <children>
-            <Circle fill="DODGERBLUE" radius="70.0" stroke="BLACK" strokeType="INSIDE">
-               <HBox.margin>
-                  <Insets bottom="20.0" />
-               </HBox.margin>
-            </Circle>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@logo.png" />
+               </image>
+            </ImageView>
             <Label text="SEMANTA">
                <font>
                   <Font name="System Bold" size="56.0" />

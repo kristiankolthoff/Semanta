@@ -3,8 +3,6 @@ package de.unima.dws.semanta.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.jena.graph.Triple;
-import org.apache.jena.graph.impl.LiteralLabel;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;

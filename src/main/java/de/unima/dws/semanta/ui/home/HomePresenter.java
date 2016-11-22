@@ -8,9 +8,11 @@ import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.builder.Diff;
 
 import de.unima.dws.semanta.Application;
 import de.unima.dws.semanta.crossword.model.Crossword;
+import de.unima.dws.semanta.crossword.model.HAWord;
 import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.ui.home.recommendation.RecommendationPresenter;
@@ -32,13 +34,17 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.Duration;
 
 public class HomePresenter implements Initializable{

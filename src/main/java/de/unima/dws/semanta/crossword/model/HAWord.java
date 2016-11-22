@@ -12,6 +12,7 @@ public class HAWord implements Iterable<Cell>{
 	private List<Cell> cells;
 	private Orientation orientation;
 	private int index;
+	private boolean solved;
 	
 	public HAWord(HAEntity entity, Orientation orientation) {
 		this.orientation = orientation;
@@ -52,7 +53,7 @@ public class HAWord implements Iterable<Cell>{
 
 	public boolean isValid() {
 		for(Cell cell : cells) {
-			if(!cell.isValid()) {
+			if(!cell.getLabel().equals("LA") && !cell.isValid()) {
 				return false;
 			}
 		}
@@ -68,7 +69,7 @@ public class HAWord implements Iterable<Cell>{
 	}
 
 	public String getWord() {
-		return entity.getAnswer();
+		return entity.getSanitizedAnswer();
 	}
 
 	public Orientation getOrientation() {
@@ -90,6 +91,14 @@ public class HAWord implements Iterable<Cell>{
 
 	public void setIndex(int index) {
 		this.index = index;
+	}
+
+	public boolean isSolved() {
+		return solved;
+	}
+
+	public void setSolved(boolean solved) {
+		this.solved = solved;
 	}
 
 	

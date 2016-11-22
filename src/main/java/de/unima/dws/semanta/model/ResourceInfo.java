@@ -28,7 +28,6 @@ public class ResourceInfo {
 	}
 	
 	
-	
 	 public ResourceInfo(Resource resource, String uri, String label, 
 			 String summary, String imageURL, int index) {
 		this.resource = resource;

@@ -78,7 +78,7 @@ public class Application {
 //				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("oliverkahn").addHint("well knwon german goal keeper, whats his name?")),
 ////				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("ronaldo").addHint("best soccer player of all time")),
 //				new HAWord(new HAEntity(ResourceFactory.createResource()).setAnswer("angel").addHint("they can fly and help people, what is it?")));
-//		crossword.normalize();
+		crossword.normalize();
 		this.topic = topic;
 		this.crossword = crossword;
 		return crossword;

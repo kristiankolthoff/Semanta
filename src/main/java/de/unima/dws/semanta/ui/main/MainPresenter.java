@@ -12,7 +12,9 @@ import de.unima.dws.semanta.crossword.model.Cell;
 import de.unima.dws.semanta.crossword.model.Crossword;
 import de.unima.dws.semanta.crossword.model.HAWord;
 import de.unima.dws.semanta.crossword.model.Orientation;
+import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.ui.home.HomeView;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -21,17 +23,21 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -44,10 +50,13 @@ public class MainPresenter implements Initializable{
 	private BorderPane borderPane;
 	
 	@FXML
-	private ListView<String> listViewAcross;
+	private CheckBox checkboxAnswers;
 	
 	@FXML
-	private ListView<String> listViewDown;
+	private ListView<HAWord> listViewAcross;
+	
+	@FXML
+	private ListView<HAWord> listViewDown;
 	
 	@FXML
 	private Label labelAnswerA;
@@ -80,6 +89,15 @@ public class MainPresenter implements Initializable{
 	private Text textAbtract;
 	
 	@FXML
+	private Accordion accordion;
+	
+	@FXML
+	private TitledPane titledPaneAbstract;
+	
+	@FXML
+	private HBox hBoxAnswers;
+	
+	@FXML
 	private VBox vBoxFacts;
 
 	@Inject
@@ -98,6 +116,8 @@ public class MainPresenter implements Initializable{
 	}
 	
 	private void initialzeCrosswordGrid() {
+		accordion.setExpandedPane(titledPaneAbstract);
+		labelLinkWithTopic.setText(application.getTopic());
 		listViewAcross.getItems().clear();
 		listViewDown.getItems().clear();
 		crossword = application.getCrossword();
@@ -126,16 +146,16 @@ public class MainPresenter implements Initializable{
 		for(HAWord word : crossword) {
 			//Insert the hints of the words into fields
 			if(word.getOrientation() == Orientation.HORIZONTAL) {
-				listViewAcross.getItems().add(word.getIndex() + ". " + word.getHAEntity().getHintsBeautified());
+				listViewAcross.getItems().add(word);
 			} else if(word.getOrientation() == Orientation.VERTICAL) {
-				listViewDown.getItems().add(word.getIndex() + ". " + word.getHAEntity().getHintsBeautified());
+				listViewDown.getItems().add(word);
 			}
 			for(Cell cell : word) {
 				//Build crossword textfield cells
 				TextField text = new TextField();
 				text.setAlignment(Pos.CENTER);
 				text.setPrefSize(1000, 1000);
-				text.setText(cell.getLabel());
+//				text.setText(cell.getLabel());
 				if(cell.getLabel().equals("LA")) {
 					text.setStyle("-fx-border-color: #00cc66");
 					text.setStyle("-fx-background-color: transparent");
@@ -149,11 +169,12 @@ public class MainPresenter implements Initializable{
 						Cell cellSelected = textMap.get(text);
 						System.out.println("selected: " + cellSelected);
 						HAWord wordCurr = wordMap.get(cellSelected);
+						validateCrossword(wordCurr);
 						boolean next = false;
 						for(Cell cellCurr : wordCurr) {
 							if(next) {
 								System.out.println("next: " + cellCurr);
-								cellMap.get(cellCurr).requestFocus();;
+								cellMap.get(cellCurr).requestFocus();
 								break;
 							}
 							if(cellCurr.equals(cellSelected)) {
@@ -170,19 +191,42 @@ public class MainPresenter implements Initializable{
 		}
 		borderPane.setCenter(grid);
 	}
+	
+	private void validateCrossword(HAWord word) {
+		System.out.println("validate " + word.getHAEntity().getAnswer());
+		System.out.println(word.isValid());
+		if(!word.isSolved() && word.isValid()) {
+			word.setSolved(true);
+			updateEntityInfo(word);
+			for(Cell cell : word) {
+				cellMap.get(cell).setStyle("-fx-border-color: #00cc66 ;-fx-border-width: 1px ;");
+			}
+		}
+	}
 
 	private void initializeListViews() {
-		listViewAcross.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+		listViewAcross.getSelectionModel().selectedItemProperty().addListener(
+				(observable, oldValue, newValue) -> {
+					Platform.runLater(new Runnable() {
+					    @Override public void run() {
+					    	listViewDown.getSelectionModel().clearSelection();
+	                         if(newValue != null && newValue.isSolved()) {
+	                        	 updateEntityInfo(newValue);
+	                         }
+	                    }
+					    });
+					});
+		listViewAcross.setCellFactory(new Callback<ListView<HAWord>, ListCell<HAWord>>() {
 	        @Override
-	        public ListCell<String> call(ListView<String> list) {
-	            final ListCell<String> cell = new ListCell<String>() {
+	        public ListCell<HAWord> call(ListView<HAWord> list) {
+	            final ListCell<HAWord> cell = new ListCell<HAWord>() {
 	                private Text text;
 
 	                @Override
-	                public void updateItem(String item, boolean empty) {
-	                    super.updateItem(item, empty);
+	                public void updateItem(HAWord word, boolean empty) {
+	                    super.updateItem(word, empty);
 	                    if (!isEmpty()) {
-	                        text = new Text(item.toString());
+	                        text = new Text(word.getIndex() + ". " + word.getHAEntity().getHintsBeautified());
 	                        text.setWrappingWidth(listViewAcross.getPrefWidth());
 	                        setGraphic(text);
 	                    }
@@ -192,17 +236,30 @@ public class MainPresenter implements Initializable{
 	            return cell;
 	        }
 	    });
-		listViewDown.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+		listViewDown.getSelectionModel().selectedItemProperty().addListener(
+				(observable, oldValue, newValue) -> {
+					Platform.runLater(new Runnable() {
+					    @Override public void run() {
+					    	listViewAcross.getSelectionModel().clearSelection();
+	                         if(newValue != null && newValue.isSolved()) {
+	                        	 updateEntityInfo(newValue);
+	                         }
+	                    }
+					    });
+					});
+					
+	               
+		listViewDown.setCellFactory(new Callback<ListView<HAWord>, ListCell<HAWord>>() {
 	        @Override
-	        public ListCell<String> call(ListView<String> list) {
-	            final ListCell<String> cell = new ListCell<String>() {
+	        public ListCell<HAWord> call(ListView<HAWord> list) {
+	            final ListCell<HAWord> cell = new ListCell<HAWord>() {
 	                private Text text;
 
 	                @Override
-	                public void updateItem(String item, boolean empty) {
-	                    super.updateItem(item, empty);
+	                public void updateItem(HAWord word, boolean empty) {
+	                    super.updateItem(word, empty);
 	                    if (!isEmpty()) {
-	                        text = new Text(item.toString());
+	                        text = new Text(word.getIndex() + ". " + word.getHAEntity().getHintsBeautified());
 	                        text.setWrappingWidth(listViewDown.getPrefWidth());
 	                        setGraphic(text);
 	                    }
@@ -212,6 +269,19 @@ public class MainPresenter implements Initializable{
 	            return cell;
 	        }
 	    });
+	}
+	
+	private void updateEntityInfo(HAWord word) {
+		HAEntity entity = word.getHAEntity();
+		labelName.setText(entity.getAnswer());
+		textAbtract.setText(entity.getEntAbstract());
+//		labelTopic.setText(entity.);
+		imageViewEntity.setImage(new Image(entity.getImageURL()));
+		accordion.setExpandedPane(titledPaneAbstract);
+	}
+	
+	public void updateAnswerCheck() {
+		hBoxAnswers.setVisible(checkboxAnswers.isSelected());
 	}
 	
 	

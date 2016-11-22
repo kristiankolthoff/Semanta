@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.jena.rdf.model.Resource;
 
 import de.unima.dws.semanta.model.Entity;
+import de.unima.dws.semanta.model.ResourceInfo;
 
 @FunctionalInterface
 public interface OAGenerator {
@@ -17,6 +18,6 @@ public interface OAGenerator {
 	 * @param numEntities the number of resources that should be generated
 	 * @return a list of generated resources according to the numEntities number
 	 */
-	public List<Resource> generate(Entity entitiy, Resource topicResource, int numEntities);
+	public List<ResourceInfo> generate(Entity entitiy, Resource topicResource, int numEntities);
 
 }

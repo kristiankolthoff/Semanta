@@ -3,7 +3,14 @@ package de.unima.dws.semanta.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.jena.graph.Triple;
+import org.apache.jena.graph.impl.LiteralLabel;
+import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
+
+import de.unima.dws.semanta.utilities.Settings;
 
 public class HAEntity {
 
@@ -11,10 +18,11 @@ public class HAEntity {
 	private String answer;
 	private Resource resource;
 	private String entAbstract;
-	private List<Resource> oaResources;
+	private String imageURL;
+	private List<ResourceInfo> oaResources;
 	
 	public HAEntity(List<String> hints, String answer, Resource resource, 
-			String entAbstract, List<Resource> optionalAnswers) {
+			String entAbstract, List<ResourceInfo> optionalAnswers) {
 		this.hints = hints;
 		this.answer = answer;
 		this.resource = resource;
@@ -33,7 +41,7 @@ public class HAEntity {
 		return this;
 	}
 	
-	public HAEntity addOptionalAnswer(Resource oaResource) {
+	public HAEntity addOptionalAnswer(ResourceInfo oaResource) {
 		this.oaResources.add(oaResource);
 		return this;
 	}
@@ -45,6 +53,10 @@ public class HAEntity {
 	public HAEntity setHints(List<String> hints) {
 		this.hints = hints;
 		return this;
+	}
+	
+	public String getSanitizedAnswer() {
+		return answer.replaceAll("\\s+","").trim().toLowerCase();
 	}
 
 	public String getAnswer() {
@@ -66,6 +78,19 @@ public class HAEntity {
 	}
 
 	public String getEntAbstract() {
+		if(entAbstract == null) {
+			StmtIterator it = resource.listProperties();
+			while(it.hasNext()) {
+				Statement stmt = it.next();
+				if(stmt.asTriple().getPredicate().getURI().toString().contains("abstract")) {
+					Literal literal = stmt.getObject().asLiteral();
+					if(literal.getLanguage().equals(Settings.LANG)) {
+						entAbstract = literal.getString();
+						break;
+					}
+				}
+			}
+		}
 		return entAbstract;
 	}
 	
@@ -83,11 +108,11 @@ public class HAEntity {
 		return this;
 	}
 
-	public List<Resource> getOAResources() {
+	public List<ResourceInfo> getOAResources() {
 		return oaResources;
 	}
 
-	public HAEntity setOAResources(List<Resource> oaResources) {
+	public HAEntity setOAResources(List<ResourceInfo> oaResources) {
 		this.oaResources = oaResources;
 		return this;
 	}
@@ -142,6 +167,25 @@ public class HAEntity {
 		return "HAEntity [hints=" + hints + ", answer=" + answer
 				+ ", resource=" + resource + ", entAbstract=" + entAbstract
 				+ ", oaResources=" + oaResources + "]";
+	}
+
+	public String getImageURL() {
+		if(imageURL == null) {
+			StmtIterator it = resource.listProperties();
+			while(it.hasNext()) {
+				Statement stmt = it.next();
+				if(stmt.asTriple().getPredicate().getURI().toString().contains("thumbnail")) {
+					imageURL = stmt.asTriple().getObject().getURI();
+					imageURL = imageURL.substring(0, 4) + "s" + imageURL.substring(4);
+					break;
+				}
+			}
+		}
+		return imageURL;
+	}
+
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
 	}
 
 }

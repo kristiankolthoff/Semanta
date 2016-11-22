@@ -68,17 +68,15 @@
                   </ImageView>
                </graphic></Button>
             <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="8.0" />
-            <Label text="Validation" />
-            <ChoiceBox prefWidth="150.0" />
             <Label text="Zoom" />
             <Slider fx:id="sliderZoom" blockIncrement="1.0" max="60.0" min="30.0" value="30.0" />
             <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="2.0" />
-            <CheckBox mnemonicParsing="false" text="Answers" />
+            <CheckBox fx:id="checkboxAnswers" mnemonicParsing="false" onAction="#updateAnswerCheck" selected="true" text="Answers" />
         </items>
       </ToolBar>
       <BorderPane prefHeight="45.0" prefWidth="1280.0">
          <top>
-            <Label text="USA @http://dbpedia.org" BorderPane.alignment="CENTER">
+            <Label fx:id="labelLinkWithTopic" text="USA @http://dbpedia.org" BorderPane.alignment="CENTER">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
@@ -129,7 +127,7 @@
                         <BorderPane fx:id="borderPane" />
                      </content>
                   </ScrollPane>
-                  <HBox alignment="CENTER" prefHeight="60.0" prefWidth="617.0">
+                  <HBox fx:id="hBoxAnswers" alignment="CENTER" prefHeight="60.0" prefWidth="617.0">
                      <children>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #C0C0C0;">
                            <children>
@@ -179,13 +177,13 @@
               <children>
                   <VBox alignment="CENTER" prefHeight="289.0" prefWidth="349.0" style="-fx-background-color: #C0C0C0;">
                      <children>
-                        <Label text="Barack Obama">
+                        <Label fx:id="labelName" text="Barack Obama">
                            <font>
                               <Font name="System Bold" size="26.0" />
                            </font>
                         </Label>
-                        <Label text="President of USA" />
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" style="-fx-image: url(http://a5.files.biography.com/image/upload/c_fill,cs_srgb,dpr_1.0,g_face,h_300,q_80,w_300/MTE4MDAzNDEwNzg5ODI4MTEw.jpg);">
+                        <Label fx:id="labelTopic" text="President of USA" />
+                        <ImageView fx:id="imageViewEntity" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" style="-fx-image: url(http://a5.files.biography.com/image/upload/c_fill,cs_srgb,dpr_1.0,g_face,h_300,q_80,w_300/MTE4MDAzNDEwNzg5ODI4MTEw.jpg);">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </VBox.margin>
@@ -200,9 +198,9 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="1000.0" prefWidth="349.0">
                      <children>
-                        <Accordion expandedPane="$abstractPane" maxWidth="1000.0" prefHeight="1000.0">
+                        <Accordion fx:id="accordion" maxWidth="1000.0" prefHeight="1000.0">
                           <panes>
-                            <TitledPane fx:id="abstractPane" text="Abstract">
+                            <TitledPane fx:id="titledPaneAbstract" text="Abstract">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
@@ -211,7 +209,7 @@
                                        <content>
                                           <TextFlow prefHeight="200.0" prefWidth="200.0" textAlignment="JUSTIFY">
                                              <children>
-                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Barack Hussein Obama II (US Listeni/bəˈrɑːk huːˈseɪn oʊˈbɑːmə/;[1][2] born August 4, 1961) is an American politician who is the 44th and current President of the United States. He is the first African American to hold the office and the first president born outside the continental United States. Born in Honolulu, Hawaii, Obama is a graduate of Columbia University and Harvard Law School, where he was president of the Harvard Law Review. He was a community organizer in Chicago before earning his law degree. He worked as a civil rights attorney and taught constitutional law at the University of Chicago Law School between 1992 and 2004. While serving three terms representing the 13th District in the Illinois Senate from 1997 to 2004, he ran unsuccessfully in the Democratic primary for the United States House of Representatives in 2000 against incumbent Bobby Rush." textAlignment="JUSTIFY" />
+                                                <Text fx:id="textAbtract" strokeType="OUTSIDE" strokeWidth="0.0" text="Barack Hussein Obama II (US Listeni/bəˈrɑːk huːˈseɪn oʊˈbɑːmə/;[1][2] born August 4, 1961) is an American politician who is the 44th and current President of the United States. He is the first African American to hold the office and the first president born outside the continental United States. Born in Honolulu, Hawaii, Obama is a graduate of Columbia University and Harvard Law School, where he was president of the Harvard Law Review. He was a community organizer in Chicago before earning his law degree. He worked as a civil rights attorney and taught constitutional law at the University of Chicago Law School between 1992 and 2004. While serving three terms representing the 13th District in the Illinois Senate from 1997 to 2004, he ran unsuccessfully in the Democratic primary for the United States House of Representatives in 2000 against incumbent Bobby Rush." textAlignment="JUSTIFY" />
                                              </children>
                                              <padding>
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -227,7 +225,7 @@
                                  <content>
                                     <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
                                        <content>
-                                          <VBox prefHeight="200.0" prefWidth="100.0">
+                                          <VBox fx:id="vBoxFacts" prefHeight="200.0" prefWidth="100.0">
                                              <children>
                                                 <Label text="- husband of Michelle Obama" />
                                                 <Label layoutX="30.0" layoutY="20.0" text="- husband of Michelle Obama" />

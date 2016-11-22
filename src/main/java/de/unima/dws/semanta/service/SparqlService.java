@@ -168,7 +168,7 @@ public class SparqlService {
 				"<" + uri + ">" + " ?p ?o . " +
 				"}";
 		ResultSet result = SparqlService.query(query);
-		return SparqlService.buildResource(result, uri, "p", "o", "wiki", "thumbnail");
+		return SparqlService.buildResource(result, uri, "p", "o", "wiki");
 	}
 	
 	public static Resource queryResourceWithTypeHierachy(String uri) {

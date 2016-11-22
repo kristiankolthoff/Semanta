@@ -101,4 +101,9 @@ public class SparqlServiceTest {
 			}
 		}
 	}
+	
+	@Test
+	public void querySimilarResourcesTest() {
+//		SparqlService.querySimilarResources(, type, limit)
+	}
 }

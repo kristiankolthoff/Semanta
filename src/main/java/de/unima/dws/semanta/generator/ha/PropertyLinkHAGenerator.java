@@ -21,7 +21,7 @@ public class PropertyLinkHAGenerator implements HAGenerator{
 	
 	public String getHint(Entity entity, Resource topicResource) {
 		//also consider inverse links between entity and topic
-		List<Resource> types = entity.getTypes();
+		List<Resource> types = entity.getTypesUnordered();
 		StringBuilder sb = new StringBuilder();
 		sb.append("The ");
 		sb.append(entity.getProperty().getLocalName());

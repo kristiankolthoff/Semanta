@@ -135,22 +135,38 @@ public class SparqlService {
 		return SparqlService.query(sb.toString());
 	}
 	
-	public static ResultSet querySimilarResources(String uri, String type, int limit) {
-		final String query = "PREFIX dbo: <http://dbpedia.org/ontology/> " +
-							 "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
-					"SELECT ?s " +
-					"WHERE { " +
-					"{ " +
-					"?s rdf:type <" + type + "> . " +
-					"?s ?p <" + uri + "> . " +
-					"} UNION " +
-					"{ " +
-					"?s rdf:type <" + type + "> . " +
-					"<" + uri + "> ?h ?s . " + 
-					"} " +
-					"} " +
-					"LIMIT " + limit;
-		return SparqlService.query(query);
+	public static List<ResourceInfo> querySimilarTypeResources(String uri, String type, int limit) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("PREFIX dbo: <http://dbpedia.org/ontology/> ");
+		sb.append("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ");
+		sb.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>");
+		sb.append("SELECT ?s ?label ");
+		sb.append("WHERE { ");
+		sb.append("{ ");
+		sb.append("?s rdf:type <" + type + "> . ");
+		sb.append("?s rdfs:label ?label . ");
+		sb.append("?s ?p <" + uri + "> . ");
+		sb.append("} UNION ");
+		sb.append("{ ");
+		sb.append("?s rdf:type <" + type + "> . ");
+		sb.append("?s rdfs:label ?label . ");
+		sb.append("<" + uri + "> ?h ?s . ");
+		sb.append("} ");
+		sb.append("FILTER (lang(?label) = 'en'). \n");
+		sb.append("} ");
+		sb.append("LIMIT " + limit);
+		System.out.println(sb.toString());
+		return SparqlService.buildTinyResourceInfo(SparqlService.query(sb.toString()), "s", "label");
+	}
+	
+	public static List<ResourceInfo> buildTinyResourceInfo(ResultSet rs, String uri, String label) {
+		List<ResourceInfo> infos = new ArrayList<>();
+		while(rs.hasNext()) {
+			QuerySolution qs = rs.next();
+			Resource r = qs.getResource(uri);
+			infos.add(new ResourceInfo(r, r.getURI(), qs.getLiteral(label).getString(), null, null, 0));
+		}
+		return infos;
 	}
 	
 	public static Resource queryResource(String uri, String...propertiesToRemove) {

@@ -2,6 +2,8 @@ package de.unima.dws.semanta.model;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.apache.jena.rdf.model.Resource;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -56,5 +58,13 @@ public class EntityTest {
 		Entity entity = new Entity(resource, null, false);
 		Resource typeResource = entity.getMediumOntType();
 		assertEquals("http://dbpedia.org/ontology/Person", typeResource.getURI());
+	}
+	
+	@Test
+	public void getTypesTest() {
+		Resource resource = SparqlService.queryResourceWithTypeHierachy("http://dbpedia.org/resource/Oliver_Kahn");
+		Entity entity = new Entity(resource, null, false);
+		List<Resource> types = entity.getTypesOrdered();
+//		assertEquals("http://dbpedia.org/ontology/SnookerChamp", typeResource.getURI());
 	}
 }

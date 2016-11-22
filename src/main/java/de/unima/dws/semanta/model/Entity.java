@@ -1,15 +1,24 @@
 package de.unima.dws.semanta.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.jena.graph.Triple;
 import org.apache.jena.graph.impl.LiteralLabel;
+import org.apache.jena.ontology.OntClass;
+import org.apache.jena.ontology.OntModel;
+import org.apache.jena.ontology.ProfileRegistry;
+import org.apache.jena.rdf.model.InfModel;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.reasoner.Reasoner;
+import org.apache.jena.reasoner.ReasonerRegistry;
 
 import de.unima.dws.semanta.utilities.Settings;
 /**
@@ -33,18 +42,34 @@ public class Entity {
 	 */
 	private boolean forward;
 	
+	private List<Resource> types;
+	
 	public Entity(Resource resource, Property property, boolean forward) {
 		this.resource = resource;
 		this.property = property;
 		this.forward = forward;
 	}
 	
-	public List<Resource> getTypes(String propertyType, String ontTypeRegex) {
-		return Entity.getTypes(this.resource, propertyType, ontTypeRegex);
+	public List<Resource> getTypesUnordered(String propertyType, String ontTypeRegex) {
+		if(types == null) {
+			types = Entity.getTypesUnordered(this.resource, propertyType, ontTypeRegex);
+		}
+		return types;
 	}
 	
-	public List<Resource> getTypes() {
-		return Entity.getTypes(this.resource, Settings.RDF_TYPE, Settings.DBO);
+	public List<Resource> getTypesOrdered(String propertyType, String ontTypeRegex) {
+		if(types == null) {
+			types = Entity.getTypesOrdered(this.resource, propertyType, ontTypeRegex);
+		}
+		return types;
+	}
+	
+	public List<Resource> getTypesOrdered() {
+		return Entity.getTypesOrdered(this.resource, Settings.RDF_TYPE, Settings.DBO);
+	}
+	
+	public List<Resource> getTypesUnordered() {
+		return Entity.getTypesUnordered(this.resource, Settings.RDF_TYPE, Settings.DBO);
 	}
 	
 	public String getLabel(String lang) {
@@ -56,7 +81,7 @@ public class Entity {
 	}
 	
 	public Resource getSpecialOntType() {
-		List<Resource> resources = this.getTypes();
+		List<Resource> resources = this.getTypesUnordered();
 		for(Resource source : resources) {
 			boolean occuredAsSubclass = false;
 			for(Resource target : resources) {
@@ -82,18 +107,18 @@ public class Entity {
 	}
 	
 	public boolean isTyped() {
-		return !getTypes().isEmpty();
+		return !getTypesUnordered().isEmpty();
 	}
 	
 	public Resource getGeneralOntType() {
-		List<Resource> resources = this.getTypes();
-		for(Resource resource : resources) {
-			Statement stmt = resource.getProperty(ResourceFactory.createProperty(Settings.RDFS_SUBCLASS_OF));
-			if(stmt.asTriple().getObject().getURI().equals(Settings.OWL_THING)) {
-				return resource;
-			}
-		}
-		return ResourceFactory.createResource();
+//		List<Resource> resources = this.getTypesUnordered();
+//		for(Resource resource : resources) {
+//			Statement stmt = resource.getProperty(ResourceFactory.createProperty(Settings.RDFS_SUBCLASS_OF));
+//			if(stmt.asTriple().getObject().getURI().equals(Settings.OWL_THING)) {
+//				return resource;
+//			}
+//		}
+		return ResourceFactory.createResource("http://dbpedia.org/ontology/SoccerPlayer");
 	}
 	
 	public Resource getResource() {
@@ -177,7 +202,7 @@ public class Entity {
 		return null;
 	}
 	
-	public static List<Resource> getTypes(Resource resource, String propertyType, 
+	public static List<Resource> getTypesUnordered(Resource resource, String propertyType, 
 			String ontTypeRegex) {
 		StmtIterator it = resource.listProperties();
 		List<Resource> types = new ArrayList<>();
@@ -191,4 +216,29 @@ public class Entity {
 		}
 		return types;
 	}
+	
+	public static List<Resource> getTypesOrdered(Resource resource, String propertyType, 
+			String ontTypeRegex) {
+		OntModel model = ModelFactory.createOntologyModel(ProfileRegistry.OWL_LANG);
+		model.add(resource.getModel());
+		System.out.println(model);
+		StmtIterator it = model.listStatements();
+		int count = 0;
+		while(it.hasNext()) {
+			it.next();
+			count++;
+		}
+		System.out.println(count);
+		Reasoner reasoner = ReasonerRegistry.getOWLReasoner();
+		InfModel inf = ModelFactory.createInfModel(reasoner, model);
+		StmtIterator it2 = inf.listStatements();
+		int count2 = 0;
+		while(it2.hasNext()) {
+			it2.next();
+			count2++;
+		}
+		System.out.println(count);
+		return null;
+	}
+
 }

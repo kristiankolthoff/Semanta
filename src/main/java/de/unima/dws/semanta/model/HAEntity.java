@@ -18,21 +18,21 @@ public class HAEntity {
 	private Resource resource;
 	private String entAbstract;
 	private String imageURL;
-	private List<ResourceInfo> oaResources;
+	private List<ResourceInfo> distractors;
 	
 	public HAEntity(List<String> hints, String answer, Resource resource, 
-			String entAbstract, List<ResourceInfo> optionalAnswers) {
+			String entAbstract, List<ResourceInfo> distractors) {
 		this.hints = hints;
 		this.answer = answer;
 		this.resource = resource;
 		this.entAbstract = entAbstract;
-		this.oaResources = optionalAnswers;
+		this.distractors = distractors;
 	}
 	
 	public HAEntity(Resource resource) {
 		this.resource = resource;
 		this.hints = new ArrayList<>();
-		this.oaResources = new ArrayList<>();
+		this.distractors = new ArrayList<>();
 	}
 	
 	public HAEntity addHint(String hint) {
@@ -41,7 +41,7 @@ public class HAEntity {
 	}
 	
 	public HAEntity addOptionalAnswer(ResourceInfo oaResource) {
-		this.oaResources.add(oaResource);
+		this.distractors.add(oaResource);
 		return this;
 	}
 
@@ -108,11 +108,11 @@ public class HAEntity {
 	}
 
 	public List<ResourceInfo> getOAResources() {
-		return oaResources;
+		return distractors;
 	}
 
 	public HAEntity setOAResources(List<ResourceInfo> oaResources) {
-		this.oaResources = oaResources;
+		this.distractors = oaResources;
 		return this;
 	}
 	
@@ -165,7 +165,7 @@ public class HAEntity {
 	public String toString() {
 		return "HAEntity [hints=" + hints + ", answer=" + answer
 				+ ", resource=" + resource + ", entAbstract=" + entAbstract
-				+ ", oaResources=" + oaResources + "]";
+				+ ", oaResources=" + distractors + "]";
 	}
 
 	public String getImageURL() {

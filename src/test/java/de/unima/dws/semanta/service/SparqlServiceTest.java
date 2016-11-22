@@ -103,6 +103,13 @@ public class SparqlServiceTest {
 	}
 	
 	@Test
+	public void queryPageRanksTest() {
+		List<Integer> ranks = SparqlService.queryOrderedPageRanks(
+				"http://dbpedia.org/resource/Barack_Obama", 300);
+		System.out.println(ranks.size());
+	}
+	
+	@Test
 	public void querySimilarResourcesTest() {
 //		SparqlService.querySimilarResources(, type, limit)
 	}

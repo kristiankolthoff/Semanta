@@ -191,6 +191,27 @@ public class SparqlService {
 		return SparqlService.queryResourceWithTypeHierachy(uri, Settings.RDF_TYPE, Settings.DBO);
 	}
 	
+	public static List<Integer> queryOrderedPageRanks(String uri, int limit) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
+		sb.append("PREFIX vrank:<http://purl.org/voc/vrank#> \n");
+		sb.append("PREFIX dbo:<http://dbpedia.org/ontology/> \n");
+		sb.append("SELECT distinct ?v \n");
+		sb.append("FROM <http://people.aifb.kit.edu/ath/#DBpedia_PageRank> \n");
+		sb.append("WHERE { \n");
+		sb.append("?s ?p " + uri + " . \n");
+		sb.append("?s vrank:hasRank/vrank:rankValue ?v. \n");
+		sb.append("} \n");
+		sb.append("order by desc(?v) limit " + limit + " \n");
+		System.out.println(sb.toString());
+		ResultSet rs = SparqlService.query(sb.toString());
+		List<Integer> pageRanks = new ArrayList<>();
+		while(rs.hasNext()) {
+			System.out.println("hallo");
+			pageRanks.add(rs.next().getLiteral("v").getInt());
+		}
+		return pageRanks;
+	}
 	
 	public static Resource queryResourceWithTypeHierachy(String uri, 
 			String propertyType, String ontTypeRegex) {

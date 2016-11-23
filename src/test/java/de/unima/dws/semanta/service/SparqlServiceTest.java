@@ -104,9 +104,9 @@ public class SparqlServiceTest {
 	
 	@Test
 	public void queryPageRanksTest() {
-		List<Integer> ranks = SparqlService.queryOrderedPageRanks(
+		List<Double> ranks = SparqlService.queryOrderedPageRanks(
 				"http://dbpedia.org/resource/Barack_Obama", 300);
-		System.out.println(ranks.size());
+		assertEquals(300, ranks.size());
 	}
 	
 	@Test

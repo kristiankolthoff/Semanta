@@ -13,6 +13,7 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.Syntax;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -21,6 +22,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 
 import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.utilities.Settings;
@@ -34,8 +36,14 @@ public class SparqlService {
 	
 	private SparqlService() {}
 	
+	@SuppressWarnings("resource")
+	public static ResultSet queryExtendedSyntax(String query) {
+		QueryEngineHTTP engine = new QueryEngineHTTP(endpoint, query);
+		return engine.execSelect();
+	}
+	
 	public static ResultSet query(String query) {
-		qExec = QueryExecutionFactory.sparqlService(endpoint, QueryFactory.create(query));
+		qExec = QueryExecutionFactory.sparqlService(endpoint, QueryFactory.create(query, Syntax.syntaxARQ));
 		return qExec.execSelect();
 	}
 	
@@ -191,26 +199,52 @@ public class SparqlService {
 		return SparqlService.queryResourceWithTypeHierachy(uri, Settings.RDF_TYPE, Settings.DBO);
 	}
 	
-	public static List<Integer> queryOrderedPageRanks(String uri, int limit) {
+	public static List<Double> queryOrderedPageRanks(String uri, int limit) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
 		sb.append("PREFIX vrank:<http://purl.org/voc/vrank#> \n");
 		sb.append("PREFIX dbo:<http://dbpedia.org/ontology/> \n");
 		sb.append("SELECT distinct ?v \n");
+		sb.append("FROM <http://dbpedia.org> \n");
 		sb.append("FROM <http://people.aifb.kit.edu/ath/#DBpedia_PageRank> \n");
 		sb.append("WHERE { \n");
-		sb.append("?s ?p " + uri + " . \n");
+		sb.append("?s ?p <" + uri + "> . \n");
 		sb.append("?s vrank:hasRank/vrank:rankValue ?v. \n");
 		sb.append("} \n");
 		sb.append("order by desc(?v) limit " + limit + " \n");
 		System.out.println(sb.toString());
 		ResultSet rs = SparqlService.query(sb.toString());
-		List<Integer> pageRanks = new ArrayList<>();
+		List<Double> pageRanks = new ArrayList<>();
+		System.out.println(rs.hasNext());
 		while(rs.hasNext()) {
-			System.out.println("hallo");
-			pageRanks.add(rs.next().getLiteral("v").getInt());
+			pageRanks.add(rs.next().getLiteral("v").getDouble());
 		}
 		return pageRanks;
+	}
+	
+	public static Resource queryEntitesByPageRankThreshold(String uri, double tUpper, double tLower, 
+			int limit, int randomSeed) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
+		sb.append("PREFIX vrank:<http://purl.org/voc/vrank#> \n");
+		sb.append("PREFIX dbo:<http://dbpedia.org/ontology/> \n");
+		sb.append("SELECT distinct ?s \n");
+		sb.append("FROM <http://dbpedia.org> \n");
+		sb.append("FROM <http://people.aifb.kit.edu/ath/#DBpedia_PageRank> \n");
+		sb.append("WHERE { \n");
+		sb.append("?s ?p <" + uri + "> . \n");
+		sb.append("?s vrank:hasRank/vrank:rankValue ?v. \n");
+		sb.append("FILTER(?v > " + tLower + " && ?v < " + tUpper + ")");
+		sb.append("} \n");
+		sb.append("ORDER BY RAND(" + randomSeed + ") LIMIT " + limit + " \n");
+		System.out.println(sb.toString());
+		ResultSet rs = SparqlService.queryExtendedSyntax(sb.toString());
+		List<Resource> vals = new ArrayList<>();
+		System.out.println(rs.hasNext());
+		while(rs.hasNext()) {
+			return SparqlService.queryResourceWithTypeHierachy(rs.next().getResource("s").getURI());
+		}
+		return null;
 	}
 	
 	public static Resource queryResourceWithTypeHierachy(String uri, 

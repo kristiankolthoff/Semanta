@@ -111,14 +111,16 @@ public class Entity {
 	}
 	
 	public Resource getGeneralOntType() {
-//		List<Resource> resources = this.getTypesUnordered();
-//		for(Resource resource : resources) {
-//			Statement stmt = resource.getProperty(ResourceFactory.createProperty(Settings.RDFS_SUBCLASS_OF));
-//			if(stmt.asTriple().getObject().getURI().equals(Settings.OWL_THING)) {
-//				return resource;
-//			}
-//		}
-		return ResourceFactory.createResource("http://dbpedia.org/ontology/SoccerPlayer");
+		List<Resource> resources = this.getTypesUnordered();
+		for(Resource resource : resources) {
+			Statement stmt = resource.getProperty(ResourceFactory.createProperty(Settings.RDFS_SUBCLASS_OF));
+			if(stmt == null) {
+				 return ResourceFactory.createResource("https://www.w3.org/2002/07/owl#Thing");
+			} else if(stmt.asTriple().getObject().getURI().equals(Settings.OWL_THING)) {
+				return resource;
+			}
+		}
+		return ResourceFactory.createResource("https://www.w3.org/2002/07/owl#Thing");
 	}
 	
 	public Resource getResource() {

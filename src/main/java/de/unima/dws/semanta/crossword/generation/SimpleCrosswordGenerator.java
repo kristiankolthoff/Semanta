@@ -62,8 +62,12 @@ public class SimpleCrosswordGenerator implements CrosswordGenerator{
 			word.addCell(new Cell(matchCell.getX(), matchCell.getY()-matchPos-1, String.valueOf("LA"), ""));
 			for (int i = matchCell.getY()-matchPos; i < 
 					originalWord.getWord().length()-matchPos; i++) {
-				word.addCell(new Cell(matchCell.getX(), i, 
-						String.valueOf(originalWord.getWord().charAt(count)), ""));
+				if(matchCell.getY() == i) {
+					word.addCell(matchCell);
+				} else {
+					word.addCell(new Cell(matchCell.getX(), i, 
+							String.valueOf(originalWord.getWord().charAt(count)), ""));
+				}
 				count++;
 			}
 			word.setOrientation(Orientation.VERTICAL);
@@ -72,8 +76,12 @@ public class SimpleCrosswordGenerator implements CrosswordGenerator{
 			word.addCell(new Cell(matchCell.getX()-matchPos-1, matchCell.getY(), String.valueOf("LA"), ""));
 			for (int i = matchCell.getX()-matchPos; i < 
 					originalWord.getWord().length()+matchCell.getX()-matchPos ; i++) {
-				word.addCell(new Cell(i, matchCell.getY(), 
-						String.valueOf(originalWord.getWord().charAt(count)), ""));
+				if(matchCell.getX() == i) {
+					word.addCell(matchCell);
+				} else {
+					word.addCell(new Cell(i, matchCell.getY(), 
+							String.valueOf(originalWord.getWord().charAt(count)), ""));
+				}
 				count++;
 			}
 			word.setOrientation(Orientation.HORIZONTAL);
@@ -82,10 +90,12 @@ public class SimpleCrosswordGenerator implements CrosswordGenerator{
 	}
 	
 	private HAWord contructFirstWord(HAWord originalWord) {
+		HAWord word = new HAWord(originalWord.getHAEntity());
+		word.addCell(new Cell(-1, 0, String.valueOf("LA"), ""));
 		for (int i = 0; i < originalWord.getWord().length(); i++) {
-			originalWord.addCell(new Cell(i, 0, String.valueOf(originalWord.getWord().charAt(i)), ""));
+			word.addCell(new Cell(i, 0, String.valueOf(originalWord.getWord().charAt(i)), ""));
 		}
-		originalWord.setOrientation(Orientation.HORIZONTAL);
-		return originalWord;
+		word.setOrientation(Orientation.HORIZONTAL);
+		return word;
 	}
 }

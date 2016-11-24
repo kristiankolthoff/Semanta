@@ -97,7 +97,7 @@ public class HAEntity {
 		StringBuilder sb = new StringBuilder();
 		for(String s : hints) {
 			sb.append(s);
-			sb.append(", ");
+			sb.append(" ");
 		}
 		return sb.toString();
 	}

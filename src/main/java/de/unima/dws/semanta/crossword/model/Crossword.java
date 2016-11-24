@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Supplier;
 
+import javafx.util.Pair;
+
 
 public class Crossword implements Iterable<HAWord>, Serializable, Supplier<Double>{
 	
@@ -198,8 +200,11 @@ public class Crossword implements Iterable<HAWord>, Serializable, Supplier<Doubl
 		minY = Math.abs(minY);
 		for(HAWord word : words) {
 			for(Cell cell : word) {
-				cell.setX(cell.getX() + minX);
-				cell.setY(cell.getY() + minY);
+				if(!cell.isNormalized()) {
+					cell.setNormalized(true);
+					cell.setX(cell.getX() + minX);
+					cell.setY(cell.getY() + minY);
+				}
 			}
 		}
 	}

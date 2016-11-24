@@ -60,7 +60,7 @@ public class EntityTest {
 		assertEquals("http://dbpedia.org/ontology/Person", typeResource.getURI());
 	}
 	
-	@Test
+	@Test @Ignore
 	public void getTypesTest() {
 		Resource resource = SparqlService.queryResourceWithTypeHierachy("http://dbpedia.org/resource/Oliver_Kahn");
 		Entity entity = new Entity(resource, null, false);

@@ -1,8 +1,11 @@
 package de.unima.dws.semanta.ui.main;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import javax.inject.Inject;
@@ -15,7 +18,9 @@ import de.unima.dws.semanta.crossword.model.Orientation;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.ui.home.HomeView;
+import de.unima.dws.semanta.utilities.Settings;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -41,6 +46,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -108,7 +115,7 @@ public class MainPresenter implements Initializable{
 	
 	private Map<Cell, TextField> cellMap;
 	private Map<TextField, Cell> textMap;
-	private Map<Cell, HAWord> wordMap;
+	private Map<Cell, List<HAWord>> wordMap;
 	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -118,8 +125,8 @@ public class MainPresenter implements Initializable{
 	
 	private void initialzeCrosswordGrid() {
 		accordion.setExpandedPane(titledPaneAbstract);
-		labelLinkWithTopic.setText(application.getTopic().getLabel());
-		updateEntityInfo(application.getTopic());
+//		labelLinkWithTopic.setText(application.getTopic().getLabel());
+//		updateEntityInfo(application.getTopic());
 		listViewAcross.getItems().clear();
 		listViewDown.getItems().clear();
 		crossword = application.getCrossword();
@@ -153,56 +160,73 @@ public class MainPresenter implements Initializable{
 				listViewDown.getItems().add(word);
 			}
 			for(Cell cell : word) {
-				//Build crossword textfield cells
-				TextField text = new TextField();
-				text.setAlignment(Pos.CENTER);
-				text.setPrefSize(1000, 1000);
-//				text.setText(cell.getLabel());
-				if(cell.getLabel().equals("LA")) {
-					text.setStyle("-fx-border-color: #00cc66");
-					text.setStyle("-fx-background-color: transparent");
-					text.setText(String.valueOf(word.getIndex()));
+				if(cellMap.containsKey(cell)) {
+					List<HAWord> words = wordMap.get(cell);
+					System.out.println("contains " + cell);
+					words.add(word);
+					wordMap.put(cell, words);
+				} else {
+					//Build crossword textfield cells
+					TextField text = new TextField();
+					text.setAlignment(Pos.CENTER);
+					text.setPrefSize(1000, 1000);
+//					text.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
+//					text.setText(cell.getLabel());
+					if(cell.getLabel().equals("LA")) {
+						text.setStyle("-fx-border-color: #00cc66");
+						text.setStyle("-fx-background-color: transparent");
+						text.setText(String.valueOf(word.getIndex()));
+						text.setEditable(false);
+					}
+					cell.getSolutionProperty().bind(text.textProperty());
+					text.textProperty().addListener((observable, oldValue, newValue) -> {
+						if(newValue.length() > 1) {
+							text.setText(newValue.substring(0, 1));
+						} else if(newValue.length() == 1){
+							Cell cellSelected = textMap.get(text);
+							System.out.println("selected: " + cellSelected);
+							List<HAWord> words = wordMap.get(cellSelected);
+							HAWord wordCurr = words.get(new Random().nextInt(words.size()));
+							validateCrossword(words);
+							boolean next = false;
+							for(Cell cellCurr : wordCurr) {
+								if(next) {
+									System.out.println("next: " + cellCurr);
+									cellMap.get(cellCurr).requestFocus();
+									break;
+								}
+								if(cellCurr.equals(cellSelected)) {
+									next = true;
+								}
+						}
+						}
+					});
+					cellMap.put(cell, text);
+					textMap.put(text, cell);
+					List<HAWord> words = new ArrayList<>();
+					words.add(word);
+					wordMap.put(cell, words);
+					grid.add(text, cell.getX(), cell.getY());
 				}
-				cell.getSolutionProperty().bind(text.textProperty());
-				text.textProperty().addListener((observable, oldValue, newValue) -> {
-					if(newValue.length() > 1) {
-						text.setText(newValue.substring(0, 1));
-					} else if(newValue.length() == 1){
-						Cell cellSelected = textMap.get(text);
-						System.out.println("selected: " + cellSelected);
-						HAWord wordCurr = wordMap.get(cellSelected);
-						validateCrossword(wordCurr);
-						boolean next = false;
-						for(Cell cellCurr : wordCurr) {
-							if(next) {
-								System.out.println("next: " + cellCurr);
-								cellMap.get(cellCurr).requestFocus();
-								break;
-							}
-							if(cellCurr.equals(cellSelected)) {
-								next = true;
-							}
-					}
-					}
-				});
-				cellMap.put(cell, text);
-				textMap.put(text, cell);
-				wordMap.put(cell, word);
-				grid.add(text, cell.getX(), cell.getY());
 			}
 		}
+//		for(Map.Entry<Cell, List<HAWord>> e : wordMap.entrySet()) {
+//			System.out.println(e.getKey() + " " + e.getValue().size());
+//		}
 		borderPane.setCenter(grid);
 	}
 	
-	private void validateCrossword(HAWord word) {
-		System.out.println("validate " + word.getHAEntity().getAnswer());
-		System.out.println(word.isValid());
-		if(!word.isSolved() && word.isValid()) {
-			word.setSolved(true);
-			updateEntityInfo(word);
-			for(Cell cell : word) {
-				if(!cell.getLabel().equals("LA")) {
-					cellMap.get(cell).setStyle("-fx-border-color: #00cc66 ;-fx-border-width: 1px ;");
+	private void validateCrossword(List<HAWord> words) {
+		for(HAWord word : words) {
+			System.out.println("validate " + word.getHAEntity().getSanitizedAnswer());
+			System.out.println(word.isValid());
+			if(!word.isSolved() && word.isValid()) {
+				word.setSolved(true);
+				updateEntityInfo(word);
+				for(Cell cell : word) {
+					if(!cell.getLabel().equals("LA")) {
+						cellMap.get(cell).setStyle("-fx-border-color: #00cc66 ;-fx-border-width: 1px ;");
+					}
 				}
 			}
 		}
@@ -292,7 +316,11 @@ public class MainPresenter implements Initializable{
 		labelName.setText(entity.getAnswer());
 		textAbtract.setText(entity.getEntAbstract());
 //		labelTopic.setText(entity.);
-		imageViewEntity.setImage(new Image(entity.getImageURL()));
+		if(entity.getImageURL() == null) {
+			imageViewEntity.setImage(new Image(Settings.DEFAULT_IMG));
+		} else {
+			imageViewEntity.setImage(new Image(entity.getImageURL()));
+		}
 		accordion.setExpandedPane(titledPaneAbstract);
 	}
 	

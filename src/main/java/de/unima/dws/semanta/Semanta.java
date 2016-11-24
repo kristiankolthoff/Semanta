@@ -10,13 +10,15 @@ import org.apache.jena.rdf.model.Resource;
 import de.unima.dws.semanta.generator.distractor.DistractorGenerator;
 import de.unima.dws.semanta.generator.distractor.TypeDistractorGenerator;
 import de.unima.dws.semanta.generator.ha.HAGenerator;
+import de.unima.dws.semanta.generator.ha.PropertyHAGenerator;
 import de.unima.dws.semanta.generator.ha.SummaryHAGenerator;
 import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.selector.EntitySelector;
-import de.unima.dws.semanta.selector.NodeSumSelector;
+import de.unima.dws.semanta.selector.NodeDegreeSelector;
+import de.unima.dws.semanta.selector.PageRankEntitySelector;
 import de.unima.dws.semanta.service.SparqlService;
 import de.unima.dws.semanta.utilities.Settings;
 /**
@@ -45,8 +47,8 @@ public class Semanta {
 	@PostConstruct
 	public void initialize() {
 		SparqlService.setEndpoint(Settings.DEFAULT_ENDPOINT_DBPEDIA);
-		this.selector = new NodeSumSelector();
-		this.generator = new SummaryHAGenerator();
+		this.selector = new PageRankEntitySelector(300);
+		this.generator = new PropertyHAGenerator();
 		this.distractorGenerator = new TypeDistractorGenerator();
 	}
 	

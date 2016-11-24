@@ -2,6 +2,7 @@ package de.unima.dws.semanta.service;
 
 import static org.junit.Assert.*;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.jena.graph.Triple;
@@ -100,6 +101,12 @@ public class SparqlServiceTest {
 				assertNotEquals(0, count);
 			}
 		}
+	}
+	
+	@Test
+	public void queryNodeSumEntities() {
+		SparqlService.queryNodeSumEntities("http://dbpedia.org/resource/Barack_Obama", 
+				10, Collections.emptyList(), Collections.emptyList());
 	}
 	
 	@Test

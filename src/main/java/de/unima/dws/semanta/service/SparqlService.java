@@ -1,10 +1,8 @@
 package de.unima.dws.semanta.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.Random;
 
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Query;
@@ -145,23 +143,40 @@ public class SparqlService {
 	
 	public static List<ResourceInfo> querySimilarTypeResources(String uri, String type, int limit) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("PREFIX dbo: <http://dbpedia.org/ontology/> ");
-		sb.append("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ");
-		sb.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>");
-		sb.append("SELECT ?s ?label ");
-		sb.append("WHERE { ");
-		sb.append("{ ");
-		sb.append("?s rdf:type <" + type + "> . ");
-		sb.append("?s rdfs:label ?label . ");
-		sb.append("?s ?p <" + uri + "> . ");
-		sb.append("} UNION ");
-		sb.append("{ ");
-		sb.append("?s rdf:type <" + type + "> . ");
-		sb.append("?s rdfs:label ?label . ");
-		sb.append("<" + uri + "> ?h ?s . ");
-		sb.append("} ");
+		sb.append("PREFIX dbo: <http://dbpedia.org/ontology/> \n");
+		sb.append("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
+		sb.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n");
+		sb.append("SELECT ?s ?label \n");
+		sb.append("WHERE { \n");
+		sb.append("?s rdf:type <" + type + "> . \n");
+		sb.append("?s rdfs:label ?label . \n");
 		sb.append("FILTER (lang(?label) = 'en'). \n");
-		sb.append("} ");
+		sb.append("} \n");
+		sb.append("order by asc( bif:rnd(" + new Random().nextInt(Integer.MAX_VALUE) + ", ?s)) \n");
+		sb.append("LIMIT " + limit);
+		System.out.println(sb.toString());
+		return SparqlService.buildTinyResourceInfo(SparqlService.queryExtendedSyntax(sb.toString()), "s", "label");
+	}
+	
+	public static List<ResourceInfo> querySimilarType2Resources(String uri, String type, int limit) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("PREFIX dbo: <http://dbpedia.org/ontology/> \n");
+		sb.append("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
+		sb.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n");
+		sb.append("SELECT ?s ?label \n");
+		sb.append("WHERE { \n");
+		sb.append("{ \n");
+		sb.append("?s rdf:type <" + type + "> . \n");
+		sb.append("?s rdfs:label ?label . \n");
+		sb.append("?s ?p <" + uri + "> . \n");
+		sb.append("} UNION \n");
+		sb.append("{ \n");
+		sb.append("?s rdf:type <" + type + "> . \n");
+		sb.append("?s rdfs:label ?label . \n");
+		sb.append("<" + uri + "> ?h ?s . \n");
+		sb.append("} \n");
+		sb.append("FILTER (lang(?label) = 'en'). \n");
+		sb.append("} \n");
 		sb.append("LIMIT " + limit);
 		System.out.println(sb.toString());
 		return SparqlService.buildTinyResourceInfo(SparqlService.query(sb.toString()), "s", "label");
@@ -191,6 +206,7 @@ public class SparqlService {
 				"{" +
 				"<" + uri + ">" + " ?p ?o . " +
 				"}";
+		System.out.println(query);
 		ResultSet result = SparqlService.query(query);
 		return SparqlService.buildResource(result, uri, "p", "o", "wiki");
 	}
@@ -215,12 +231,12 @@ public class SparqlService {
 		System.out.println(sb.toString());
 		ResultSet rs = SparqlService.query(sb.toString());
 		List<Double> pageRanks = new ArrayList<>();
-		System.out.println(rs.hasNext());
 		while(rs.hasNext()) {
 			pageRanks.add(rs.next().getLiteral("v").getDouble());
 		}
 		return pageRanks;
 	}
+	
 	
 	public static Resource queryEntitesByPageRankThreshold(String uri, double tUpper, double tLower, 
 			int limit, int randomSeed) {
@@ -239,12 +255,34 @@ public class SparqlService {
 		sb.append("ORDER BY RAND(" + randomSeed + ") LIMIT " + limit + " \n");
 		System.out.println(sb.toString());
 		ResultSet rs = SparqlService.queryExtendedSyntax(sb.toString());
-		List<Resource> vals = new ArrayList<>();
-		System.out.println(rs.hasNext());
 		while(rs.hasNext()) {
 			return SparqlService.queryResourceWithTypeHierachy(rs.next().getResource("s").getURI());
 		}
 		return null;
+	}
+	
+	public static ResultSet queryResourcePropertyRanks(String uri) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
+		sb.append("PREFIX dbo:<http://dbpedia.org/ontology/> \n");
+		sb.append("PREFIX vrank:<http://purl.org/voc/vrank#> \n");
+		sb.append("PREFIX owl: <http://www.w3.org/2002/07/owl#> \n");
+		sb.append("SELECT DISTINCT ?labelP ?labelO \n");
+		sb.append("FROM <http://dbpedia.org> \n");
+		sb.append("FROM <http://people.aifb.kit.edu/ath/#DBpedia_PageRank>  \n");
+		sb.append("WHERE { \n");
+		sb.append("<" + uri + "> ?p ?o . \n");
+		sb.append("?p rdf:type owl:ObjectProperty . \n");
+		sb.append("?o vrank:hasRank/vrank:rankValue ?r. \n");
+		sb.append("?p rdfs:label ?labelP . \n");
+		sb.append("?o rdfs:label ?labelO . \n");
+		sb.append("FILTER (lang(?labelP) = 'en') . \n");
+		sb.append("FILTER (lang(?labelO) = 'en') . \n");
+		sb.append("} \n");
+		sb.append("ORDER BY DESC(?r) \n");
+		sb.append("LIMIT 50");
+		System.out.println(sb.toString());
+		return SparqlService.queryExtendedSyntax(sb.toString());
 	}
 	
 	public static Resource queryResourceWithTypeHierachy(String uri, 

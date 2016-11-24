@@ -1,6 +1,5 @@
 package de.unima.dws.semanta.generator.distractor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.jena.rdf.model.Resource;
@@ -19,9 +18,11 @@ public class TypeDistractorGenerator implements DistractorGenerator{
 			distractors = SparqlService.querySimilarTypeResources(
 					entity.getResource().getURI(), entity.getGeneralOntType().getURI(), 3);
 		} else if(difficulty == Difficulty.ADVANCED) {
-			
+			distractors = SparqlService.querySimilarTypeResources(
+					entity.getResource().getURI(), entity.getMediumOntType().getURI(), 3);
 		} else if(difficulty == Difficulty.EXPERT) {
-			
+			distractors = SparqlService.querySimilarTypeResources(
+					entity.getResource().getURI(), entity.getSpecialOntType().getURI(), 3);
 		}
 		return distractors;
 	}

@@ -8,6 +8,7 @@ public class Cell {
 	private int y;
 	private SimpleStringProperty label;
 	private SimpleStringProperty solution;
+	private boolean normalized;
 	
 	public Cell(int x, int y, SimpleStringProperty label, 
 			SimpleStringProperty solution) {
@@ -113,6 +114,14 @@ public class Cell {
 	@Override
 	public String toString() {
 		return "Cell [x=" + x + ", y=" + y + ", label=" + label + ", solution=" + solution + "]";
+	}
+
+	public boolean isNormalized() {
+		return normalized;
+	}
+
+	public void setNormalized(boolean normalized) {
+		this.normalized = normalized;
 	}
 	
 }

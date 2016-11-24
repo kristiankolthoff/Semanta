@@ -158,7 +158,31 @@ public class SparqlService {
 		return SparqlService.buildTinyResourceInfo(SparqlService.queryExtendedSyntax(sb.toString()), "s", "label");
 	}
 	
-	public static List<ResourceInfo> querySimilarType2Resources(String uri, String type, int limit) {
+	public static List<ResourceInfo> querySimilarTopicResources(String uri, String type, int limit) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("PREFIX dbo: <http://dbpedia.org/ontology/> \n");
+		sb.append("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
+		sb.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n");
+		sb.append("SELECT ?s ?label \n");
+		sb.append("WHERE { \n");
+		sb.append("{ \n");
+		sb.append("?s rdf:type <" + type + "> . \n");
+		sb.append("?s rdfs:label ?label . \n");
+		sb.append("?s ?p <" + uri + "> . \n");
+		sb.append("} UNION \n");
+		sb.append("{ \n");
+		sb.append("?s rdf:type <" + type + "> . \n");
+		sb.append("?s rdfs:label ?label . \n");
+		sb.append("<" + uri + "> ?h ?s . \n");
+		sb.append("} \n");
+		sb.append("FILTER (lang(?label) = 'en'). \n");
+		sb.append("} \n");
+		sb.append("LIMIT " + limit);
+		System.out.println(sb.toString());
+		return SparqlService.buildTinyResourceInfo(SparqlService.query(sb.toString()), "s", "label");
+	}
+	
+	public static List<ResourceInfo> querySimilarLinkingEntityResources(String uri, String type, int limit) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("PREFIX dbo: <http://dbpedia.org/ontology/> \n");
 		sb.append("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");

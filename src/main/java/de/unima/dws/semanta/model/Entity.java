@@ -103,7 +103,15 @@ public class Entity {
 	}
 	
 	public Resource getMediumOntType() {
-		return ResourceFactory.createResource();
+		List<Resource> resources = this.getTypesUnordered();
+		resources.remove(getGeneralOntType());
+		resources.remove(getSpecialOntType());
+		if(resources.isEmpty()) {
+			return getSpecialOntType();
+		} else {
+			int index = (resources.size() > 1) ? resources.size() / 2 : 1;
+			return resources.get(index);
+		}
 	}
 	
 	public boolean isTyped() {

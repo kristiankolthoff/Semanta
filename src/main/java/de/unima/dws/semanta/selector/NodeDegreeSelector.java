@@ -12,13 +12,13 @@ import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.service.SparqlService;
 
-public class NodeSumSelector implements EntitySelector {
+public class NodeDegreeSelector implements EntitySelector {
 
 	private List<Entity> cache;
 	private List<String> filterSubjects;
 	private List<String> filterPredicates;
 	
-	public NodeSumSelector() {
+	public NodeDegreeSelector() {
 		this.cache = new ArrayList<>();
 		this.filterSubjects = new ArrayList<>();
 		this.filterPredicates = new ArrayList<>();

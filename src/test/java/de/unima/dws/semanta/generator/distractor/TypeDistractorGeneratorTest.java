@@ -16,7 +16,7 @@ import de.unima.dws.semanta.utilities.Settings;
 
 public class TypeDistractorGeneratorTest {
 
-	private DistractorGenerator distractor;
+	private TypeDistractorGenerator distractor;
 	
 	@Before
 	public void init() {

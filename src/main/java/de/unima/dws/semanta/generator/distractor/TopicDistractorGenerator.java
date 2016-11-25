@@ -16,13 +16,13 @@ public class TopicDistractorGenerator implements DistractorGenerator{
 		List<ResourceInfo> distractors = null;
 		if(difficulty == Difficulty.BEGINNER) {
 			distractors = SparqlService.querySimilarTopicResources(
-					entity.getResource().getURI(), entity.getGeneralOntType().getURI(), 3);
+					topicResource.getURI(), entity.getGeneralOntType().getURI(), 3);
 		} else if(difficulty == Difficulty.ADVANCED) {
 			distractors = SparqlService.querySimilarTopicResources(
-					entity.getResource().getURI(), entity.getMediumOntType().getURI(), 3);
+					topicResource.getURI(), entity.getMediumOntType().getURI(), 3);
 		} else if(difficulty == Difficulty.EXPERT) {
 			distractors = SparqlService.querySimilarTopicResources(
-					entity.getResource().getURI(), entity.getSpecialOntType().getURI(), 3);
+					topicResource.getURI(), entity.getSpecialOntType().getURI(), 3);
 		}
 		return distractors;
 	}

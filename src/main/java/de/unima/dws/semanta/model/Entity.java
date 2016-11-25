@@ -82,6 +82,9 @@ public class Entity {
 	
 	public Resource getSpecialOntType() {
 		List<Resource> resources = this.getTypesUnordered();
+		if(resources.isEmpty()) {
+			return ResourceFactory.createResource("http://dbpedia.org/ontology/Location");
+		}
 		for(Resource source : resources) {
 			boolean occuredAsSubclass = false;
 			for(Resource target : resources) {
@@ -104,6 +107,9 @@ public class Entity {
 	
 	public Resource getMediumOntType() {
 		List<Resource> resources = this.getTypesUnordered();
+		if(resources.isEmpty()) {
+			return ResourceFactory.createResource("http://dbpedia.org/ontology/Location");
+		}
 		resources.remove(getGeneralOntType());
 		resources.remove(getSpecialOntType());
 		if(resources.isEmpty()) {
@@ -120,15 +126,18 @@ public class Entity {
 	
 	public Resource getGeneralOntType() {
 		List<Resource> resources = this.getTypesUnordered();
+		if(resources.isEmpty()) {
+			return ResourceFactory.createResource("http://dbpedia.org/ontology/Location");
+		}
 		for(Resource resource : resources) {
 			Statement stmt = resource.getProperty(ResourceFactory.createProperty(Settings.RDFS_SUBCLASS_OF));
 			if(stmt == null) {
-				 return ResourceFactory.createResource("https://www.w3.org/2002/07/owl#Thing");
+				 return ResourceFactory.createResource("http://dbpedia.org/ontology/Location");
 			} else if(stmt.asTriple().getObject().getURI().equals(Settings.OWL_THING)) {
 				return resource;
 			}
 		}
-		return ResourceFactory.createResource("https://www.w3.org/2002/07/owl#Thing");
+		return ResourceFactory.createResource("http://dbpedia.org/ontology/Location");
 	}
 	
 	public Resource getResource() {

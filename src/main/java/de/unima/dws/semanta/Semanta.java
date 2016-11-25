@@ -48,7 +48,7 @@ public class Semanta {
 	public void initialize() {
 		SparqlService.setEndpoint(Settings.DEFAULT_ENDPOINT_DBPEDIA);
 		this.selector = new PageRankEntitySelector(300);
-		this.generator = new PropertyHAGenerator();
+		this.generator = new SummaryHAGenerator();
 		this.distractorGenerator = new TypeDistractorGenerator();
 	}
 	

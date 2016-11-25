@@ -20,7 +20,6 @@ import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.ui.home.HomeView;
 import de.unima.dws.semanta.utilities.Settings;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -38,6 +37,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -46,8 +46,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -69,14 +67,26 @@ public class MainPresenter implements Initializable{
 	@FXML
 	private Label labelAnswerA;
 	
+	@FXML
+	private Tooltip tooltipA;
+	
 	@FXML 
 	private Label labelAnswerB;
+	
+	@FXML
+	private Tooltip tooltipB;
 	
 	@FXML
 	private Label labelAnswerC;
 	
 	@FXML
+	private Tooltip tooltipC;
+	
+	@FXML
 	private Label labelAnswerD;
+	
+	@FXML
+	private Tooltip tooltipD;
 	
 	@FXML
 	private Slider sliderZoom;
@@ -111,8 +121,6 @@ public class MainPresenter implements Initializable{
 	@Inject
 	private Application application;
 	private Crossword crossword;
-	
-	
 	private Map<Cell, TextField> cellMap;
 	private Map<TextField, Cell> textMap;
 	private Map<Cell, List<HAWord>> wordMap;
@@ -125,8 +133,8 @@ public class MainPresenter implements Initializable{
 	
 	private void initialzeCrosswordGrid() {
 		accordion.setExpandedPane(titledPaneAbstract);
-//		labelLinkWithTopic.setText(application.getTopic().getLabel());
-//		updateEntityInfo(application.getTopic());
+		labelLinkWithTopic.setText(application.getTopic().getLabel());
+		updateEntityInfo(application.getTopic());
 		listViewAcross.getItems().clear();
 		listViewDown.getItems().clear();
 		crossword = application.getCrossword();
@@ -238,6 +246,7 @@ public class MainPresenter implements Initializable{
 					Platform.runLater(new Runnable() {
 					    @Override public void run() {
 					    	listViewDown.getSelectionModel().clearSelection();
+					    	updateDistractors(newValue);
 	                         if(newValue != null && newValue.isSolved()) {
 	                        	 updateEntityInfo(newValue);
 	                         }
@@ -269,6 +278,7 @@ public class MainPresenter implements Initializable{
 					Platform.runLater(new Runnable() {
 					    @Override public void run() {
 					    	listViewAcross.getSelectionModel().clearSelection();
+					    	updateDistractors(newValue);
 	                         if(newValue != null && newValue.isSolved()) {
 	                        	 updateEntityInfo(newValue);
 	                         }
@@ -305,6 +315,17 @@ public class MainPresenter implements Initializable{
 //		labelTopic.setText(info.getType());
 		imageViewEntity.setImage(new Image(info.getImageURL().get()));
 		accordion.setExpandedPane(titledPaneAbstract);
+	}
+	
+	private void updateDistractors(HAWord word) {
+		labelAnswerA.setText(word.getHAEntity().getDistractorA());
+		tooltipA.setText(word.getHAEntity().getDistractorA());
+		labelAnswerB.setText(word.getHAEntity().getDistractorB());
+		tooltipB.setText(word.getHAEntity().getDistractorB());
+		labelAnswerC.setText(word.getHAEntity().getDistractorC());
+		tooltipC.setText(word.getHAEntity().getDistractorC());
+		labelAnswerD.setText(word.getHAEntity().getDistractorD());
+		tooltipD.setText(word.getHAEntity().getDistractorD());
 	}
 	
 	public void updateEntityInfoToTopic() {

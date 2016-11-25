@@ -154,7 +154,7 @@
                         <BorderPane fx:id="borderPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
                      </content>
                   </ScrollPane>
-                  <HBox fx:id="hBoxAnswers" alignment="CENTER" prefHeight="60.0" prefWidth="617.0">
+                  <HBox fx:id="hBoxAnswers" alignment="CENTER" prefHeight="31.0" prefWidth="617.0">
                      <children>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #C0C0C0;">
                            <children>
@@ -163,7 +163,10 @@
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="labelAnswerA" text="Answer A" />
+                              <Label fx:id="labelAnswerA" text="Answer A">
+                                 <tooltip>
+                                    <Tooltip fx:id="tooltipA" text="Empty Tooltip" />
+                                 </tooltip></Label>
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" layoutX="219.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
@@ -173,7 +176,10 @@
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="labelAnswerB" text="Answer B" />
+                              <Label fx:id="labelAnswerB" text="Answer B">
+                                 <tooltip>
+                                    <Tooltip fx:id="tooltipB" text="Empty Tooltip" />
+                                 </tooltip></Label>
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" layoutX="119.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #C0C0C0;">
@@ -183,7 +189,10 @@
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="labelAnswerC" text="Answer C" />
+                              <Label fx:id="labelAnswerC" text="Answer C">
+                                 <tooltip>
+                                    <Tooltip fx:id="tooltipC" text="Empty Tooltip" />
+                                 </tooltip></Label>
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" layoutX="419.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
@@ -193,7 +202,10 @@
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="labelAnswerD" text="Answer D" />
+                              <Label fx:id="labelAnswerD" text="Answer D">
+                                 <tooltip>
+                                    <Tooltip fx:id="tooltipD" text="Empty Tooltip" />
+                                 </tooltip></Label>
                            </children>
                         </HBox>
                      </children>

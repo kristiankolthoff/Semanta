@@ -37,7 +37,7 @@
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin></TextField>
-            <TextField alignment="CENTER" prefHeight="50.0" prefWidth="51.0" text="5">
+            <TextField fx:id="textFieldWords" alignment="CENTER" prefHeight="50.0" prefWidth="51.0" text="5">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>

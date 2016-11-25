@@ -14,20 +14,20 @@ import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.service.SparqlService;
 import de.unima.dws.semanta.utilities.Settings;
 
-public class TypeDistractorGeneratorTest {
+public class TopicDistractorGeneratorTest {
 
-	private TypeDistractorGenerator distractor;
+	private TopicDistractorGenerator distractor;
 	
 	@Before
 	public void init() {
 		SparqlService.setEndpoint(Settings.DEFAULT_ENDPOINT_DBPEDIA);
-		distractor = new TypeDistractorGenerator();
+		distractor = new TopicDistractorGenerator();
 	}
 	
 	@Test
 	public void generateBeginnerTest() {
 		List<ResourceInfo> infos = distractor.generate(
-				new Entity(SparqlService.queryResourceWithTypeHierachy("http://dbpedia.org/resource/Kindergarten"), null, true), 
+				new Entity(SparqlService.queryResourceWithTypeHierachy("http://dbpedia.org/resource/Oliver_Kahn"), null, true), 
 				SparqlService.queryResourceWithTypeHierachy("http://dbpedia.org/resource/Germany"), Difficulty.ADVANCED, 3);
 		System.out.println(infos);
 		assertEquals(3, infos.size());

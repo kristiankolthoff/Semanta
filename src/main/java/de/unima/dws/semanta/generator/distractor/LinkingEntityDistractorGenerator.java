@@ -15,13 +15,13 @@ public class LinkingEntityDistractorGenerator implements DistractorGenerator{
 	public List<ResourceInfo> generate(Entity entity, Resource topicResource, Difficulty difficulty, int numEntities) {
 		List<ResourceInfo> distractors = null;
 		if(difficulty == Difficulty.BEGINNER) {
-			distractors = SparqlService.querySimilarLinkingEntityResources(
+			distractors = SparqlService.querySimilarLinkingEntityResources(topicResource.getURI(),
 					entity.getResource().getURI(), entity.getGeneralOntType().getURI(), 3);
 		} else if(difficulty == Difficulty.ADVANCED) {
-			distractors = SparqlService.querySimilarLinkingEntityResources(
+			distractors = SparqlService.querySimilarLinkingEntityResources(topicResource.getURI(), 
 					entity.getResource().getURI(), entity.getMediumOntType().getURI(), 3);
 		} else if(difficulty == Difficulty.EXPERT) {
-			distractors = SparqlService.querySimilarLinkingEntityResources(
+			distractors = SparqlService.querySimilarLinkingEntityResources(topicResource.getURI(), 
 					entity.getResource().getURI(), entity.getSpecialOntType().getURI(), 3);
 		}
 		return distractors;

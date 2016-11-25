@@ -1,6 +1,10 @@
 package de.unima.dws.semanta.recommender;
 
-public class Recommender {
+import java.util.List;
+
+import de.unima.dws.semanta.model.ResourceInfo;
+
+public class Recommender implements LocationRecommender, HistoryRecommender{
 
 	private LocationRecommender locationRecommender;
 	private HistoryRecommender historyRecommender;
@@ -29,6 +33,16 @@ public class Recommender {
 	
 	public void setHistoryRecommender(HistoryRecommender historyRecommender) {
 		this.historyRecommender = historyRecommender;
+	}
+
+	@Override
+	public List<ResourceInfo> recommend(List<HistoryEntry> entries) {
+		return null;
+	}
+
+	@Override
+	public List<ResourceInfo> recommend(Location location) {
+		return null;
 	}
 	
 	

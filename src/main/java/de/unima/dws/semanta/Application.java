@@ -29,6 +29,7 @@ public class Application {
 	private Crossword crossword;
 	private Difficulty difficulty;
 	private ResourceInfo topic;
+	private int numOfWords;
 	
 	@PostConstruct
 	public void initialize() {
@@ -36,6 +37,7 @@ public class Application {
 //		generator = new SimpleCrosswordGenerator();
 		crossword = null;
 		topic = null;
+		numOfWords = 5;
 	}
 	
 	public List<ResourceInfo> getTopicResults(String topic) {
@@ -50,9 +52,10 @@ public class Application {
 		return this.semanta.fetchTopics(topic, 10);
 	}
 	
-	public Crossword generateCrossword(String topic, Difficulty difficulty) {
+	public Crossword generateCrossword(String topic, Difficulty difficulty, int numOfWords) {
 		System.out.println(difficulty);
 		this.difficulty = difficulty;
+		this.numOfWords = numOfWords;
 		if(!topic.contains("http")) {
 			List<ResourceInfo> infos = semanta.fetchTopics(topic, 5);
 			if(!infos.isEmpty()) {
@@ -61,7 +64,7 @@ public class Application {
 				topic = this.topic.getUri();
 			}
 		}
-		List<HAEntity> entities = semanta.fetchEntities(topic, 5, true, difficulty);
+		List<HAEntity> entities = semanta.fetchEntities(topic, numOfWords, true, difficulty);
 		List<HAWord> words = new ArrayList<>();
 		for(HAEntity entity : entities) {
 			System.out.println(entity);
@@ -88,14 +91,14 @@ public class Application {
 		return crossword;
 	}
 	
-	public Crossword generateCrossword(ResourceInfo info, Difficulty difficulty) {
+	public Crossword generateCrossword(ResourceInfo info, Difficulty difficulty, int numOfWords) {
 		this.topic = info;
-		return generateCrossword(info.getUri(), difficulty);
+		return generateCrossword(info.getUri(), difficulty, numOfWords);
 	}
 	
 	public Crossword regenerateCrossword() {
 		if(topic != null) {
-			return generateCrossword(topic, difficulty);
+			return generateCrossword(topic, difficulty, numOfWords);
 		}
 		return crossword;
 	}

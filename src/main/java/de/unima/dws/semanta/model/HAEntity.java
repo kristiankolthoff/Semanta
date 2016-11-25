@@ -1,6 +1,7 @@
 package de.unima.dws.semanta.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.jena.rdf.model.Literal;
@@ -55,6 +56,10 @@ public class HAEntity {
 	}
 	
 	public String getSanitizedAnswer() {
+		return sanitizeAnswer(answer);
+	}
+	
+	private static String sanitizeAnswer(String answer) {
 		return answer.replaceAll("\\s+","").trim().toLowerCase();
 	}
 
@@ -74,6 +79,22 @@ public class HAEntity {
 	public HAEntity setResource(Resource resource) {
 		this.resource = resource;
 		return this;
+	}
+	
+	public String getDistractorA() {
+		return sanitizeAnswer(this.distractors.get(0).getLabel());
+	}
+	
+	public String getDistractorB() {
+		return sanitizeAnswer(this.distractors.get(1).getLabel());
+	}
+	
+	public String getDistractorC() {
+		return sanitizeAnswer(this.distractors.get(2).getLabel());
+	}
+	
+	public String getDistractorD() {
+		return sanitizeAnswer(this.distractors.get(3).getLabel());
 	}
 
 	public String getEntAbstract() {
@@ -113,6 +134,8 @@ public class HAEntity {
 
 	public HAEntity setOAResources(List<ResourceInfo> oaResources) {
 		this.distractors = oaResources;
+		this.distractors.add(new ResourceInfo(null, null, null, answer));
+		Collections.shuffle(distractors);
 		return this;
 	}
 	

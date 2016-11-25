@@ -53,6 +53,9 @@ public class HomePresenter implements Initializable{
 	private TextField textFieldSearch;
 	
 	@FXML
+	private TextField textFieldWords;
+	
+	@FXML
 	private ComboBox<Difficulty> comboBoxDifficulty;
 	
 	@FXML
@@ -199,7 +202,7 @@ public class HomePresenter implements Initializable{
 		         @Override
 		         protected Crossword call() throws Exception {
 		         //TODO sanitize string
-		         return application.generateCrossword(topic, difficulty);
+		         return application.generateCrossword(topic, difficulty, Integer.valueOf(textFieldWords.getText()));
 		         }
 		};
 		longTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
@@ -220,7 +223,7 @@ public class HomePresenter implements Initializable{
 		         @Override
 		         protected Crossword call() throws Exception {
 		         //TODO sanitize string
-		         return application.generateCrossword(topic, difficulty);
+		         return application.generateCrossword(topic, difficulty, Integer.valueOf(textFieldWords.getText()));
 		         }
 		};
 		longTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {

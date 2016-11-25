@@ -260,7 +260,7 @@ public class SparqlService {
 	}
 	
 	
-	public static Resource queryEntitesByPageRankThreshold(String uri, double tUpper, double tLower, 
+	public static List<Resource> queryEntitesByPageRankThreshold(String uri, double tUpper, double tLower, 
 			int limit, int randomSeed) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
@@ -277,10 +277,11 @@ public class SparqlService {
 		sb.append("ORDER BY RAND(" + randomSeed + ") LIMIT " + limit + " \n");
 		System.out.println(sb.toString());
 		ResultSet rs = SparqlService.queryExtendedSyntax(sb.toString());
+		List<Resource> results = new ArrayList<>();
 		while(rs.hasNext()) {
-			return SparqlService.queryResourceWithTypeHierachy(rs.next().getResource("s").getURI());
+			results.add(SparqlService.queryResourceWithTypeHierachy(rs.next().getResource("s").getURI()));
 		}
-		return null;
+		return results;
 	}
 	
 	public static ResultSet queryResourcePropertyRanks(String uri) {
@@ -305,6 +306,33 @@ public class SparqlService {
 		sb.append("LIMIT 50");
 		System.out.println(sb.toString());
 		return SparqlService.queryExtendedSyntax(sb.toString());
+	}
+	
+	public static List<Resource> queryResourcesByPropertyRanks(String uri) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
+		sb.append("PREFIX dbo:<http://dbpedia.org/ontology/> \n");
+		sb.append("PREFIX vrank:<http://purl.org/voc/vrank#> \n");
+		sb.append("PREFIX owl: <http://www.w3.org/2002/07/owl#> \n");
+		sb.append("SELECT DISTINCT ?o \n");
+		sb.append("FROM <http://dbpedia.org> \n");
+		sb.append("FROM <http://people.aifb.kit.edu/ath/#DBpedia_PageRank>  \n");
+		sb.append("WHERE { \n");
+		sb.append("<" + uri + "> ?p ?o . \n");
+		sb.append("?p rdf:type owl:ObjectProperty . \n");
+		sb.append("?o vrank:hasRank/vrank:rankValue ?r. \n");
+		sb.append("?o rdfs:label ?labelO . \n");
+		sb.append("FILTER (lang(?labelO) = 'en') . \n");
+		sb.append("} \n");
+		sb.append("ORDER BY DESC(?r) \n");
+		sb.append("LIMIT 50");
+		System.out.println(sb.toString());
+		ResultSet rs = SparqlService.queryExtendedSyntax(sb.toString());
+		List<Resource> results = new ArrayList<>();
+		while(rs.hasNext()) {
+			results.add(SparqlService.queryResourceWithTypeHierachy(rs.next().getResource("o").getURI()));
+		}
+		return results;
 	}
 	
 	public static Resource queryResourceWithTypeHierachy(String uri, 

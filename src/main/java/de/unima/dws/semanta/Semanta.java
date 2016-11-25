@@ -55,11 +55,11 @@ public class Semanta {
 	public List<HAEntity> fetchEntities(String uri, int numEntities, boolean optionalAnswers, Difficulty difficulty) {
 		List<HAEntity> haEntities = new ArrayList<>();
 		Resource topicResource = SparqlService.queryResource(uri);
+		List<Entity> resourceEntity = this.selector.select(topicResource, difficulty, numEntities);
 		for (int i = 0; i < numEntities; i++) {
-			Entity resourceEntity = this.selector.select(topicResource, difficulty);
-			HAEntity entity = this.generator.generate(resourceEntity, topicResource, difficulty);
+			HAEntity entity = this.generator.generate(resourceEntity.get(i), topicResource, difficulty);
 			if(optionalAnswers) {
-				entity.setOAResources(this.distractorGenerator.generate(resourceEntity, topicResource, difficulty, 3));
+				entity.setOAResources(this.distractorGenerator.generate(resourceEntity.get(i), topicResource, difficulty, 3));
 			}
 			haEntities.add(entity);
 		}

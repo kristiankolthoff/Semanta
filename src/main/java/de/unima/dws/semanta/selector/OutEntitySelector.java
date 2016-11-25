@@ -1,13 +1,10 @@
 package de.unima.dws.semanta.selector;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import org.apache.jena.graph.Triple;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.StmtIterator;
 
 import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.Entity;
@@ -15,63 +12,26 @@ import de.unima.dws.semanta.service.SparqlService;
 
 public class OutEntitySelector implements EntitySelector{
 
-	private List<Entity> cache;
-	
-	public OutEntitySelector() {
-		this.cache = new ArrayList<>();
-	}
-	
 	@Override
-	public Entity select(Resource topicResource, Difficulty difficulty) {
-		StmtIterator it = topicResource.listProperties();
-		while(it.hasNext()) {
-			Statement stmt = it.next();
-			Triple triple = stmt.asTriple();
-			if(selectTriple(triple)) {
-				Entity entity = new Entity(SparqlService.queryResourceWithTypeHierachy(triple.getObject().getURI()),
-						ResourceFactory.createProperty(triple.getPredicate().getURI()), true);
-				cache.add(entity);
-				return entity;
-			}
+	public List<Entity> select(Resource topicResource, Difficulty difficulty, int numEntities) {
+		List<Resource> resources = SparqlService.queryResourcesByPropertyRanks(topicResource.getURI());
+		if(difficulty == Difficulty.BEGINNER) {
+			return select(resources, 0, resources.size() / 3);
+		} else if(difficulty == Difficulty.ADVANCED) {
+			return select(resources, resources.size() / 3, (resources.size() / 3)*2);
+		} else if(difficulty == Difficulty.EXPERT) {
+			return select(resources, (resources.size() / 3)*2, resources.size());
 		}
-		return new Entity(ResourceFactory.createResource(), ResourceFactory.createProperty(""), true);
+		return Collections.emptyList();
 	}
 	
-	
-	public boolean isCached(Resource resource) {
-		return this.cache.contains(resource);
-	}
-	
-	public boolean isURICached(String uri) {
-		for(Entity entity : this.cache) {
-			if(entity.getResource().getURI().equals(uri)) {
-				return true;
-			}
+	private List<Entity> select(List<Resource> resources, int from, int to) {
+		List<Entity> entities = new ArrayList<>();
+		for (int i = from; i < to; i++) {
+			entities.add(new Entity(resources.get(i), null, true));
 		}
-		return false;
-	}
-	
-	public boolean selectTriple(Triple triple) {
-		return !triple.getObject().isLiteral() && 
-				!triple.getPredicate().getURI().contains("rdf") &&
-				!triple.getPredicate().getURI().contains("owl") && 
-				!triple.getPredicate().getURI().contains("purl") && 
-				!triple.getPredicate().getURI().contains("wiki") &&
-				!isURICached(triple.getObject().getURI());
-	}
-
-	public List<Entity> getCache() {
-		return cache;
-	}
-
-	@Override
-	public void clear() {
-		this.cache.clear();
-	}
-
-	@Override
-	public int size() {
-		return this.cache.size();
+		return entities;
+		
 	}
 
 }

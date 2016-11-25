@@ -1,5 +1,7 @@
 package de.unima.dws.semanta.selector;
 
+import java.util.List;
+
 import org.apache.jena.rdf.model.Resource;
 
 import de.unima.dws.semanta.model.Difficulty;
@@ -8,20 +10,9 @@ import de.unima.dws.semanta.model.Entity;
 public class InEntitySelector implements EntitySelector{
 
 	@Override
-	public Entity select(Resource topicResource, Difficulty difficulty) {
+	public List<Entity> select(Resource topicResource, Difficulty difficulty, int numEntities) {
 		return null;
 	}
 
-	@Override
-	public void clear() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 }

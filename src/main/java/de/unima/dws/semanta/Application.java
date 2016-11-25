@@ -17,7 +17,12 @@ import de.unima.dws.semanta.crossword.model.HAWord;
 import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.model.ResourceInfo;
+import de.unima.dws.semanta.recommender.Location;
 import de.unima.dws.semanta.recommender.Recommender;
+import de.unima.dws.semanta.service.RESTLocationService;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.schedulers.Schedulers;
 
 public class Application {
 
@@ -104,6 +109,25 @@ public class Application {
 	}
 	
 	public List<ResourceInfo> generateRecommendations() {
+		RESTLocationService service = new RESTLocationService.Factory().build();
+		 Subscription subscription = service.getLocation()
+	                .subscribeOn(Schedulers.newThread())
+	                .subscribe(new Subscriber<Location>() {
+	                    @Override
+	                    public void onCompleted() {
+	                    	System.out.println("completed");
+	                    }
+
+	                    @Override
+	                    public void onError(Throwable e) {
+	                    	System.out.println(e);
+	                    }
+
+	                    @Override
+	                    public void onNext(Location location) {
+	                      System.out.println(location);
+	                    }
+	                });
 		ResourceInfo info = new ResourceInfo(ResourceFactory.createResource(), "http://", "agent", "Barack Obama");
         info.setIndex(1);
         info.setType("Agent");

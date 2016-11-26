@@ -14,7 +14,7 @@
    <children>
       <HBox prefHeight="220.0" prefWidth="246.0" style="-fx-background-color: #C0C0C0;">
          <children>
-            <ImageView fx:id="imageView" fitHeight="136.0" fitWidth="112.0" pickOnBounds="true" preserveRatio="true" style="-fx-image: url(http://a5.files.biography.com/image/upload/c_fill,cs_srgb,dpr_1.0,g_face,h_300,q_80,w_300/MTE4MDAzNDEwNzg5ODI4MTEw.jpg);">
+            <ImageView fx:id="imageView" fitHeight="136.0" fitWidth="112.0" pickOnBounds="true" preserveRatio="true">
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>

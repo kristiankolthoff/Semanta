@@ -32,7 +32,8 @@ public class SummaryHAGenerator implements HAGenerator {
 		List<String> entitySentences = new ArrayList<>();
 		for (int i = 0; i < sentences.length; i++) {
 			if(sentences[i].contains(entity.getLabel())) {
-				entitySentences.add(sentences[i]);
+				String sentence = sentences[i].replaceAll("\\(^0-9A-Za-z\\)", " -----");
+				entitySentences.add(sentence);
 			}
 		}
 		numOfHints = (numOfHints > entitySentences.size()) ? 

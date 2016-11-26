@@ -2,6 +2,7 @@ package de.unima.dws.semanta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -39,6 +40,7 @@ public class Application {
 	@PostConstruct
 	public void initialize() {
 		generator = new InternalGreedyCrosswordGenerator(new SimpleCrosswordGenerator(), 5, null);
+		this.recommender = new Recommender();
 //		generator = new SimpleCrosswordGenerator();
 		crossword = null;
 		topic = null;
@@ -108,45 +110,26 @@ public class Application {
 		return crossword;
 	}
 	
-	public List<ResourceInfo> generateRecommendations() {
-		RESTLocationService service = new RESTLocationService.Factory().build();
-		 Subscription subscription = service.getLocation()
-	                .subscribeOn(Schedulers.newThread())
-	                .subscribe(new Subscriber<Location>() {
-	                    @Override
-	                    public void onCompleted() {
-	                    	System.out.println("completed");
-	                    }
-
-	                    @Override
-	                    public void onError(Throwable e) {
-	                    	System.out.println(e);
-	                    }
-
-	                    @Override
-	                    public void onNext(Location location) {
-	                      System.out.println(location);
-	                    }
-	                });
-		ResourceInfo info = new ResourceInfo(ResourceFactory.createResource(), "http://", "agent", "Barack Obama");
-        info.setIndex(1);
-        info.setType("Agent");
-        info.setImageURL("http://a5.files.biography.com/image/upload/c_fill,cs_srgb,dpr_1.0,g_face,h_300,q_80,w_300/MTE4MDAzNDEwNzg5ODI4MTEw.jpg");
-        info.setSummary("blac bla bla");
-        List<ResourceInfo> list = new ArrayList<>();
-        list.add(info);
-        list.add(info);
-        list.add(info);
-        list.add(info);
-        list.add(info);
-        list.add(info);
-        list.add(info);
-        list.add(info);
-        list.add(info);
-        list.add(info);
-        list.add(info);
-        list.add(info);
-        return list;
+	public void generateRecommendations(Consumer<List<ResourceInfo>> callback) {
+//		ResourceInfo info = new ResourceInfo(ResourceFactory.createResource(), "http://", "agent", "Barack Obama");
+//        info.setIndex(1);
+//        info.setType("Agent");
+//        info.setImageURL("http://a5.files.biography.com/image/upload/c_fill,cs_srgb,dpr_1.0,g_face,h_300,q_80,w_300/MTE4MDAzNDEwNzg5ODI4MTEw.jpg");
+//        info.setSummary("blac bla bla");
+//        List<ResourceInfo> list = new ArrayList<>();
+//        list.add(info);
+//        list.add(info);
+//        list.add(info);
+//        list.add(info);
+//        list.add(info);
+//        list.add(info);
+//        list.add(info);
+//        list.add(info);
+//        list.add(info);
+//        list.add(info);
+//        list.add(info);
+//        list.add(info);
+		this.recommender.getRecommendations(12, callback);
 	}
 
 	public Semanta getSemanta() {

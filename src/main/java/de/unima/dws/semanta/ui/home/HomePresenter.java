@@ -24,6 +24,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
@@ -46,6 +47,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import sun.management.HotspotMemoryMBean;
 
 public class HomePresenter implements Initializable{
 
@@ -90,10 +92,6 @@ public class HomePresenter implements Initializable{
  
         HBox hBox = new HBox();
 		initializeRecommendations(hBox);
-		paneRecommendation.setMaxSize(RECOMMENDATION_WIDTH, RECOMMENDATION_HEIGHT);
-		paneRecommendation.setClip(new Rectangle(RECOMMENDATION_WIDTH, RECOMMENDATION_HEIGHT));
-		paneRecommendation.getChildren().add(hBox);
-		startAnimation(hBox, (int) RECOMMENDATION_WIDTH, numOfRecommendations);
 	}
 	
 	public void slideLeft() {
@@ -106,18 +104,29 @@ public class HomePresenter implements Initializable{
 	
 	
 	private void initializeRecommendations(HBox hBox) {
-		List<ResourceInfo> recommendations = this.application.generateRecommendations();
-		for(ResourceInfo recommendation : recommendations) {
-			//TODO only inject application
-			RecommendationView view = new RecommendationView((f) -> recommendation);
-			((RecommendationPresenter)view.getPresenter()).setHomePresenter(this);
-			Separator separator = new Separator(Orientation.VERTICAL);
-			separator.setVisible(false);
-			separator.setPadding(new Insets(5));
-			hBox.getChildren().add(separator);
-			hBox.getChildren().add(view.getView());
-		}
-		numOfRecommendations = recommendations.size();
+		this.application.generateRecommendations(vals -> {
+			System.out.println(vals);
+			 Platform.runLater(new Runnable() {
+			      @Override public void run() {
+			    	  for(ResourceInfo recommendation : vals) {
+							System.out.println("Create recommendation view");
+							//TODO only inject application
+							RecommendationView view = new RecommendationView((f) -> recommendation);
+							((RecommendationPresenter)view.getPresenter()).setHomePresenter(HomePresenter.this);
+							Separator separator = new Separator(Orientation.VERTICAL);
+							separator.setVisible(false);
+							separator.setPadding(new Insets(5));
+							hBox.getChildren().add(separator);
+							hBox.getChildren().add(view.getView());
+						}
+						numOfRecommendations = vals.size();
+						paneRecommendation.setMaxSize(RECOMMENDATION_WIDTH, RECOMMENDATION_HEIGHT);
+						paneRecommendation.setClip(new Rectangle(RECOMMENDATION_WIDTH, RECOMMENDATION_HEIGHT));
+						paneRecommendation.getChildren().add(hBox);
+						startAnimation(hBox, (int) RECOMMENDATION_WIDTH, numOfRecommendations); 
+			      }
+			    });
+		});
 	}
 	
     private void startAnimation(final HBox hbox, final int RECOMMENDATION_WIDTH, final int NUM_OF_RECOMMENDATIONS) {

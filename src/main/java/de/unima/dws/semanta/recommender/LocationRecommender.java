@@ -7,5 +7,5 @@ import de.unima.dws.semanta.model.ResourceInfo;
 @FunctionalInterface
 public interface LocationRecommender {
 
-	public List<ResourceInfo> recommend(Location location);
+	public List<ResourceInfo> recommend(Location location, int numberOfRecommendations);
 }

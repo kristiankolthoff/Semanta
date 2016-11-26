@@ -17,6 +17,7 @@ import de.unima.dws.semanta.model.Entity;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.model.ResourceInfo;
 import de.unima.dws.semanta.selector.EntitySelector;
+import de.unima.dws.semanta.selector.MetaEntitySelector;
 import de.unima.dws.semanta.selector.NodeDegreeSelector;
 import de.unima.dws.semanta.selector.PageRankEntitySelector;
 import de.unima.dws.semanta.service.SparqlService;
@@ -47,7 +48,7 @@ public class Semanta {
 	@PostConstruct
 	public void initialize() {
 		SparqlService.setEndpoint(Settings.DEFAULT_ENDPOINT_DBPEDIA);
-		this.selector = new PageRankEntitySelector(300);
+		this.selector = new MetaEntitySelector();
 		this.generator = new SummaryHAGenerator();
 		this.distractorGenerator = new TypeDistractorGenerator();
 	}

@@ -16,11 +16,11 @@ public class OutEntitySelector implements EntitySelector{
 	public List<Entity> select(Resource topicResource, Difficulty difficulty, int numEntities) {
 		List<Resource> resources = SparqlService.queryResourcesByPropertyRanks(topicResource.getURI());
 		if(difficulty == Difficulty.BEGINNER) {
-			return select(resources, 0, resources.size() / 3);
+			return select(resources, 0, numEntities);
 		} else if(difficulty == Difficulty.ADVANCED) {
-			return select(resources, resources.size() / 3, (resources.size() / 3)*2);
+			return select(resources, resources.size() / 3, resources.size() / 3 + numEntities);
 		} else if(difficulty == Difficulty.EXPERT) {
-			return select(resources, (resources.size() / 3)*2, resources.size());
+			return select(resources, (resources.size() / 3)*2, (resources.size() / 3)*2 + numEntities);
 		}
 		return Collections.emptyList();
 	}

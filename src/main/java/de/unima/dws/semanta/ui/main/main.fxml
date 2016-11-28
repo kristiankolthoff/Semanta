@@ -151,7 +151,7 @@
                <children>
                   <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="1000.0" prefWidth="1000.0">
                      <content>
-                        <BorderPane fx:id="borderPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                        <AnchorPane fx:id="borderPane" prefHeight="200.0" prefWidth="200.0" />
                      </content>
                   </ScrollPane>
                   <HBox fx:id="hBoxAnswers" alignment="CENTER" prefHeight="31.0" prefWidth="617.0">

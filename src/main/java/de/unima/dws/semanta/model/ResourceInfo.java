@@ -5,18 +5,31 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 import org.apache.jena.rdf.model.Resource;
 
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType
+@XmlRootElement(name = "ResourceInfo")
 public class ResourceInfo {
 	
+	@XmlElement
 	private Resource resource;
 	private String uri;
 	private String label;
 	private String summary;
+	@XmlTransient
 	private Optional<String> imageURL;
 	private List<String> types;
+	@XmlTransient
 	private int index;
+	@XmlTransient
 	private String type;
 	
 	public ResourceInfo(Resource resource, String uri, String type, String label) {

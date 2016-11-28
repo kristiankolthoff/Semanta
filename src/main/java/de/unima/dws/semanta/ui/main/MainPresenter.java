@@ -40,6 +40,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -53,7 +54,7 @@ import javafx.util.Callback;
 public class MainPresenter implements Initializable{
 
 	@FXML
-	private BorderPane borderPane;
+	private AnchorPane borderPane;
 	
 	@FXML
 	private CheckBox checkboxAnswers;
@@ -221,7 +222,8 @@ public class MainPresenter implements Initializable{
 //		for(Map.Entry<Cell, List<HAWord>> e : wordMap.entrySet()) {
 //			System.out.println(e.getKey() + " " + e.getValue().size());
 //		}
-		borderPane.setCenter(grid);
+//		borderPane.setCenter(grid);
+		borderPane.getChildren().add(grid);
 	}
 	
 	private void validateCrossword(List<HAWord> words) {
@@ -376,7 +378,8 @@ public class MainPresenter implements Initializable{
 		indicator.setMaxSize(60, 60);
 		indicator.setProgress(-1);
 		indicator.setVisible(true);
-		this.borderPane.setCenter(indicator);
+//		this.borderPane.setCenter(indicator);
+		this.borderPane.getChildren().add(indicator);
 		Task<Void> longTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {

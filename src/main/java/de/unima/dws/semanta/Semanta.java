@@ -59,7 +59,7 @@ public class Semanta {
 		List<Entity> resourceEntity = this.selector.select(topicResource, difficulty, numEntities);
 		for (int i = 0; i < numEntities; i++) {
 			HAEntity entity = this.generator.generate(resourceEntity.get(i), topicResource, difficulty);
-			if(optionalAnswers) {
+			if(false) {
 				entity.setOAResources(this.distractorGenerator.generate(resourceEntity.get(i), topicResource, difficulty, 3));
 			}
 			haEntities.add(entity);

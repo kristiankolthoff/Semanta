@@ -2,6 +2,9 @@ package de.unima.dws.semanta.generator.ha;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.jena.graph.Triple;
 import org.apache.jena.graph.impl.LiteralLabel;
@@ -17,35 +20,68 @@ import de.unima.dws.semanta.utilities.Settings;
 
 public class SummaryHAGenerator implements HAGenerator {
 
+	private Random random;
+	
+	public SummaryHAGenerator() {
+		this.random = new Random();
+	}
 	
 	@Override
 	public HAEntity generate(Entity entity, Resource topicResource, Difficulty difficulty) {
 		String summary = this.extractSummary(entity.getResource());
 		String[] sentences = NLPService.detectSentences(summary);
-		String hint = this.getHint(entity, sentences, 1);
+		String hint = this.getHint(entity, sentences, 1, difficulty);
 		return new HAEntity(entity.getResource()).
 				addHint(hint).
 				setAnswer(entity.getLabel());
 	}
 	
-	public String getHint(Entity entity, String[] sentences, int numOfHints) {
+	public String getHint(Entity entity, String[] sentences, int numOfHints, Difficulty difficulty) {
 		List<String> entitySentences = new ArrayList<>();
 		for (int i = 0; i < sentences.length; i++) {
-			if(sentences[i].contains(entity.getLabel())) {
-				String sentence = sentences[i].replaceAll("\\(^0-9A-Za-z\\)", " -----");
-				entitySentences.add(sentence);
+			String sanitized = getSanitizedSentence(sentences[i], entity);
+			if(sanitized != null) {
+				entitySentences.add(sanitized);
 			}
 		}
-		numOfHints = (numOfHints > entitySentences.size()) ? 
-				entitySentences.size() : numOfHints;
-		StringBuilder sb = new StringBuilder();
-		String type = entity.isTyped() ? 
-				entity.getSpecialOntType().getLocalName().toLowerCase() : "thing";
-		for (int i = 0; i < numOfHints; i++) {
-			sb.append(" the ");
-			sb.append(entitySentences.get(i).replace(entity.getLabel(), type));
+		if(!entitySentences.isEmpty()) {
+			if(difficulty == Difficulty.BEGINNER) {
+				return entitySentences.get(0);
+			} else if(difficulty == Difficulty.ADVANCED) {
+				int position = (entitySentences.size() > 2) ? 1 : 0;
+				return entitySentences.get(position);
+			} else if(difficulty == Difficulty.EXPERT) {
+				int position = (entitySentences.size() > 3) ? 2 : 0;
+				return entitySentences.get(position);
+			}
+		} 
+		return "";
+	}
+	
+	public String getSanitizedSentence(String sentence, Entity entity) {
+		 String pattern = "\\s+\\(.*?\\)";
+		 Pattern r = Pattern.compile(pattern);
+		 sentence = r.matcher(sentence).replaceAll("");
+		 String[] words = entity.getLabel().split(" ");
+		 String labelRegex = ""; //"Angela?\\s*[A-Za-z0-9]*\\s*Merkel";	  
+		 for (int i = 0; i < words.length; i++) {
+			labelRegex +=  words[i];
+			if(i != words.length - 1) {
+				labelRegex += "\\s*[A-Za-z0-9]*\\s*";
+			}
+		 }
+		 String type = entity.isTyped() ? 
+					entity.getSpecialOntType().getLocalName().toLowerCase() : "thing";
+	     Pattern labelPattern = Pattern.compile(labelRegex);
+	     sentence = labelPattern.matcher(sentence).replaceAll(" the " + type);
+	     for (int i = 0; i < words.length; i++) {
+			if(sentence.contains(words[i])) {
+				sentence = sentence.replaceAll(words[i], " the " + type);
+				break;
+			}
 		}
-		return sb.toString().trim();
+	    sentence = sentence.trim();
+	    return sentence.contains(type) ? sentence : null;
 	}
 	
 	

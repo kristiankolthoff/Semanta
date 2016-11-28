@@ -1,5 +1,8 @@
 package de.unima.dws.semanta.generator.ha;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +27,7 @@ public class SummaryHAGenertorTest {
 	public void removeAdditionalInfoTest() {
 		HAEntity entity = generator.generate(new Entity(SparqlService.
 				queryResourceWithTypeHierachy("http://dbpedia.org/resource/Berlin"), null, false), 
-				ResourceFactory.createResource("http://dbpedia.org/resource/Germany"), Difficulty.EXPERT);
+				ResourceFactory.createResource("http://dbpedia.org/resource/Germany"), Difficulty.ADVANCED);
 		System.out.println(entity.getHintsBeautified());
 		
 	}
@@ -36,4 +39,5 @@ public class SummaryHAGenertorTest {
 				ResourceFactory.createResource("http://dbpedia.org/resource/Germany"), Difficulty.EXPERT);
 		System.out.println(entity.getHintsBeautified());
 	}
+	
 }

@@ -14,6 +14,7 @@ public class OutEntitySelector implements EntitySelector{
 
 	@Override
 	public List<Entity> select(Resource topicResource, Difficulty difficulty, int numEntities) {
+		System.out.println("---------OUTENTITYSELECTOR---------");
 		List<Resource> resources = SparqlService.queryResourcesByPropertyRanks(topicResource.getURI());
 		if(difficulty == Difficulty.BEGINNER) {
 			return select(resources, 0, numEntities);

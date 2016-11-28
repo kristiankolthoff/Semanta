@@ -268,6 +268,7 @@ public class SparqlService {
 		sb.append("PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
 		sb.append("PREFIX vrank:<http://purl.org/voc/vrank#> \n");
 		sb.append("PREFIX dbo:<http://dbpedia.org/ontology/> \n");
+		sb.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n");
 		sb.append("SELECT distinct ?v \n");
 		sb.append("FROM <http://dbpedia.org> \n");
 		sb.append("FROM <http://people.aifb.kit.edu/ath/#DBpedia_PageRank> \n");
@@ -316,6 +317,7 @@ public class SparqlService {
 		sb.append("PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
 		sb.append("PREFIX vrank:<http://purl.org/voc/vrank#> \n");
 		sb.append("PREFIX dbo:<http://dbpedia.org/ontology/> \n");
+		sb.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n");
 		sb.append("SELECT distinct ?s \n");
 		sb.append("FROM <http://dbpedia.org> \n");
 		sb.append("FROM <http://people.aifb.kit.edu/ath/#DBpedia_PageRank> \n");
@@ -390,6 +392,7 @@ public class SparqlService {
 		sb.append("PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
 		sb.append("PREFIX dbo:<http://dbpedia.org/ontology/> \n");
 		sb.append("PREFIX vrank:<http://purl.org/voc/vrank#> \n");
+		sb.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n");
 		sb.append("PREFIX owl: <http://www.w3.org/2002/07/owl#> \n");
 		sb.append("SELECT DISTINCT ?o \n");
 		sb.append("FROM <http://dbpedia.org> \n");

@@ -24,7 +24,7 @@ public class PageRankEntitySelectorTest {
 	@Test
 	public void selectBeginnerTest() {
 		List<Entity> entity = this.selector.select(ResourceFactory.
-				createResource("http://dbpedia.org/resource/Barack_Obama"), Difficulty.BEGINNER, 5);
+				createResource("http://dbpedia.org/resource/Italy"), Difficulty.BEGINNER, 5);
 		System.out.println(entity);
 		
 	}

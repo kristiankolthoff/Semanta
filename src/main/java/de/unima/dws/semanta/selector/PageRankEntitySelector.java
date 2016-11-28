@@ -26,6 +26,7 @@ public class PageRankEntitySelector implements EntitySelector{
 	
 	@Override
 	public List<Entity> select(Resource topicResource, Difficulty difficulty, int numEntities) {
+		System.out.println("-------PAGERANKESELECTOR--------");
 		estimateThresholds(topicResource.getURI());
 		List<Resource> resources = null;
 		if(difficulty == Difficulty.BEGINNER) {

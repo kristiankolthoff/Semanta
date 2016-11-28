@@ -31,8 +31,8 @@ public class InfoPresenter implements Initializable{
 	@FXML
 	private Label labelName;
 	
-	@FXML
-	private Label labelType;
+//	@FXML
+//	private Label labelType;
 	
 	@FXML
 	private ComboBox<Difficulty> comboBoxDifficulty;

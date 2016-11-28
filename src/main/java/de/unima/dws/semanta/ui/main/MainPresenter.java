@@ -219,10 +219,6 @@ public class MainPresenter implements Initializable{
 				}
 			}
 		}
-//		for(Map.Entry<Cell, List<HAWord>> e : wordMap.entrySet()) {
-//			System.out.println(e.getKey() + " " + e.getValue().size());
-//		}
-//		borderPane.setCenter(grid);
 		borderPane.getChildren().add(grid);
 	}
 	
@@ -248,7 +244,7 @@ public class MainPresenter implements Initializable{
 					Platform.runLater(new Runnable() {
 					    @Override public void run() {
 					    	listViewDown.getSelectionModel().clearSelection();
-					    	updateDistractors(newValue);
+//					    	updateDistractors(newValue);
 	                         if(newValue != null && newValue.isSolved()) {
 	                        	 updateEntityInfo(newValue);
 	                         }
@@ -280,7 +276,7 @@ public class MainPresenter implements Initializable{
 					Platform.runLater(new Runnable() {
 					    @Override public void run() {
 					    	listViewAcross.getSelectionModel().clearSelection();
-					    	updateDistractors(newValue);
+//					    	updateDistractors(newValue);
 	                         if(newValue != null && newValue.isSolved()) {
 	                        	 updateEntityInfo(newValue);
 	                         }
@@ -314,7 +310,7 @@ public class MainPresenter implements Initializable{
 	private void updateEntityInfo(ResourceInfo info) {
 		labelName.setText(info.getLabel());
 		textAbtract.setText(info.getSummary());
-//		labelTopic.setText(info.getType());
+		labelTopic.setText(info.getType());
 		imageViewEntity.setImage(new Image(info.getImageURL().get()));
 		accordion.setExpandedPane(titledPaneAbstract);
 	}
@@ -338,7 +334,7 @@ public class MainPresenter implements Initializable{
 		HAEntity entity = word.getHAEntity();
 		labelName.setText(entity.getAnswer());
 		textAbtract.setText(entity.getEntAbstract());
-//		labelTopic.setText(entity.);
+		labelTopic.setText(entity.getTypes());
 		if(entity.getImageURL() == null) {
 			imageViewEntity.setImage(new Image(Settings.DEFAULT_IMG));
 		} else {

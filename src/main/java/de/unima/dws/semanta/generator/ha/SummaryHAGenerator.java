@@ -54,8 +54,8 @@ public class SummaryHAGenerator implements HAGenerator {
 				int position = (entitySentences.size() > 3) ? 2 : 0;
 				return entitySentences.get(position);
 			}
-		} 
-		return "";
+		}
+		return entity.isTyped() ? entity.getSpecialOntType().getLocalName() : "";
 	}
 	
 	public String getSanitizedSentence(String sentence, Entity entity) {
@@ -81,7 +81,21 @@ public class SummaryHAGenerator implements HAGenerator {
 			}
 		}
 	    sentence = sentence.trim();
+	    sentence = applyRules(sentence);
 	    return sentence.contains(type) ? sentence : null;
+	}
+	
+	public String applyRules(String sentence) {
+		sentence = sentence.trim().replaceAll(" +", " ");
+		String[] words = sentence.split(" ");
+		if(words.length > 2) {
+			if(words[0].toLowerCase().equals("the") && words[1].toLowerCase().equals("the")) {
+			words[0] = "";
+			}
+		}
+		String val = String.join(" ", words).trim();
+		val = val.substring(0, 1).toUpperCase() + val.substring(1);
+		return val;
 	}
 	
 	

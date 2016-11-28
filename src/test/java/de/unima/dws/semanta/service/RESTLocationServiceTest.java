@@ -12,7 +12,8 @@ public class RESTLocationServiceTest {
 	@Test
 	public void restServiceTest() {
 		RESTLocationService service = new RESTLocationService.Factory().build();
-		 Subscription subscription = service.getLocation()
+		@SuppressWarnings("unused")
+		Subscription subscription = service.getLocation()
 	                .subscribeOn(Schedulers.newThread())
 	                .subscribe(new Subscriber<Location>() {
 	                    @Override
@@ -30,6 +31,5 @@ public class RESTLocationServiceTest {
 	                      System.out.println(location);
 	                    }
 	                });
-		 System.out.println();
 	}
 }

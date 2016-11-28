@@ -285,6 +285,27 @@ public class SparqlService {
 		return pageRanks;
 	}
 	
+	public static List<Double> queryOrderedNodeDegrees(String uri, int limit) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
+		sb.append("PREFIX vrank:<http://purl.org/voc/vrank#> \n");
+		sb.append("PREFIX dbo:<http://dbpedia.org/ontology/> \n");
+		sb.append("SELECT (count(?p1) as ?c) \n");
+		sb.append("WHERE { \n");
+		sb.append("?s ?p <" + uri + "> . \n");
+		sb.append("?in ?p1 ?s . \n");
+		sb.append("} \n");
+		sb.append("group by ?s \n");
+		sb.append("order by desc(?c) limit " + limit + " \n");
+		System.out.println(sb.toString());
+		ResultSet rs = SparqlService.query(sb.toString());
+		List<Double> pageRanks = new ArrayList<>();
+		while(rs.hasNext()) {
+			pageRanks.add(rs.next().getLiteral("c").getDouble());
+		}
+		return pageRanks;
+	}
+	
 	
 	public static List<Resource> queryEntitesByPageRankThreshold(String uri, double tUpper, double tLower, 
 			int limit, int randomSeed) {
@@ -300,6 +321,30 @@ public class SparqlService {
 		sb.append("?s vrank:hasRank/vrank:rankValue ?v. \n");
 		sb.append("FILTER(?v > " + tLower + " && ?v < " + tUpper + ")");
 		sb.append("} \n");
+		sb.append("ORDER BY RAND(" + randomSeed + ") LIMIT " + limit + " \n");
+		System.out.println(sb.toString());
+		ResultSet rs = SparqlService.queryExtendedSyntax(sb.toString());
+		List<Resource> results = new ArrayList<>();
+		while(rs.hasNext()) {
+			results.add(SparqlService.queryResourceWithTypeHierachy(rs.next().getResource("s").getURI()));
+		}
+		return results;
+	}
+	
+		
+	public static List<Resource> queryEntitesByNodeDegreeThreshold(String uri, double tUpper, double tLower, 
+			int limit, int randomSeed) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
+		sb.append("PREFIX vrank:<http://purl.org/voc/vrank#> \n");
+		sb.append("PREFIX dbo:<http://dbpedia.org/ontology/> \n");
+		sb.append("SELECT distinct ?s \n");
+		sb.append("WHERE { \n");
+		sb.append("?in ?p1 ?s . \n");
+		sb.append("?s ?p <" + uri + "> . \n");
+		sb.append("} \n");
+		sb.append("GROUP BY ?s \n");
+		sb.append("HAVING (COUNT(?p1) > " + tLower + " && COUNT(?p1) < " + tUpper + ") \n");
 		sb.append("ORDER BY RAND(" + randomSeed + ") LIMIT " + limit + " \n");
 		System.out.println(sb.toString());
 		ResultSet rs = SparqlService.queryExtendedSyntax(sb.toString());

@@ -39,7 +39,7 @@ public class Application {
 	
 	@PostConstruct
 	public void initialize() {
-		generator = new InternalGreedyCrosswordGenerator(new SimpleCrosswordGenerator(), 5, null);
+		generator = new InternalGreedyCrosswordGenerator(new SimpleCrosswordGenerator(), 10, null);
 		this.recommender = new Recommender();
 //		generator = new SimpleCrosswordGenerator();
 		crossword = null;

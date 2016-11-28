@@ -26,10 +26,10 @@ public class RecommendationPresenter implements Initializable{
 	private ImageView imageView;
 	
 	@FXML
-	private Label labelName;
+	private Text labelName;
 	
-	@FXML
-	private Text textType;
+//	@FXML
+//	private Text textType;
 	
 	@FXML
 	private Text textAbstract;

@@ -30,7 +30,6 @@
                         <Font name="System Bold" size="23.0" />
                      </font>
                   </Label>
-                  <Label fx:id="labelType" text="Agent, Person, Office Holder, President" />
                </children>
             </VBox>
             <Separator prefWidth="200.0" />

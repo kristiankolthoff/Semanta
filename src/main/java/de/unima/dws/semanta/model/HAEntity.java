@@ -114,6 +114,18 @@ public class HAEntity {
 		return entAbstract;
 	}
 	
+	public String getTypes() {
+		List<Resource> types = Entity.getTypesUnordered(resource, Settings.RDF_TYPE, Settings.DBO);
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < types.size(); i++) {
+			sb.append(types.get(i).getLocalName());
+			if(i != types.size()-1) {
+				sb.append(", ");
+			}
+		}
+		return sb.toString();
+	}
+	
 	public String getHintsBeautified() {
 		StringBuilder sb = new StringBuilder();
 		for(String s : hints) {

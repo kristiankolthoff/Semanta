@@ -50,6 +50,32 @@ public class SparqlService {
 		qExec = QueryExecutionFactory.sparqlService(endpoint, QueryFactory.create(query));
 		return qExec.execDescribe();
 	}
+	
+	// Get Properties
+	public static Resource getPropertiesOfURI(String uri, int limit) {
+		
+		limit = 50;
+		
+		final StringBuilder query = new StringBuilder();
+		query.append("PREFIX dbo:<http://dbpedia.org/ontology/> \n");
+		query.append("PREFIX vrank:<http://purl.org/voc/vrank#> \n");
+		query.append("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
+		query.append("SELECT distinct ?p ?r ?o \n");
+		query.append("FROM <http://dbpedia.org> \n");
+		query.append("FROM <http://people.aifb.kit.edu/ath/#DBpedia_PageRank> \n");
+		query.append("WHERE { \n");
+		query.append("<");
+		query.append(uri);
+		query.append("> ?p ?o . \n");
+		query.append("?p rdf:type dbo:ObjectProperty . \n");
+		query.append("?o vrank:hasRank/vrank:rankValue ?r. \n");	
+		query.append("} ORDER BY DESC(?r) \n");
+		query.append("limit ");
+		query.append(limit);
+		
+		ResultSet result = SparqlService.query(query.toString());
+		return SparqlService.buildResource(result, uri, "p", "o","");
+	}
 
 	// Get topics related to a search word
 		public static List<ResourceInfo> getTopics(String topic, int limit) {

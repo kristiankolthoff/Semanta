@@ -38,6 +38,14 @@ public class SparqlServiceTest {
 	}
 	
 	@Test
+	public void getProperties()
+	{
+		System.out.println("####################");
+		System.out.println(SparqlService.getPropertiesOfURI("http://dbpedia.org/resource/London",50).getModel().toString());
+		System.out.println("####################");
+	}
+	
+	@Test
 	public void getTopics()
 	{
 		List<ResourceInfo> infos = SparqlService.getTopics("barack obama", 10);

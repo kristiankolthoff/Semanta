@@ -274,6 +274,9 @@ public class SparqlService {
 		sb.append("WHERE { \n");
 		sb.append("?s ?p <" + uri + "> . \n");
 		sb.append("?s vrank:hasRank/vrank:rankValue ?v. \n");
+		sb.append("?s rdfs:label ?label \n");
+		sb.append("FILTER(lang(?label) = \"en\") . \n");
+		sb.append("FILTER(strlen(str(?label)) < 20) . \n");
 		sb.append("} \n");
 		sb.append("order by desc(?v) limit " + limit + " \n");
 		System.out.println(sb.toString());
@@ -320,6 +323,9 @@ public class SparqlService {
 		sb.append("?s ?p <" + uri + "> . \n");
 		sb.append("?s vrank:hasRank/vrank:rankValue ?v. \n");
 		sb.append("FILTER(?v > " + tLower + " && ?v < " + tUpper + ")");
+		sb.append("?s rdfs:label ?label \n");
+		sb.append("FILTER(lang(?label) = \"en\") . \n");
+		sb.append("FILTER(strlen(str(?label)) < 20) . \n");
 		sb.append("} \n");
 		sb.append("ORDER BY RAND(" + randomSeed + ") LIMIT " + limit + " \n");
 		System.out.println(sb.toString());
@@ -394,6 +400,7 @@ public class SparqlService {
 		sb.append("?o vrank:hasRank/vrank:rankValue ?r. \n");
 		sb.append("?o rdfs:label ?labelO . \n");
 		sb.append("FILTER (lang(?labelO) = 'en') . \n");
+		sb.append("FILTER(strlen(str(?labelO)) < 20) . \n");
 		sb.append("} \n");
 		sb.append("ORDER BY DESC(?r) \n");
 		sb.append("LIMIT 50");

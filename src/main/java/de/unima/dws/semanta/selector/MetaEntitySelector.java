@@ -13,7 +13,7 @@ public class MetaEntitySelector implements EntitySelector{
 	private EntitySelector outSelector;
 	
 	public MetaEntitySelector() {
-		this.pageRankSelector = new NodeDegreeSelector(300);
+		this.pageRankSelector = new PageRankEntitySelector(300);
 		this.outSelector = new OutEntitySelector();
 	}
 	

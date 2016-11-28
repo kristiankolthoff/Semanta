@@ -27,6 +27,12 @@ public class NLPService {
 		}
 	}
 	
+	// Remove all non-English & special characters
+	public static String stringCleaner(String s)
+	{
+		return s.replaceAll("[^A-Za-z0-9 ]", "");
+	}
+	
 	public static String[] detectSentences(String content) {
 		if(content == null || content.isEmpty()) {
 			return new String[0];	

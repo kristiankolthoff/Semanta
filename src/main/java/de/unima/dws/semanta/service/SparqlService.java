@@ -167,7 +167,7 @@ public class SparqlService {
 		return SparqlService.query(sb.toString());
 	}
 	
-	public static List<ResourceInfo> querySimilarTypeResources(String uri, String type, int limit) {
+	public static List<ResourceInfo> querySimilarTypeResources(String uri, String type, int length, int limit) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("PREFIX dbo: <http://dbpedia.org/ontology/> \n");
 		sb.append("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
@@ -177,6 +177,7 @@ public class SparqlService {
 		sb.append("?s rdf:type <" + type + "> . \n");
 		sb.append("?s rdfs:label ?label . \n");
 		sb.append("FILTER (lang(?label) = 'en'). \n");
+		sb.append("FILTER(strlen(str(?label)) = " + length + ") \n");
 		sb.append("} \n");
 		sb.append("order by asc( bif:rnd(" + new Random().nextInt(Integer.MAX_VALUE) + ", ?s)) \n");
 		sb.append("LIMIT " + limit);
@@ -184,7 +185,7 @@ public class SparqlService {
 		return SparqlService.buildTinyResourceInfo(SparqlService.queryExtendedSyntax(sb.toString()), "s", "label");
 	}
 	
-	public static List<ResourceInfo> querySimilarTopicResources(String uri, String type, int limit) {
+	public static List<ResourceInfo> querySimilarTopicResources(String uri, String type, int length, int limit) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("PREFIX dbo: <http://dbpedia.org/ontology/> \n");
 		sb.append("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
@@ -201,6 +202,7 @@ public class SparqlService {
 		sb.append("} \n");
 		sb.append("?s rdfs:label ?label . \n");
 		sb.append("FILTER (lang(?label) = 'en'). \n");
+		sb.append("FILTER(strlen(str(?label)) = " + length + ") \n");
 		sb.append("} \n");
 		sb.append("order by asc( bif:rnd(" + new Random().nextInt(Integer.MAX_VALUE) + ", ?s)) \n");
 		sb.append("LIMIT " + limit);
@@ -208,7 +210,8 @@ public class SparqlService {
 		return SparqlService.buildTinyResourceInfo(SparqlService.queryExtendedSyntax(sb.toString()), "s", "label");
 	}
 	
-	public static List<ResourceInfo> querySimilarLinkingEntityResources(String topic, String entity, String type, int limit) {
+	public static List<ResourceInfo> querySimilarLinkingEntityResources(String topic, String entity,
+			String type, int length, int limit) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("PREFIX dbo: <http://dbpedia.org/ontology/> \n");
 		sb.append("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n");
@@ -223,6 +226,7 @@ public class SparqlService {
 		sb.append("?p2 rdf:type owl:ObjectProperty .\n");
 		sb.append("?s rdfs:label ?label . \n");
 		sb.append("FILTER (lang(?label) = 'en'). \n");
+		sb.append("FILTER(strlen(str(?label)) = " + length + ") \n");
 		sb.append("} \n");
 		sb.append("order by asc( bif:rnd(" + new Random().nextInt(Integer.MAX_VALUE) + ", ?s)) \n");
 		sb.append("LIMIT " + limit);

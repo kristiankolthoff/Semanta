@@ -28,7 +28,7 @@ public class LinkingEntityDistractorGeneratorTest {
 	public void generateBeginnerTest() {
 		List<ResourceInfo> infos = distractor.generate(
 				new Entity(SparqlService.queryResourceWithTypeHierachy("http://dbpedia.org/resource/Oliver_Kahn"), null, true), 
-				SparqlService.queryResourceWithTypeHierachy("http://dbpedia.org/resource/Germany"), Difficulty.EXPERT, 3);
+				SparqlService.queryResourceWithTypeHierachy("http://dbpedia.org/resource/Germany"), Difficulty.EXPERT, 11, 3);
 		System.out.println(infos);
 		assertEquals(3, infos.size());
 	}

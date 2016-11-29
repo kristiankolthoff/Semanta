@@ -22,13 +22,14 @@ public class MetaDistractorGenerator implements DistractorGenerator{
 	}
 	
 	@Override
-	public List<ResourceInfo> generate(Entity entitiy, Resource topicResource, Difficulty difficulty, int numEntities) {
+	public List<ResourceInfo> generate(Entity entitiy, Resource topicResource, Difficulty difficulty,
+			int length, int numEntities) {
 		if(difficulty == Difficulty.BEGINNER) {
-			return typeDistractor.generate(entitiy, topicResource, difficulty, numEntities);
+			return typeDistractor.generate(entitiy, topicResource, difficulty, length, numEntities);
 		} else if(difficulty == Difficulty.ADVANCED) {
-			return topicDistractor.generate(entitiy, topicResource, difficulty, numEntities);
+			return topicDistractor.generate(entitiy, topicResource, difficulty, length, numEntities);
 		} else if(difficulty == Difficulty.EXPERT) {
-			return entityDistractor.generate(entitiy, topicResource, difficulty, numEntities);
+			return entityDistractor.generate(entitiy, topicResource, difficulty, length, numEntities);
 		}
 		return Collections.emptyList();
 	}

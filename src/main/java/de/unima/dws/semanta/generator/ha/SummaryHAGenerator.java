@@ -31,7 +31,7 @@ public class SummaryHAGenerator implements HAGenerator {
 		String summary = this.extractSummary(entity.getResource());
 		String[] sentences = NLPService.detectSentences(summary);
 		String hint = this.getHint(entity, sentences, 1, difficulty);
-		return new HAEntity(entity.getResource()).
+		return new HAEntity(entity).
 				addHint(hint).
 				setAnswer(entity.getLabel());
 	}

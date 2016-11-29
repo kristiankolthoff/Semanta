@@ -20,6 +20,6 @@ public interface DistractorGenerator {
 	 * @return a list of generated resources according to the numEntities number
 	 */
 	public List<ResourceInfo> generate(Entity entity, Resource topicResource, 
-			Difficulty difficulty, int numEntities);
+			Difficulty difficulty, int length, int numEntities);
 
 }

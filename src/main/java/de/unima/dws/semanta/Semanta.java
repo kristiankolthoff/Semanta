@@ -2,12 +2,15 @@ package de.unima.dws.semanta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.jena.rdf.model.Resource;
 
 import de.unima.dws.semanta.generator.distractor.DistractorGenerator;
+import de.unima.dws.semanta.generator.distractor.LinkingEntityDistractorGenerator;
+import de.unima.dws.semanta.generator.distractor.TopicDistractorGenerator;
 import de.unima.dws.semanta.generator.distractor.TypeDistractorGenerator;
 import de.unima.dws.semanta.generator.ha.HAGenerator;
 import de.unima.dws.semanta.generator.ha.PropertyHAGenerator;
@@ -33,6 +36,7 @@ public class Semanta {
 	private EntitySelector selector;
 	private HAGenerator generator;
 	private DistractorGenerator distractorGenerator;
+	private Resource topicResource;
 	
 	public Semanta(EntitySelector selector, HAGenerator generator,
 			DistractorGenerator distractorGenerator) {
@@ -50,21 +54,28 @@ public class Semanta {
 		SparqlService.setEndpoint(Settings.DEFAULT_ENDPOINT_DBPEDIA);
 		this.selector = new MetaEntitySelector();
 		this.generator = new SummaryHAGenerator();
-		this.distractorGenerator = new TypeDistractorGenerator();
+		this.distractorGenerator = new TopicDistractorGenerator();
 	}
 	
 	public List<HAEntity> fetchEntities(String uri, int numEntities, boolean optionalAnswers, Difficulty difficulty) {
 		List<HAEntity> haEntities = new ArrayList<>();
-		Resource topicResource = SparqlService.queryResource(uri);
+		topicResource = SparqlService.queryResource(uri);
 		List<Entity> resourceEntity = this.selector.select(topicResource, difficulty, numEntities);
 		for (int i = 0; i < numEntities; i++) {
 			HAEntity entity = this.generator.generate(resourceEntity.get(i), topicResource, difficulty);
-			if(false) {
-				entity.setOAResources(this.distractorGenerator.generate(resourceEntity.get(i), topicResource, difficulty, 3));
-			}
+//			if(false) {
+//				entity.setOAResources(this.distractorGenerator.generate(resourceEntity.get(i), topicResource, difficulty, 3));
+//			}
 			haEntities.add(entity);
 		}
 		return haEntities;
+	}
+	
+	public List<ResourceInfo> generateDistractors(HAEntity entity, String regex, 
+			Difficulty difficulty, Resource topicResource) {
+		List<ResourceInfo> distractors = this.distractorGenerator.generate(entity.getEntity(), topicResource, 
+				difficulty, entity.getSanitizedAnswer().length(), 3);
+		return distractors;
 	}
 	
 	public List<HAEntity> fetchEntities(String uri, int numEntities, boolean optionalAnswers) {
@@ -98,6 +109,14 @@ public class Semanta {
 	
 	public List<ResourceInfo> fetchTopics(String keyword,int topicsCount) {
 		return SparqlService.getTopics(keyword, topicsCount);
+	}
+
+	public Resource getTopicResource() {
+		return topicResource;
+	}
+
+	public void setTopicResource(Resource topicResource) {
+		this.topicResource = topicResource;
 	}
 	
 }

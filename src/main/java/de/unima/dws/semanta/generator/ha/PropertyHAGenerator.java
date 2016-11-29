@@ -30,7 +30,7 @@ public class PropertyHAGenerator implements HAGenerator {
 	
 	public HAEntity generate(Entity entity, Resource topicResource, Difficulty difficulty) {
 		rankProperties(entity);
-		HAEntity val = new HAEntity(entity.getResource()).setAnswer(entity.getLabel());
+		HAEntity val = new HAEntity(entity).setAnswer(entity.getLabel());
 		if(properties.isEmpty()) {
 			return val;
 		}

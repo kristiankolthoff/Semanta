@@ -27,8 +27,8 @@ public class TypeDistractorGeneratorTest {
 	@Test
 	public void generateBeginnerTest() {
 		List<ResourceInfo> infos = distractor.generate(
-				new Entity(SparqlService.queryResourceWithTypeHierachy("http://dbpedia.org/resource/Kindergarten"), null, true), 
-				SparqlService.queryResourceWithTypeHierachy("http://dbpedia.org/resource/Germany"), Difficulty.ADVANCED, 3);
+				new Entity(SparqlService.queryResourceWithTypeHierachy("http://dbpedia.org/resource/Oliver_Kahn"), null, true), 
+				SparqlService.queryResourceWithTypeHierachy("http://dbpedia.org/resource/Germany"), Difficulty.ADVANCED, 11, 3);
 		System.out.println(infos);
 		assertEquals(3, infos.size());
 	}

@@ -7,23 +7,20 @@ import java.util.function.Consumer;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.builder.Diff;
-import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.sparql.sse.ItemTransformer;
 
 import de.unima.dws.semanta.crossword.generation.CrosswordGenerator;
 import de.unima.dws.semanta.crossword.generation.InternalGreedyCrosswordGenerator;
 import de.unima.dws.semanta.crossword.generation.SimpleCrosswordGenerator;
+import de.unima.dws.semanta.crossword.model.Cell;
 import de.unima.dws.semanta.crossword.model.Crossword;
 import de.unima.dws.semanta.crossword.model.HAWord;
+import de.unima.dws.semanta.generator.distractor.DistractorGenerator;
+import de.unima.dws.semanta.generator.distractor.TypeDistractorGenerator;
 import de.unima.dws.semanta.model.Difficulty;
 import de.unima.dws.semanta.model.HAEntity;
 import de.unima.dws.semanta.model.ResourceInfo;
-import de.unima.dws.semanta.recommender.Location;
 import de.unima.dws.semanta.recommender.Recommender;
-import de.unima.dws.semanta.service.RESTLocationService;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.schedulers.Schedulers;
 
 public class Application {
 
@@ -36,26 +33,18 @@ public class Application {
 	private Difficulty difficulty;
 	private ResourceInfo topic;
 	private int numOfWords;
+	private boolean distractorsLoaded;
 	
 	@PostConstruct
 	public void initialize() {
 		generator = new InternalGreedyCrosswordGenerator(new SimpleCrosswordGenerator(), 10, null);
 		this.recommender = new Recommender();
-//		generator = new SimpleCrosswordGenerator();
 		crossword = null;
 		topic = null;
 		numOfWords = 5;
 	}
 	
 	public List<ResourceInfo> getTopicResults(String topic) {
-//		ResourceInfo info = new ResourceInfo(ResourceFactory.createResource(), "http://", "agent", "Barack Obama");
-//        info.setIndex(1);
-//        info.setImageURL("http://a5.files.biography.com/image/upload/c_fill,cs_srgb,dpr_1.0,g_face,h_300,q_80,w_300/MTE4MDAzNDEwNzg5ODI4MTEw.jpg");
-//        info.setSummary("blac bla bla");
-//        List<ResourceInfo> list = new ArrayList<>();
-//        list.add(info);
-//        this.infos = list;
-//        return list;
 		return this.semanta.fetchTopics(topic, 10);
 	}
 	
@@ -110,25 +99,38 @@ public class Application {
 		return crossword;
 	}
 	
+	public void generateDistractors() {
+		for(HAWord word : this.crossword) {
+			HAEntity entity = word.getHAEntity();
+			entity.setOAResources(this.semanta.generateDistractors(entity, null, 
+					difficulty, semanta.getTopicResource()));
+		}
+	}
+	
+	
+	
+//	private String getRegex(HAWord word) {
+//		List<Cell> intersections = this.crossword.getIntersections(word);
+//		StringBuilder sb = new StringBuilder();
+//		sb.append("'^");
+//		int intersec = 0, space = 0;
+//		for(Cell cell : word) {
+//			if(cell.equals(intersections.get(intersec))) {
+//				intersec++;
+//				if(space != 0) {
+//					sb.append("[a-zA-Z]{" + space + "}"+);
+//				}
+//				space = 0;
+//			}
+//			space++;
+//		}
+//		sb.append("[a-zA-Z]{" + startCell + "}");
+//		sb.append("$'");
+//		[a-zA-Z]{4}r [a-zA-Z]{4}
+//		return null;
+//	}
+
 	public void generateRecommendations(Consumer<List<ResourceInfo>> callback) {
-//		ResourceInfo info = new ResourceInfo(ResourceFactory.createResource(), "http://", "agent", "Barack Obama");
-//        info.setIndex(1);
-//        info.setType("Agent");
-//        info.setImageURL("http://a5.files.biography.com/image/upload/c_fill,cs_srgb,dpr_1.0,g_face,h_300,q_80,w_300/MTE4MDAzNDEwNzg5ODI4MTEw.jpg");
-//        info.setSummary("blac bla bla");
-//        List<ResourceInfo> list = new ArrayList<>();
-//        list.add(info);
-//        list.add(info);
-//        list.add(info);
-//        list.add(info);
-//        list.add(info);
-//        list.add(info);
-//        list.add(info);
-//        list.add(info);
-//        list.add(info);
-//        list.add(info);
-//        list.add(info);
-//        list.add(info);
 		this.recommender.getRecommendations(12, callback);
 	}
 
@@ -175,5 +177,15 @@ public class Application {
 	public List<ResourceInfo> getInfos() {
 		return infos;
 	}
+
+	public boolean isDistractorsLoaded() {
+		return distractorsLoaded;
+	}
+
+	public void setDistractorsLoaded(boolean distractorsLoaded) {
+		this.distractorsLoaded = distractorsLoaded;
+	}
+	
+	
 
 }

@@ -13,7 +13,7 @@ public class PropertyLinkHAGenerator implements HAGenerator{
 
 	@Override
 	public HAEntity generate(Entity entity, Resource topicResource, Difficulty difficulty) {
-		HAEntity haEntity = new HAEntity(entity.getResource());
+		HAEntity haEntity = new HAEntity(entity);
 		haEntity.setAnswer(entity.getLabel()).
 				 addHint(getHint(entity, topicResource));
 		return haEntity;

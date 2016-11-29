@@ -33,6 +33,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -118,6 +119,12 @@ public class MainPresenter implements Initializable{
 	
 	@FXML
 	private VBox vBoxFacts;
+	
+	@FXML
+	private ProgressBar progressBar;
+	
+	@FXML
+	private Label labelLoading;
 
 	@Inject
 	private Application application;
@@ -133,6 +140,7 @@ public class MainPresenter implements Initializable{
 	}
 	
 	private void initialzeCrosswordGrid() {
+		generateDistractors();
 		accordion.setExpandedPane(titledPaneAbstract);
 		labelLinkWithTopic.setText(application.getTopic().getLabel());
 		updateEntityInfo(application.getTopic());
@@ -244,7 +252,9 @@ public class MainPresenter implements Initializable{
 					Platform.runLater(new Runnable() {
 					    @Override public void run() {
 					    	listViewDown.getSelectionModel().clearSelection();
-//					    	updateDistractors(newValue);
+					    	if(application.isDistractorsLoaded()) {
+					    		updateDistractors(newValue);
+					    	}
 	                         if(newValue != null && newValue.isSolved()) {
 	                        	 updateEntityInfo(newValue);
 	                         }
@@ -276,7 +286,9 @@ public class MainPresenter implements Initializable{
 					Platform.runLater(new Runnable() {
 					    @Override public void run() {
 					    	listViewAcross.getSelectionModel().clearSelection();
-//					    	updateDistractors(newValue);
+					    	if(application.isDistractorsLoaded()) {
+					    		updateDistractors(newValue);
+					    	}
 	                         if(newValue != null && newValue.isSolved()) {
 	                        	 updateEntityInfo(newValue);
 	                         }
@@ -360,6 +372,26 @@ public class MainPresenter implements Initializable{
 				}
 			}
 		}
+	}
+	
+	public void generateDistractors() {
+		Task<Void> longTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+            	application.generateDistractors();
+				return null;
+            }
+        };
+       longTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent t) {
+            	System.out.println("Loaded distractors");
+				progressBar.setVisible(false);
+				labelLoading.setText("");
+				application.setDistractorsLoaded(true);
+            }
+        });
+        new Thread(longTask).start();
 	}
 	
 	public void backToHome() {

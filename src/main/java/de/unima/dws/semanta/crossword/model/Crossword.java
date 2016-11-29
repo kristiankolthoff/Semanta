@@ -229,10 +229,25 @@ public class Crossword implements Iterable<HAWord>, Serializable, Supplier<Doubl
 		return numVert / numHor;
 	}
 	
+	public List<Cell> getIntersections(HAWord word) {
+		List<Cell> cells = new ArrayList<>();
+		for(Cell cellOut : word) {
+			for(HAWord wordCurr : words) {
+				if(word != wordCurr) {
+					for(Cell cellCurr : wordCurr) {
+						if(cellCurr.equals(cellOut)) {
+							cells.add(cellOut);
+						}
+					}
+				}
+			}
+		}
+		return cells;
+	}
+	
 	@Override
 	public Double get() {
 		this.score = (double) (getWidth() * getHeight());
-		double ratio = vertToHorRatio();
 		this.score += 100 * Math.pow((vertToHorRatio()-1), 2);
 		return score;
 	}

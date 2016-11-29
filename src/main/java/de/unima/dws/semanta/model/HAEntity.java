@@ -15,23 +15,22 @@ public class HAEntity {
 
 	private List<String> hints;
 	private String answer;
-	//TODO refactor to entity
-	private Resource resource;
+	private Entity entity;
 	private String entAbstract;
 	private String imageURL;
 	private List<ResourceInfo> distractors;
 	
-	public HAEntity(List<String> hints, String answer, Resource resource, 
+	public HAEntity(List<String> hints, String answer, Entity entity, 
 			String entAbstract, List<ResourceInfo> distractors) {
 		this.hints = hints;
 		this.answer = answer;
-		this.resource = resource;
+		this.entity = entity;
 		this.entAbstract = entAbstract;
 		this.distractors = distractors;
 	}
 	
-	public HAEntity(Resource resource) {
-		this.resource = resource;
+	public HAEntity(Entity entity) {
+		this.entity = entity;
 		this.hints = new ArrayList<>();
 		this.distractors = new ArrayList<>();
 	}
@@ -73,11 +72,11 @@ public class HAEntity {
 	}
 
 	public Resource getResource() {
-		return resource;
+		return entity.getResource();
 	}
 
 	public HAEntity setResource(Resource resource) {
-		this.resource = resource;
+		this.entity.setResource(resource);
 		return this;
 	}
 	
@@ -99,7 +98,7 @@ public class HAEntity {
 
 	public String getEntAbstract() {
 		if(entAbstract == null) {
-			StmtIterator it = resource.listProperties();
+			StmtIterator it = entity.getResource().listProperties();
 			while(it.hasNext()) {
 				Statement stmt = it.next();
 				if(stmt.asTriple().getPredicate().getURI().toString().contains("abstract")) {
@@ -115,7 +114,7 @@ public class HAEntity {
 	}
 	
 	public String getTypes() {
-		List<Resource> types = Entity.getTypesUnordered(resource, Settings.RDF_TYPE, Settings.DBO);
+		List<Resource> types = Entity.getTypesUnordered(entity.getResource(), Settings.RDF_TYPE, Settings.DBO);
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < types.size(); i++) {
 			sb.append(types.get(i).getLocalName());
@@ -151,6 +150,14 @@ public class HAEntity {
 		return this;
 	}
 	
+	public Entity getEntity() {
+		return entity;
+	}
+
+	public void setEntity(Entity entity) {
+		this.entity = entity;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -160,7 +167,7 @@ public class HAEntity {
 				+ ((entAbstract == null) ? 0 : entAbstract.hashCode());
 		result = prime * result + ((hints == null) ? 0 : hints.hashCode());
 		result = prime * result
-				+ ((resource == null) ? 0 : resource.hashCode());
+				+ ((entity.getResource() == null) ? 0 : entity.getResource().hashCode());
 		return result;
 	}
 
@@ -188,10 +195,10 @@ public class HAEntity {
 				return false;
 		} else if (!hints.equals(other.hints))
 			return false;
-		if (resource == null) {
-			if (other.resource != null)
+		if (entity.getResource() == null) {
+			if (other.entity.getResource() != null)
 				return false;
-		} else if (!resource.equals(other.resource))
+		} else if (!entity.getResource().equals(other.entity.getResource()))
 			return false;
 		return true;
 	}
@@ -199,13 +206,13 @@ public class HAEntity {
 	@Override
 	public String toString() {
 		return "HAEntity [hints=" + hints + ", answer=" + answer
-				+ ", resource=" + resource + ", entAbstract=" + entAbstract
+				+ ", resource=" + entity.getResource() + ", entAbstract=" + entAbstract
 				+ ", oaResources=" + distractors + "]";
 	}
 
 	public String getImageURL() {
 		if(imageURL == null) {
-			StmtIterator it = resource.listProperties();
+			StmtIterator it = entity.getResource().listProperties();
 			while(it.hasNext()) {
 				Statement stmt = it.next();
 				if(stmt.asTriple().getPredicate().getURI().toString().contains("thumbnail")) {

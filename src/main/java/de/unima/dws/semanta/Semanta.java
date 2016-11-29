@@ -6,10 +6,14 @@ import java.util.function.Consumer;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Resource;
 
+import de.unima.dws.semanta.crossword.model.HAWord;
 import de.unima.dws.semanta.generator.distractor.DistractorGenerator;
 import de.unima.dws.semanta.generator.distractor.LinkingEntityDistractorGenerator;
+import de.unima.dws.semanta.generator.distractor.MetaTopicTypeDistractorGenerator;
 import de.unima.dws.semanta.generator.distractor.TopicDistractorGenerator;
 import de.unima.dws.semanta.generator.distractor.TypeDistractorGenerator;
 import de.unima.dws.semanta.generator.ha.HAGenerator;
@@ -54,19 +58,25 @@ public class Semanta {
 		SparqlService.setEndpoint(Settings.DEFAULT_ENDPOINT_DBPEDIA);
 		this.selector = new MetaEntitySelector();
 		this.generator = new SummaryHAGenerator();
-		this.distractorGenerator = new TopicDistractorGenerator();
+		this.distractorGenerator = new MetaTopicTypeDistractorGenerator();
 	}
 	
 	public List<HAEntity> fetchEntities(String uri, int numEntities, boolean optionalAnswers, Difficulty difficulty) {
 		List<HAEntity> haEntities = new ArrayList<>();
 		topicResource = SparqlService.queryResource(uri);
 		List<Entity> resourceEntity = this.selector.select(topicResource, difficulty, numEntities);
-		for (int i = 0; i < numEntities; i++) {
-			HAEntity entity = this.generator.generate(resourceEntity.get(i), topicResource, difficulty);
-//			if(false) {
-//				entity.setOAResources(this.distractorGenerator.generate(resourceEntity.get(i), topicResource, difficulty, 3));
-//			}
-			haEntities.add(entity);
+		for (Entity ent : resourceEntity) {
+			HAEntity entity = this.generator.generate(ent, topicResource, difficulty);
+			boolean alreadyFetched = false;
+			for(HAEntity savedEnt : haEntities) {
+				if(savedEnt.getAnswer().equals(entity.getAnswer())) {
+					alreadyFetched = true;
+					break;
+				}
+			}
+			if(!alreadyFetched) {
+				haEntities.add(entity);
+			}
 		}
 		return haEntities;
 	}
@@ -82,6 +92,25 @@ public class Semanta {
 		return fetchEntities(uri, numEntities, optionalAnswers, Difficulty.BEGINNER);
 	}
 	
+	public void getFacts(ResourceInfo info) {
+		ResultSet rs = SparqlService.queryResourcePropertyRanks(info.getResource().getURI());
+		while(rs.hasNext()) {
+			QuerySolution qs = rs.next();
+			info.addFact(qs.getLiteral("labelP").getString() + 
+					" " + qs.getLiteral("labelO").getString());
+		}
+	}
+	
+	public void getFacts(HAWord word) {
+		if(word.getHAEntity().getFacts().isEmpty()) {
+			ResultSet rs = SparqlService.queryResourcePropertyRanks(word.getHAEntity().getResource().getURI());
+			while(rs.hasNext()) {
+				QuerySolution qs = rs.next();
+				word.getHAEntity().addFact(qs.getLiteral("labelP").getString() + 
+						" " + qs.getLiteral("labelO").getString());
+			}
+		}
+	}
 
 	public EntitySelector getSelector() {
 		return selector;

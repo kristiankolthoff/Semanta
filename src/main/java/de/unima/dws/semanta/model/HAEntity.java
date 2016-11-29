@@ -18,6 +18,7 @@ public class HAEntity {
 	private Entity entity;
 	private String entAbstract;
 	private String imageURL;
+	private List<String> facts;
 	private List<ResourceInfo> distractors;
 	
 	public HAEntity(List<String> hints, String answer, Entity entity, 
@@ -27,12 +28,14 @@ public class HAEntity {
 		this.entity = entity;
 		this.entAbstract = entAbstract;
 		this.distractors = distractors;
+		this.facts = new ArrayList<>();
 	}
 	
 	public HAEntity(Entity entity) {
 		this.entity = entity;
 		this.hints = new ArrayList<>();
 		this.distractors = new ArrayList<>();
+		this.facts = new ArrayList<>();
 	}
 	
 	public HAEntity addHint(String hint) {
@@ -42,6 +45,11 @@ public class HAEntity {
 	
 	public HAEntity addOptionalAnswer(ResourceInfo oaResource) {
 		this.distractors.add(oaResource);
+		return this;
+	}
+	
+	public HAEntity addFact(String fact) {
+		this.facts.add(fact);
 		return this;
 	}
 
@@ -227,6 +235,14 @@ public class HAEntity {
 
 	public void setImageURL(String imageURL) {
 		this.imageURL = imageURL;
+	}
+
+	public List<String> getFacts() {
+		return facts;
+	}
+
+	public void setFacts(List<String> facts) {
+		this.facts = facts;
 	}
 
 }

@@ -15,6 +15,7 @@ import de.unima.dws.semanta.crossword.generation.SimpleCrosswordGenerator;
 import de.unima.dws.semanta.crossword.model.Cell;
 import de.unima.dws.semanta.crossword.model.Crossword;
 import de.unima.dws.semanta.crossword.model.HAWord;
+import de.unima.dws.semanta.exception.TopicNotFoundException;
 import de.unima.dws.semanta.generator.distractor.DistractorGenerator;
 import de.unima.dws.semanta.generator.distractor.TypeDistractorGenerator;
 import de.unima.dws.semanta.model.Difficulty;
@@ -58,9 +59,14 @@ public class Application {
 				//TODO only set if topic not resource uri already
 				this.topic = infos.get(0);
 				topic = this.topic.getUri();
+			} else {
+				return null;
 			}
 		}
 		List<HAEntity> entities = semanta.fetchEntities(topic, numOfWords, true, difficulty);
+		if(entities.isEmpty()) {
+			return null;
+		}
 		List<HAWord> words = new ArrayList<>();
 		for(HAEntity entity : entities) {
 			System.out.println(entity);
@@ -92,11 +98,19 @@ public class Application {
 		return generateCrossword(info.getUri(), difficulty, numOfWords);
 	}
 	
-	public Crossword regenerateCrossword() {
+	public Crossword regenerateCrossword() throws TopicNotFoundException {
 		if(topic != null) {
 			return generateCrossword(topic, difficulty, numOfWords);
 		}
 		return crossword;
+	}
+	
+	public void getFacts(ResourceInfo info) {
+		semanta.getFacts(info);
+	}
+	
+	public void getFacts(HAWord word) {
+		semanta.getFacts(word);
 	}
 	
 	public void generateDistractors() {

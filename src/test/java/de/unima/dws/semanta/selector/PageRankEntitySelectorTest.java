@@ -13,18 +13,18 @@ import de.unima.dws.semanta.utilities.Settings;
 
 public class PageRankEntitySelectorTest {
 
-	private PageRankEntitySelector selector;
+	private MetaEntitySelector selector;
 	
 	@Before
 	public void init() {
 		SparqlService.setEndpoint(Settings.DEFAULT_ENDPOINT_DBPEDIA);
-		this.selector = new PageRankEntitySelector(300);
+		this.selector = new MetaEntitySelector();
 	}
 	
 	@Test
 	public void selectBeginnerTest() {
 		List<Entity> entity = this.selector.select(ResourceFactory.
-				createResource("http://dbpedia.org/resource/Italy"), Difficulty.BEGINNER, 5);
+				createResource("http://dbpedia.org/resource/Cristiano_Ronaldo"), Difficulty.BEGINNER, 5);
 		System.out.println(entity);
 		
 	}

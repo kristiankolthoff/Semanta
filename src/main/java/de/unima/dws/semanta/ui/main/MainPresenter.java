@@ -10,6 +10,8 @@ import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 
+import org.apache.jena.base.Sys;
+
 import de.unima.dws.semanta.Application;
 import de.unima.dws.semanta.crossword.model.Cell;
 import de.unima.dws.semanta.crossword.model.Crossword;
@@ -125,6 +127,8 @@ public class MainPresenter implements Initializable{
 	
 	@FXML
 	private Label labelLoading;
+	
+	private ProgressIndicator progressFacts;
 
 	@Inject
 	private Application application;
@@ -255,6 +259,7 @@ public class MainPresenter implements Initializable{
 					    	if(application.isDistractorsLoaded()) {
 					    		updateDistractors(newValue);
 					    	}
+					    	System.out.println("HALLO FROM ACROSS");
 	                         if(newValue != null && newValue.isSolved()) {
 	                        	 updateEntityInfo(newValue);
 	                         }
@@ -289,6 +294,7 @@ public class MainPresenter implements Initializable{
 					    	if(application.isDistractorsLoaded()) {
 					    		updateDistractors(newValue);
 					    	}
+					    	System.out.println("HALLO FROM DOWN");
 	                         if(newValue != null && newValue.isSolved()) {
 	                        	 updateEntityInfo(newValue);
 	                         }
@@ -320,6 +326,31 @@ public class MainPresenter implements Initializable{
 	}
 	
 	private void updateEntityInfo(ResourceInfo info) {
+		System.out.println("-----------UPDATE ENTITY INFO------------");
+		Task<Void> longTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+            	progressFacts = new ProgressIndicator(-1);
+            	progressFacts.setVisible(true);
+            	vBoxFacts.getChildren().clear();
+            	vBoxFacts.getChildren().add(progressFacts);
+            	System.out.println("FETCH IMPORTANT FACTS");
+            	application.getFacts(info);
+				return null;
+            }
+        };
+       longTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent t) {
+            	progressFacts.setVisible(false);
+            	vBoxFacts.getChildren().remove(progressFacts);
+            	System.out.println("FETCH FACTS DONE");
+				for(String fact : info.getFacts()) {
+					vBoxFacts.getChildren().add(new Label(fact));
+				}
+            }
+        });
+        new Thread(longTask).start();
 		labelName.setText(info.getLabel());
 		textAbtract.setText(info.getSummary());
 		labelTopic.setText(info.getType());
@@ -328,14 +359,18 @@ public class MainPresenter implements Initializable{
 	}
 	
 	private void updateDistractors(HAWord word) {
-		labelAnswerA.setText(word.getHAEntity().getDistractorA());
-		tooltipA.setText(word.getHAEntity().getDistractorA());
-		labelAnswerB.setText(word.getHAEntity().getDistractorB());
-		tooltipB.setText(word.getHAEntity().getDistractorB());
-		labelAnswerC.setText(word.getHAEntity().getDistractorC());
-		tooltipC.setText(word.getHAEntity().getDistractorC());
-		labelAnswerD.setText(word.getHAEntity().getDistractorD());
-		tooltipD.setText(word.getHAEntity().getDistractorD());
+		try {
+			labelAnswerA.setText(word.getHAEntity().getDistractorA());
+			tooltipA.setText(word.getHAEntity().getDistractorA());
+			labelAnswerB.setText(word.getHAEntity().getDistractorB());
+			tooltipB.setText(word.getHAEntity().getDistractorB());
+			labelAnswerC.setText(word.getHAEntity().getDistractorC());
+			tooltipC.setText(word.getHAEntity().getDistractorC());
+			labelAnswerD.setText(word.getHAEntity().getDistractorD());
+			tooltipD.setText(word.getHAEntity().getDistractorD());
+		} catch(NullPointerException ex) {
+			
+		}
 	}
 	
 	public void updateEntityInfoToTopic() {
@@ -387,7 +422,7 @@ public class MainPresenter implements Initializable{
             public void handle(WorkerStateEvent t) {
             	System.out.println("Loaded distractors");
 				progressBar.setVisible(false);
-				labelLoading.setText("");
+				labelLoading.setVisible(false);
 				application.setDistractorsLoaded(true);
             }
         });
@@ -421,6 +456,8 @@ public class MainPresenter implements Initializable{
             public void handle(WorkerStateEvent t) {
     			indicator.setVisible(false);
 				System.out.println("success");
+				progressBar.setVisible(true);
+				labelLoading.setVisible(true);
 				initialzeCrosswordGrid();
             }
         });

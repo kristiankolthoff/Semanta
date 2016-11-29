@@ -112,6 +112,18 @@ public class SparqlServiceTest {
 	}
 	
 	@Test
+	public void queryResourceWithTypeHierachyTest1() {
+		Resource resource = SparqlService.queryResource("http://dbpedia.org/ontology/Wikidata:Q11424");
+		StmtIterator it = resource.listProperties();
+		int count = 0;
+		while(it.hasNext()) {
+			it.next();
+			count++;
+		}
+		assertEquals(170, count);
+	}
+	
+	@Test
 	public void queryNodeSumEntities() {
 		SparqlService.queryNodeSumEntities("http://dbpedia.org/resource/Barack_Obama", 
 				10, Collections.emptyList(), Collections.emptyList());

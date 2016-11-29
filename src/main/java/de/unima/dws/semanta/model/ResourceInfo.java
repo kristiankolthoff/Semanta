@@ -27,6 +27,7 @@ public class ResourceInfo {
 	@XmlTransient
 	private Optional<String> imageURL;
 	private List<String> types;
+	private List<String> facts;
 	@XmlTransient
 	private int index;
 	@XmlTransient
@@ -34,6 +35,7 @@ public class ResourceInfo {
 	
 	public ResourceInfo(Resource resource, String uri, String type, String label) {
 		this.types = new ArrayList<>();
+		this.facts = new ArrayList<>();
 		this.resource = resource;
 		this.uri = uri;
 		this.type = type;
@@ -43,6 +45,8 @@ public class ResourceInfo {
 	
 	 public ResourceInfo(Resource resource, String uri, String label, 
 			 String summary, String imageURL, int index) {
+		this.facts = new ArrayList<>();
+		this.facts = new ArrayList<>();
 		this.resource = resource;
 		this.uri = uri;
 		this.label = label;
@@ -51,6 +55,10 @@ public class ResourceInfo {
 		this.index = index;
 	}
 
+	 public ResourceInfo addFact(String fact) {
+		 this.facts.add(fact);
+		 return this;
+	 }
 
 
 	public ResourceInfo() {	}
@@ -132,6 +140,16 @@ public class ResourceInfo {
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+
+	public List<String> getFacts() {
+		return facts;
+	}
+
+
+	public void setFacts(List<String> facts) {
+		this.facts = facts;
 	}
 	
 	

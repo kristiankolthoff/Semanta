@@ -24,7 +24,7 @@ public class OutEntitySelectorTest {
 	@Test
 	public void selectBeginnerTest() {
 		List<Entity> entity = this.selector.select(ResourceFactory.
-				createResource("http://dbpedia.org/resource/Germany"), Difficulty.EXPERT, 5);
+				createResource("http://dbpedia.org/resource/Silicon_Valley"), Difficulty.EXPERT, 5);
 		System.out.println(entity);
 		
 	}

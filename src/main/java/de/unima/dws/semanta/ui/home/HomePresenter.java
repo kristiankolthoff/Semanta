@@ -189,12 +189,16 @@ public class HomePresenter implements Initializable{
 					System.out.println("success");
 					try {
 						List<ResourceInfo> searchInfo = longTask.get();
-						SearchView view = new SearchView((f) -> searchInfo);
-						((SearchPresenter)view.getPresenter()).setHomePresenter(HomePresenter.this);
-						((SearchPresenter)view.getPresenter()).initialize();
+						if(searchInfo.isEmpty()) {
+							textFieldSearch.setStyle("-fx-border-color: red ;-fx-border-width: 2px;");
+						} else {
+							SearchView view = new SearchView((f) -> searchInfo);
+							((SearchPresenter)view.getPresenter()).setHomePresenter(HomePresenter.this);
+							((SearchPresenter)view.getPresenter()).initialize();
+							Stage stage = (Stage) textFieldSearch.getScene().getWindow();
+							stage.setScene(new Scene(view.getView()));
+						}
 						indicator.setVisible(false);
-						Stage stage = (Stage) textFieldSearch.getScene().getWindow();
-						stage.setScene(new Scene(view.getView()));
 					} catch (InterruptedException | ExecutionException e) {
 						e.printStackTrace();
 					}
@@ -217,9 +221,18 @@ public class HomePresenter implements Initializable{
 		longTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 		         @Override
 		         public void handle(WorkerStateEvent t) {
-		        	 indicator.setVisible(false);
-					 System.out.println("success");
-					 stage.setScene(new Scene(new MainView((f) -> application).getView()));
+		        	 try {
+						if(longTask.get() != null) {
+							System.out.println("success");
+							stage.setScene(new Scene(new MainView((f) -> application).getView()));
+						 } else {
+							 textFieldSearch.setStyle("-fx-border-color: red ;-fx-border-width: 2px;");
+						 }
+						 indicator.setVisible(false);
+					} catch (InterruptedException | ExecutionException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 		         }
 		});
 		new Thread(longTask).start();

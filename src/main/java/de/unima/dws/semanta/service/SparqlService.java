@@ -117,7 +117,7 @@ public class SparqlService {
 				Resource img = qs.getResource("img");
 				String imgURL = (img != null) ? img.getURI().substring(0, 4) + "s" + img.getURI().substring(4) : null;
 				resourceInfos.add(new ResourceInfo(resource, resource.getURI(), 
-						label.toString(), abst.toString(), imgURL, resourceInfos.size()+1));
+						label.getString(), abst.toString(), imgURL, resourceInfos.size()+1));
 			}
 			return resourceInfos;
 		}
@@ -328,8 +328,8 @@ public class SparqlService {
 		sb.append("WHERE { \n");
 		sb.append("?s ?p <" + uri + "> . \n");
 		sb.append("?s vrank:hasRank/vrank:rankValue ?v. \n");
-		sb.append("FILTER(?v > " + tLower + " && ?v < " + tUpper + ")");
-		sb.append("?s rdfs:label ?label \n");
+		sb.append("FILTER(?v > " + tLower + " && ?v < " + tUpper + ") . \n");
+		sb.append("?s rdfs:label ?label . \n");
 		sb.append("FILTER(lang(?label) = \"en\") . \n");
 		sb.append("FILTER(strlen(str(?label)) < 20) . \n");
 		sb.append("} \n");
@@ -431,7 +431,9 @@ public class SparqlService {
 			if(triple.getPredicate().getURI().equals(propertyType) &&
 					triple.getObject().getURI().contains(ontTypeRegex)) {
 				Resource typeResource = SparqlService.queryResource(triple.getObject().getURI());
-				model.add(typeResource.getModel());
+				if(typeResource != null) {
+					model.add(typeResource.getModel());
+				}
 			}
 		}
 		return resource;
@@ -439,6 +441,9 @@ public class SparqlService {
 	
 	private static Resource buildResource(ResultSet result, String uri, String p, 
 			String o, String... propertiesToRemove) {
+		if(!result.hasNext()) {
+			return null;
+		}
 		Model model = ModelFactory.createDefaultModel();
 		Resource resource = model.createResource(uri);
 		while(result.hasNext()) {

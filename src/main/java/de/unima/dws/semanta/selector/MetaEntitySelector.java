@@ -1,5 +1,7 @@
 package de.unima.dws.semanta.selector;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.jena.rdf.model.Resource;
@@ -19,12 +21,18 @@ public class MetaEntitySelector implements EntitySelector{
 	
 	@Override
 	public List<Entity> select(Resource topicResource, Difficulty difficulty, int numEntities) {
-		int num = numEntities / 2;
-		List<Entity> outEntites = this.outSelector.select(topicResource, difficulty, num);
+		List<Entity> outEntites = this.outSelector.select(topicResource, difficulty, numEntities);
 		List<Entity> pageEntites = this.pageRankSelector.select(topicResource, difficulty, 
-				numEntities-outEntites.size());
-		pageEntites.addAll(outEntites);
-		return pageEntites;
+				numEntities);
+		List<Entity> result = new ArrayList<>();
+		result.addAll(outEntites);
+		result.addAll(pageEntites);
+		Collections.shuffle(result);
+		if(result.size() > numEntities) {
+			return result.subList(0, numEntities);
+		} else {
+			return result;
+		}
 	}
 
 }

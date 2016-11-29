@@ -346,7 +346,7 @@ public class MainPresenter implements Initializable{
             	vBoxFacts.getChildren().remove(progressFacts);
             	System.out.println("FETCH FACTS DONE");
 				for(String fact : info.getFacts()) {
-					vBoxFacts.getChildren().add(new Label(fact));
+					vBoxFacts.getChildren().add(new Label("- " + fact));
 				}
             }
         });

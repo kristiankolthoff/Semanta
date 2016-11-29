@@ -261,7 +261,7 @@
                                        </content></ScrollPane>
                                  </content>
                             </TitledPane>
-                            <TitledPane text="Important Facts">
+                            <TitledPane text="Important Topic Facts">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
@@ -294,7 +294,7 @@
                </children>
             </Pane>
         <Pane prefHeight="18.0" prefWidth="907.0" HBox.hgrow="ALWAYS" />
-        <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Left status" HBox.hgrow="ALWAYS">
+        <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" HBox.hgrow="ALWAYS">
           <font>
             <Font size="11.0" fx:id="x3" />
           </font>

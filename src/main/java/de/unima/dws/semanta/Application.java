@@ -15,7 +15,6 @@ import de.unima.dws.semanta.crossword.generation.SimpleCrosswordGenerator;
 import de.unima.dws.semanta.crossword.model.Cell;
 import de.unima.dws.semanta.crossword.model.Crossword;
 import de.unima.dws.semanta.crossword.model.HAWord;
-import de.unima.dws.semanta.exception.TopicNotFoundException;
 import de.unima.dws.semanta.generator.distractor.DistractorGenerator;
 import de.unima.dws.semanta.generator.distractor.TypeDistractorGenerator;
 import de.unima.dws.semanta.model.Difficulty;
@@ -98,7 +97,7 @@ public class Application {
 		return generateCrossword(info.getUri(), difficulty, numOfWords);
 	}
 	
-	public Crossword regenerateCrossword() throws TopicNotFoundException {
+	public Crossword regenerateCrossword() {
 		if(topic != null) {
 			return generateCrossword(topic, difficulty, numOfWords);
 		}

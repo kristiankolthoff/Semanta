@@ -13,7 +13,6 @@ import org.apache.jena.rdf.model.Resource;
 import de.unima.dws.semanta.crossword.model.HAWord;
 import de.unima.dws.semanta.generator.distractor.DistractorGenerator;
 import de.unima.dws.semanta.generator.distractor.LinkingEntityDistractorGenerator;
-import de.unima.dws.semanta.generator.distractor.MetaTopicTypeDistractorGenerator;
 import de.unima.dws.semanta.generator.distractor.TopicDistractorGenerator;
 import de.unima.dws.semanta.generator.distractor.TypeDistractorGenerator;
 import de.unima.dws.semanta.generator.ha.HAGenerator;
@@ -58,7 +57,7 @@ public class Semanta {
 		SparqlService.setEndpoint(Settings.DEFAULT_ENDPOINT_DBPEDIA);
 		this.selector = new MetaEntitySelector();
 		this.generator = new SummaryHAGenerator();
-		this.distractorGenerator = new MetaTopicTypeDistractorGenerator();
+		this.distractorGenerator = new TopicDistractorGenerator();
 	}
 	
 	public List<HAEntity> fetchEntities(String uri, int numEntities, boolean optionalAnswers, Difficulty difficulty) {

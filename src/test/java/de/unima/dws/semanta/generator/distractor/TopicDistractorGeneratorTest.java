@@ -16,12 +16,12 @@ import de.unima.dws.semanta.utilities.Settings;
 
 public class TopicDistractorGeneratorTest {
 
-	private MetaTopicTypeDistractorGenerator distractor;
+	private TopicDistractorGenerator distractor;
 	
 	@Before
 	public void init() {
 		SparqlService.setEndpoint(Settings.DEFAULT_ENDPOINT_DBPEDIA);
-		distractor = new MetaTopicTypeDistractorGenerator();
+		distractor = new TopicDistractorGenerator();
 	}
 	
 	@Test

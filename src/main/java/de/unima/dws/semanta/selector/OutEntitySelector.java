@@ -31,8 +31,8 @@ public class OutEntitySelector implements EntitySelector{
 			return Collections.emptyList();
 		}
 		List<Entity> entities = new ArrayList<>();
-		for (int i = from; i < to; i++) {
-			entities.add(new Entity(resources.get(i), null, true));
+		for (Resource resource : resources) {
+			entities.add(new Entity(resource, null, true));
 		}
 		return entities;
 		

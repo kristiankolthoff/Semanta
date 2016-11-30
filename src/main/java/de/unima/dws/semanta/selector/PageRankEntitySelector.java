@@ -52,6 +52,10 @@ public class PageRankEntitySelector implements EntitySelector{
 		min = ranks.get(ranks.size()-1);
 		t1 = ranks.get(ranks.size()/3);
 		t2 = ranks.get((ranks.size()/3)*2);
+		System.out.println("max : " + max);
+		System.out.println("t1 : " + t1);
+		System.out.println("t2 : " + t2);
+		System.out.println("min : " + min);
 	}
 
 	public double getMax() {

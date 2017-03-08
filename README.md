@@ -25,3 +25,7 @@ resources. Note that the main RDF data processing tasks are to find topic-relate
 meaningful clues for the sought-after words. In addition, we integrate the option to retrieve four possible
 answers (distractors) to facilitate the solving of the crossword puzzle. Here, the application is required 
 to automatically generate reasonable distractors adaptive to a difficulty level given the actual answer resource.
+
+![alt tag](https://raw.githubusercontent.com/kristiankolthoff/Semanta/master/src/main/resources/images/semantahome.png)
+
+![alt tag](https://raw.githubusercontent.com/kristiankolthoff/Semanta/master/src/main/resources/images/pizza.png)

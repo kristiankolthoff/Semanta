@@ -16,7 +16,7 @@ public class AppTest {
 	public void semantaTest() {
 		Semanta semanta = new Semanta();
 		List<HAEntity> vals = semanta.
-				fetchEntities("http://dbpedia.org/resource/Cristiano_Ronaldo", 5, true, Difficulty.BEGINNER);
+				fetchEntities("http://dbpedia.org/resource/Italy", 5, true, Difficulty.BEGINNER);
 		System.out.println(vals.size());
 	}
 }

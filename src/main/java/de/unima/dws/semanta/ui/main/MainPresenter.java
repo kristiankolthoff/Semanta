@@ -368,7 +368,7 @@ public class MainPresenter implements Initializable{
 			tooltipC.setText(word.getHAEntity().getDistractorC());
 			labelAnswerD.setText(word.getHAEntity().getDistractorD());
 			tooltipD.setText(word.getHAEntity().getDistractorD());
-		} catch(NullPointerException ex) {
+		} catch(Exception ex) {
 			
 		}
 	}

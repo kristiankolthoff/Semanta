@@ -51,11 +51,11 @@ The previous components involved SPARQL queries and fetching RDF data. As a subs
 ### a. Abstract Sentence Extraction
 This approach for clue generation exploits the abstract provided by the resource through the `dbo:abstract` property. First, we employ the sentence detector of Apache OpenNLP trained on a English sentence model. This NLP tool extracts individual sentences in the abstract. Thus, it detects if a period is used to end the sentence or only as abbreviation within a sentence. After obtaining the sentences, a regular expression is created using the label of the resource under consideration in such a way, that the regular expression matches all occurrences of the label. On each sentence we apply the regular expression and if there is at least one match, we keep the sentence and replace the match with a template of the definite article followed by the ontology concept of the resource. Note that we adapt the difficulty level by inserting one of the mentioned ontology concepts. For example, inserting `dbo:SoccerPlayer` into a sentence extracted for `dbr:Oliver Kahn` makes it easier to determine the answer as inserting `dbo:Person`, since we add specialized information. An additional way of adapting the clue to difficulty level is to exploit the fact that sentences which occur earlier in the abstract are more important and general, than sentences occurring later in the abstract. The following example shows the original sentence and the regular expression match replaced with its ontology type for `dbr:Oliver Kahn`.
 
-`
+```
 Oliver Rolf Kahn is a former German football goalkeeper.
 
 The soccer player is a former German football goalkeeper.
-`
+```
 
 The abstract sentence extraction approach exploits already existing descriptions of the resource, which are properly written by humans. Hence, this approach is able to create proper clues often, however, sometimes generates grammatically wrong clues and fails, if no match for the regular expression is found.
 
@@ -63,7 +63,7 @@ The abstract sentence extraction approach exploits already existing descriptions
 
 The second investigated approach for crossword clue generation is more robust in the sense that in most cases it can generate clues, however, often produces grammatically wrong sentences which are hard to understand. It is a template-based approach and combines the ontology concept with a corresponding property and its object value. For example, the following clues are generated for resource `dbr:Oliver Kahn` for each difficulty level using the given template.
 
-`
+```
 Template : <ontology concept> with <property> <object>
 
 Beginner : Soccer player with position Goalkeeper (association football) 
@@ -71,5 +71,5 @@ Beginner : Soccer player with position Goalkeeper (association football)
 Advanced : Person with team FC Bayern Munich 
 
 Expert : Agent with team Karlsruher SC II  
-`
+```
 Again the specificity of the ontology concept is adapted to achieve different difficulty levels, and in addition the selected properties of the resource are adapted. Note that the notion behind the selection of the properties is identical to the related resource selection using page rank. However, since there is no PageRank available for properties, we rank the objects they link the resource to. According to the example, the resource `dbr:Goalkeeper` has a higher rank than `dbr:FC Bayern Munich` and `dbr:Karlsruher SC II}`. We observed that the produced hints are more concise as in a manually crafted crosswords, however, often lack grammatically correctness. As an improvement, we tested various grammar check APIs like JLanguageTool, however, these tools mostly apply only simple rules and are not sophisticated enough to correct severe grammatical errors.

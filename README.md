@@ -1,5 +1,7 @@
 # Semanta -Topic-Based Crossword Generator
 
+![alt tag](https://raw.githubusercontent.com/kristiankolthoff/Semanta/master/src/main/resources/images/semantahome.png)
+
 In this project we develop a Semantic Web application that automatically generates crossword 
 puzzles based on user-specified topics in a generic way. Hence, the final application can be 
 recognized as a learning tool focusing on topics the user is interested in. However, the application 
@@ -11,6 +13,8 @@ algorithms by exploiting manually crafted databases of clue-answer pairs. Hence,
 crossword puzzle is only semi-automatic, still requiring human knowledge and expertise. Therefore, 
 different topics can only be represented in the crossword by applying different topic clue-answer 
 databases. 
+
+![alt tag](https://raw.githubusercontent.com/kristiankolthoff/Semanta/master/src/main/resources/images/pizza.png)
 
 The approach of creating crosswords implemented in Semanta, however, is reversed. Instead 
 of starting with a fixed structure and filling in words, Semanta firstly extracts the topic-related 
@@ -26,9 +30,21 @@ meaningful clues for the sought-after words. In addition, we integrate the optio
 answers (distractors) to facilitate the solving of the crossword puzzle. Here, the application is required 
 to automatically generate reasonable distractors adaptive to a difficulty level given the actual answer resource.
 
-![alt tag](https://raw.githubusercontent.com/kristiankolthoff/Semanta/master/src/main/resources/images/semantahome.png)
 
-![alt tag](https://raw.githubusercontent.com/kristiankolthoff/Semanta/master/src/main/resources/images/pizza.png)
+# Pipeline Overview
+
+![alt tag](https://raw.githubusercontent.com/kristiankolthoff/Semanta/master/src/main/resources/images/pipeline.png)
+
+The figure illustrates the overall pipeline and individual steps involved in automatically creating a crossword based on
+user specified topic, number of words and difficulty level. First, we map the input topic string to a particular resource
+in our knowledge base as a starting point for the remaining process. This step is denoted as (1) Topic Resource Retrivial and 
+exploits full text search capabilities of the Virtuoso endpoint as well as the PageRank available for DBPedia entities.
+Based on the topic resource, we explore the local neighbourhood to identify interesting and reasonable sought-after resources for the
+crossword, which is denoted by (2) Topic-Related Resource Selection. Here, we implemented two approaches based on the PageRank of the
+entities and based on the approximate PageRank denoted as Node Degree. Once we have selected the crossword entities, 
+we automatically generate clues which is denoted by (3) Clue Generation. We focued on two main approaches called Abstract Sentence
+Extraction and Property Clue Generation, which are more precisely described in the subsequent section. In order to help the user to guess the answer, we also provide distractors as in a traditional quiz game. For each entity in the crossword, we therefore extract meaningful related entites which are similar in some way. This step is denoted by (4) Distractor Generation. FInally, once all data is generated, we generate a crossword structure denoted by (5) Crossword Generation.
+
 
 ## 1. Topic Resource Retrieval
 

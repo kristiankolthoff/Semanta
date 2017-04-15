@@ -60,6 +60,8 @@ As a first importance metric, we computed the degree of a the resource as the su
 
 To obtain the resources for a specific difficulty level, we sort the resources using PageRank first and divide the ranked list into three parts representing the distinct difficulty levels. Each division can be specified by an upper and lower threshold of the rank value. With a subsequent SPARQL query, we obtain resources belonging to one difficulty level by using a filter and the previously estimated thresholds, and select a random sample. We execute these steps for both incoming and outgoing resources and combine them equally for the final result.
 
+![alt tag](https://raw.githubusercontent.com/kristiankolthoff/Semanta/master/src/main/resources/images/entityselection.png)
+
 ## 3. Crossword Clue Generation
 
 The previous components involved SPARQL queries and fetching RDF data. As a subsequent component of topic-related resource selection which form the words in the crossword, we perform processing of the data in order to generate clues for each word. We developed two independent approaches for clue generation. For each resource, we locally compute the most general, the most specialized and the in between ontology concept based on Dbpedia ontology. These computed ontology types are also beneficial for difficulty adaption for clue generation as well as distractor generation.

@@ -96,6 +96,8 @@ Again the specificity of the ontology concept is adapted to achieve different di
 
 All algorithmic steps discussed previously are sufficient for generating an entire topic-based crossword puzzle composed of clues and corresponding answers. However, we decided to include the facility to present four possible answer (the actual answer among three distractors) to the user, similar to a quiz game. For this component, we also developed multiple approaches for adapting to different difficulty levels. Note that the following approaches built upon each other. That is, a subsequent approach can be regarded as a specialization of the previous one. All approaches have in common that from the qualifying resources, a random sample is selected.
 
+![alt tag](https://raw.githubusercontent.com/kristiankolthoff/Semanta/master/src/main/resources/images/distractor.png)
+
 ### a.Type Distractor 
 
 The first and simplest approach to identify meaningful distractors given a resource is to query for resources having the same `rdf:type` as depicted in the following Figure. We can easily adapt the difficulty level by switching the ontology concept using the previously described method. Note that for clue generation a more specialized ontology concept yields easier clues. However, distractors which are more similar (by querying for more specialized ontology concept) to the actual resource, increase the fuzziness and complicate finding the valid answer. For example, for resource `dbr:Oliver_Kahn` this component extracts `dbr:Ronaldo`.

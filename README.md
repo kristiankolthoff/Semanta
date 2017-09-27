@@ -91,3 +91,25 @@ Advanced : Person with team FC Bayern Munich
 Expert : Agent with team Karlsruher SC II  
 ```
 Again the specificity of the ontology concept is adapted to achieve different difficulty levels, and in addition the selected properties of the resource are adapted. Note that the notion behind the selection of the properties is identical to the related resource selection using page rank. However, since there is no PageRank available for properties, we rank the objects they link the resource to. According to the example, the resource `dbr:Goalkeeper` has a higher rank than `dbr:FC Bayern Munich` and `dbr:Karlsruher SC II`. We observed that the produced hints are more concise as in a manually crafted crosswords, however, often lack grammatically correctness. As an improvement, we tested various grammar check APIs like JLanguageTool, however, these tools mostly apply only simple rules and are not sophisticated enough to correct severe grammatical errors.
+
+# 4. Distractor Generation
+
+All algorithmic steps discussed previously are sufficient for generating an entire topic-based crossword puzzle composed of clues and corresponding answers. However, we decided to include the facility to present four possible answer (the actual answer among three distractors) to the user, similar to a quiz game. For this component, we also developed multiple approaches for adapting to different difficulty levels. Note that the following approaches built upon each other. That is, a subsequent approach can be regarded as a specialization of the previous one. All approaches have in common that from the qualifying resources, a random sample is selected.
+
+### a.Type Distractor 
+
+The first and simplest approach to identify meaningful distractors given a resource is to query for resources having the same `rdf:type` as depicted in the following Figure. We can easily adapt the difficulty level by switching the ontology concept using the previously described method. Note that for clue generation a more specialized ontology concept yields easier clues. However, distractors which are more similar (by querying for more specialized ontology concept) to the actual resource, increase the fuzziness and complicate finding the valid answer. For example, for resource `dbr:Oliver_Kahn` this component extracts `dbr:Ronaldo`.
+
+### b. Topic Distractor
+
+The second approach also uses the ontology concept of the actual resource, however, additionally requires some link between the distractor and the topic resource. Note that each resource under consideration is inevitable linked to the topic resource. Hence, we increase the fuzziness through extracting only distractors which exhibit some connection to the topic. This approach is also adaptable to different difficulty levels through ontology concept switching. The additional component is depicted in Figure b. 
+
+### c. Linking Resource Distractor
+
+The third approach extracts distractors with further linking resources, to which both the resource under consideration and the distractor are linked to. We sort the results by the number of linking resources and extract the top-ranked as distractors. For example, for `dbr:Oliver_Kahn` this approach extracts soccer players with position goalkeeper, team Bayern Munich and so on. The more the resources have in common in terms of linking resources, the higher the fuzziness for the user dealing with the distractors. These linking resources are depicted in Figure c. 
+
+### d. Meta Distractor
+
+Finally we combined the three approaches and use the Linking Resource Distractor Generator for expert level, Topic Distractor Generator for advanced level and Type Distractor Generator for beginner level. Note that this approach also provides a fallback strategy in case of distractor generation failure. Therefore, if a more specialized component fails, the next more general approach is used. Hence, we trade-off between meeting the difficulty level and generate distractors in any case.
+
+So far, we only focused on generating distractors based on increasing fuzziness due to higher semantic similarity. However, distractor generation for crosswords is especially challenging due to further restrictions like a determined word length and specific characters at specific position within the word. Therefore, we filter all distractors which have a different length compared to the actual answer. However, due to increased complexity and lack of time, we neglect the fact that distractors must have specific characters at intersection cells.
